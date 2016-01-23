@@ -88,7 +88,7 @@ namespace DMS_3
 					//Is a user login ?
 					DBRepository dbr = new DBRepository ();
 					var user_Login = dbr.is_user_Log_In();
-					if (!(user_Login=string.Empty)) {
+					if (!(user_Login==string.Empty)) {
 						Data.userAndsoft = user_Login;
 						StartActivity(new Intent(Application.Context, typeof (HomeActivity)));
 					}else{

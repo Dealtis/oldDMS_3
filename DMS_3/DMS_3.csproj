@@ -94,6 +94,14 @@
     <AndroidResource Include="Resources\drawable\gray_button.axml" />
     <AndroidResource Include="Resources\drawable\bleu_button.xml" />
     <AndroidResource Include="Resources\drawable\whitefield.png" />
+    <AndroidResource Include="Resources\layout\Home.axml" />
+    <AndroidResource Include="Resources\drawable\dealtis_fonte.png" />
+    <AndroidResource Include="Resources\drawable\delivery.png" />
+    <AndroidResource Include="Resources\drawable\Logout.png" />
+    <AndroidResource Include="Resources\drawable\newMsg.png" />
+    <AndroidResource Include="Resources\drawable\peekup.png" />
+    <AndroidResource Include="Resources\drawable\SBBadgeBG.png" />
+    <AndroidResource Include="Resources\drawable\SBBadgeBGUP.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
