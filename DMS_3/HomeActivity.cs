@@ -51,7 +51,7 @@ namespace DMS_3
 			var version = context.PackageManager.GetPackageInfo(context.PackageName, 0).VersionName;
 
 			//Lancer les threads : boucles avec les différent actions en cascade UIThread
-			Threadapp ();
+
 		}
 
 		protected override void OnStart()
@@ -66,15 +66,19 @@ namespace DMS_3
 		{
 			base.OnResume();
 			//Afficher ou non les badges
+
+			Thread ThreadAppInteg = new Thread(new ThreadStart(this.Threadapp));
+			ThreadAppInteg.Start();
 		}
 
 		void Threadapp ()
 		{
 			if (!Is_thread_Running) {
-				//execution des fonctions dans une boucle
+				Is_thread_Running = true;
 				while (true) {
+					//execution des fonctions dans une boucle
 					Task.Factory.StartNew (
-						
+
 						() => {
 							Console.WriteLine ( "\nHello from InsertData." );
 							InsertData();
@@ -83,32 +87,52 @@ namespace DMS_3
 						t => {
 							Console.WriteLine ( "\nHello from ComWebService." );
 							ComWebService();
-						}, TaskScheduler.FromCurrentSynchronizationContext()
-						
-					).ContinueWith ( 
+						}						
+					).ContinueWith (
 						v => {
 							Console.WriteLine ( "\nHello from ComPosGps." );
 							ComPosGps();
-						}, TaskScheduler.FromCurrentSynchronizationContext()
+						}
 					);
+					Thread.Sleep ( TimeSpan.FromSeconds(120));
 				}
 
+					
+			
 			}
 		}
 
 		void  InsertData ()
-		{
-			
+		{	
+			Thread.Sleep (5000);
+			//récupération de donnée via le webservice
+
+			//intégration des données dans la BDD
+
+			//maj des badges
+
+			//verification des groupages et suppression des cloturer
+			Console.WriteLine ("\nTask InsertData done");
 		}
 
 		void  ComWebService ()
 		{
+			//envoi des données des positions traités
 
+			//envoi des messages et des positions GPS et des notif MSg
+			Console.WriteLine ("\nTask ComWebService done");
 		}
 
 		void  ComPosGps ()
 		{
+			//récupération des donnée de message via le webservice
 
+			//intégration des données dans la BDD
+
+			//maj des badges
+
+
+			Console.WriteLine ("\nTask ComPosGps done");
 		}
 	}
 }
