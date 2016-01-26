@@ -14,7 +14,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
+using Android.Locations;
 using System.Json;
 
 using DMS_3.BDD;
@@ -24,7 +24,7 @@ using Environment = System.Environment;
 namespace DMS_3
 {
 	[Activity (Label = "HomeActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]			
-	public class HomeActivity : Activity
+	public class HomeActivity : Activity, ILocationListener
 	{
 		TextView lblTitle;
 		TextView peekupBadgeText;
@@ -40,6 +40,10 @@ namespace DMS_3
 		String datedujour_mouth;
 		String datedujour_hour;
 		String datedujour_minute;
+
+		String posgps;
+
+		LocationManager locMgr;
 
 		bool Is_thread_Running = false;
 
@@ -61,7 +65,7 @@ namespace DMS_3
 			Context context = this.ApplicationContext;
 			var version = context.PackageManager.GetPackageInfo(context.PackageName, 0).VersionName;
 
-			//Lancer les threads : boucles avec les différent actions en cascade UIThread
+			//btn deconnexion, userlogin false et update
 
 		}
 
@@ -77,6 +81,16 @@ namespace DMS_3
 		{
 			base.OnResume();
 			//Afficher ou non les badges
+
+			// initialize location manager
+			locMgr = GetSystemService (Context.LocationService) as LocationManager;
+
+			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
+				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
+				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider, 2000, 1, this);
+			} else {
+				Toast.MakeText (this, "GPS Désactiver!", ToastLength.Long).Show ();
+			}
 
 			Thread ThreadAppInteg = new Thread(new ThreadStart(this.Threadapp));
 			ThreadAppInteg.Start();
@@ -96,21 +110,23 @@ namespace DMS_3
 
 							() => {
 								Console.WriteLine ("\nHello from InsertData.");
-								InsertData ();
+								InsertData ();//TOUTES LES 2 MINS
 							}					
 						).ContinueWith (
 							t => {
 								Console.WriteLine ("\nHello from ComWebService.");
-								ComWebService ();
+								ComWebService ();//TOUTES LES 2MIN
 							}						
 						).ContinueWith (
 							v => {
 								Console.WriteLine ("\nHello from ComPosGps.");
-								ComPosGps ();
+								ComPosGps ();//TOUTES LES 2MIN
 							}
 						);
 					}
-					Thread.Sleep (TimeSpan.FromSeconds (60));
+
+					//30s TODO
+					Thread.Sleep (TimeSpan.FromSeconds (30));
 				}	
 			
 			}
@@ -118,8 +134,6 @@ namespace DMS_3
 
 		void  InsertData ()
 		{	
-			Thread.Sleep (5000);
-
 			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
@@ -186,7 +200,7 @@ namespace DMS_3
 
 			//select des grp's
 			string content_grpcloture = String.Empty;
-			var tablegroupage = db.Query<TablePosition> ("SELECT groupage FROM ToDoTask group by groupage");
+			var tablegroupage = db.Query<TablePositions> ("SELECT groupage FROM TablePositions group by groupage");
 			foreach (var row in tablegroupage)
 			{
 				string numGroupage = row.groupage;
@@ -217,22 +231,54 @@ namespace DMS_3
 			Console.WriteLine ("\nTask InsertData done");
 		}
 
+		void  ComPosGps ()
+		{
+			//recupération des messages wervice
+			//insertion en base
+			//recupation des messages / notifications / POS GPS
+			//maj du badge
+			Console.WriteLine ("\nTask ComPosGps done");
+		}
+
 		void  ComWebService ()
 		{
-			//envoi des données des positions traités
+			//récupération des données dans la BDD
+			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection (dbPath);
+			var table = db.Table<StatutPositions> ();
 
-			//envoi des messages et des positions GPS et des notif MSg
+			foreach (var item in table) {
+				try {
+					string _url = "http://dms.jeantettransport.com/api/livraisongroupage";
+					var webClient = new WebClient ();
+					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+					webClient.UploadString (_url, item.datajson);
+					//Sup pde la row dans statut pos
+					var row = db.Get<StatutPositions>(item.Id);
+					db.Delete(row);
+				} catch (Exception e) {
+					Console.WriteLine (e);
+				}
+			}
 			Console.WriteLine ("\nTask ComWebService done");
 		}
 
-		void  ComPosGps ()
+		public void OnLocationChanged (Android.Locations.Location location)
 		{
-			//récupération des donnée de message via le webservice
+			posgps = location.Latitude.ToString() +";"+ location.Longitude.ToString();
+		}
+		public void OnProviderDisabled (string provider)
+		{
+			
+		}
+		public void OnProviderEnabled (string provider)
+		{
 
-			//intégration des données dans la BDD
-
-			//maj des badges
-			Console.WriteLine ("\nTask ComPosGps done");
+		}
+		public void OnStatusChanged (string provider, Availability status, Bundle extras)
+		{
+			
 		}
 	}
 }

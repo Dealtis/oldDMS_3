@@ -32,9 +32,8 @@ namespace DMS_3.BDD
 					(Environment.SpecialFolder.Personal),"ormDMS.db3");
 				var db = new SQLiteConnection(dbPath);
 				db.CreateTable<TableUser>();
+				db.CreateTable<TablePositions>();
 				Console.Out.WriteLine("\nTable User Crée");
-
-
 				string result = "Table crée !";
 				return result;
 			}
@@ -95,7 +94,7 @@ namespace DMS_3.BDD
 				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
 					(Environment.SpecialFolder.Personal), "ormDMS.db3");
 				var db = new SQLiteConnection(dbPath);
-				TablePosition item = new TablePosition();
+				TablePositions item = new TablePositions();
 
 				item.codeLivraison =  codeLivraison;
 				item.numCommande = numCommande;
@@ -204,7 +203,7 @@ namespace DMS_3.BDD
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			bool output = false;
-			var table = db.Table<TablePosition>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage));
+			var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage));
 			foreach (var item in table)
 			{
 				output = true;
@@ -222,10 +221,10 @@ namespace DMS_3.BDD
 			var db = new SQLiteConnection(dbPath);
 			string output = "";
 
-			var query = db.Table<TablePosition>().Where (v => v.groupage.Equals(numGroupage));
+			var query = db.Table<TablePositions>().Where (v => v.groupage.Equals(numGroupage));
 			foreach (var item in query) {
 				output = item.groupage;
-				var row = db.Get<TablePosition>(item.Id);
+				var row = db.Get<TablePositions>(item.Id);
 				db.Delete(row);
 				Console.WriteLine ("\nDELETE GOOD" + numGroupage);
 			}

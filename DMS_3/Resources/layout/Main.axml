@@ -15,7 +15,6 @@
         <EditText
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/user"
-            android:background="@drawable/whitefield"
             android:gravity="center"
             android:layout_width="@dimen/dim200"
             android:layout_height="@dimen/dim50"
@@ -23,7 +22,6 @@
         <EditText
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/password"
-            android:background="@drawable/whitefield"
             android:layout_width="@dimen/dim200"
             android:layout_height="@dimen/dim50"
             android:hint="@string/password"

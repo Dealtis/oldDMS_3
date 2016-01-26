@@ -15,8 +15,8 @@ using SQLite;
 
 namespace DMS_3
 {
-	[Table ("TablePosition")]			
-	public class TablePosition
+	[Table ("TablePositions")]			
+	public class TablePositions
 	{		
 		//Table Positions
 
