@@ -53,7 +53,7 @@ namespace DMS_3.BDD
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			bool output = false;
-			var table = db.Query<TableUser>("SELECT * FROM TableUser WHERE user_AndsoftUser = ? and user_TransicsUser = ? and user_Password = ? and user_UsePartic = ?",user_AndsoftUser,user_TransicsUser,user_Password,user_UsePartic);
+			var table = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUser)).Where (v => v.user_TransicsUser.Equals(user_TransicsUser)).Where (v => v.user_Password.Equals(user_Password)).Where (v => v.user_UsePartic.Equals(user_UsePartic));
 			foreach (var item in table)
 			{
 				output = true;
@@ -79,6 +79,59 @@ namespace DMS_3.BDD
 				db.Insert(item);
 
 				return "Insertion" +user_AndsoftUser+" réussite";
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+
+			}
+		}
+
+		//Insertion des donnes des positions
+		public string InsertDataPosition(string codeLivraison,string numCommande, string refClient, string nomPayeur, string nomExpediteur,string adresseExpediteur, string villeExpediteur, string CpExpediteur, string dateExpe, string nomClient, string adresseLivraison, string villeLivraison, string CpLivraison, string dateHeure, string poids, string nbrPallette, string nbrColis, string instrucLivraison, string typeMission, string typeSegment, string GROUPAGE,string AdrLiv, string AdrGrp, string statutLivraison, string CR,int dateBDD, string Datemission, int Ordremission, string planDeTransport, string Userandsoft, string nomClientLivraison, string villeClientLivraison, string imgpath)
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				TablePosition item = new TablePosition();
+
+				item.codeLivraison =  codeLivraison;
+				item.numCommande = numCommande;
+				item.nomClient =  nomClient ;
+				item.refClient = refClient ;
+				item.nomPayeur = nomPayeur;
+				item.adresseLivraison = adresseLivraison;
+				item.CpLivraison = CpLivraison;
+				item.villeLivraison = villeLivraison;
+				item.dateHeure = dateHeure;
+				item.nbrColis = nbrColis;
+				item.nbrPallette = nbrPallette;
+				item.poids = poids;
+				item.adresseExpediteur = adresseExpediteur;
+				item.CpExpediteur = CpExpediteur;
+				item.dateExpe = dateExpe;
+				item.villeExpediteur = villeExpediteur;
+				item.nomExpediteur = nomExpediteur;
+				item.instrucLivraison = instrucLivraison;
+				item.groupage = GROUPAGE;
+				item.ADRLiv = AdrLiv;
+				item.ADRGrp = AdrGrp;
+				item.typeMission = typeMission;
+				item.typeSegment = typeSegment;
+				item.StatutLivraison = statutLivraison;
+				item.CR = CR;
+				item.dateBDD = dateBDD;
+				item.Datemission = Datemission;
+				item.Ordremission = Ordremission;
+				item.planDeTransport = planDeTransport;
+				item.Userandsoft = Userandsoft;
+				item.nomClientLivraison = nomClientLivraison;
+				item.villeClientLivraison = villeClientLivraison;
+				item.imgpath = imgpath;
+				db.Insert(item);
+				return "Insertion good";
 			}
 			catch (Exception ex)
 			{
@@ -125,6 +178,63 @@ namespace DMS_3.BDD
 			return output;
 
 		}
+
+		//USER CHECK LOGIN
+		public string user_login_Transics(string user_AndsoftUserTEXT)
+		{		
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = string.Empty;
+
+			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUserTEXT));
+
+			foreach (var item in query) {
+				output = item.user_TransicsUser;
+				Console.WriteLine ("\nUSER CONNECTE" + item.user_TransicsUser);
+			}
+			return output;
+
+		}
+
+		//VERIF SI POS DEJA INTEGRER
+		public bool pos_AlreadyExist(string numCommande, string groupage)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			bool output = false;
+			var table = db.Table<TablePosition>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage));
+			foreach (var item in table)
+			{
+				output = true;
+
+
+			}
+			return output;
+		}
+
+		//suppresion d'un GRP
+		public string supp_grp(string numGroupage)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = "";
+
+			var query = db.Table<TablePosition>().Where (v => v.groupage.Equals(numGroupage));
+			foreach (var item in query) {
+				output = item.groupage;
+				var row = db.Get<TablePosition>(item.Id);
+				db.Delete(row);
+				Console.WriteLine ("\nDELETE GOOD" + numGroupage);
+			}
+			return output;
+		}
+
+
+
+
 			
 	}
 }
