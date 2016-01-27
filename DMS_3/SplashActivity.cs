@@ -1,19 +1,20 @@
 ﻿using System;
+using System.IO;
+using System.Json;
+using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Net;
-using System.Net;
-using System.Text;
+using Android.OS;
 using Android.Support.V7.App;
 using Android.Util;
-using DMS_3.BDD;
-
+using System.Globalization;
 using AndroidHUD;
-
-using System.Json;
+using DMS_3.BDD;
+using Android.Text.Format;
 
 namespace DMS_3
 {
@@ -44,6 +45,41 @@ namespace DMS_3
 					//TEST DE CONNEXION
 					var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
 
+
+					var t = DateTime.Now.ToString("dd_MM_yy");
+					string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+					//Shared Preference
+					ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+					string log = pref.GetString("Log", String.Empty);
+
+					//Si il n'y a pas de shared pref
+					if (log == String.Empty){
+						Data.log_file = Path.Combine (dir_log, t+"_log.txt");
+						ISharedPreferencesEditor edit = pref.Edit();
+						edit.PutString("Log",Data.log_file);
+						edit.Apply();
+					}else{
+						//il y a des shared pref
+						Data.log_file = pref.GetString("Log", String.Empty);
+						if (((File.GetCreationTime(Data.log_file)).CompareTo(DateTime.Now)) > 3) {
+							File.Delete(Data.log_file);
+							Data.log_file = Path.Combine (dir_log, t+"_log.txt");
+							ISharedPreferencesEditor edit = pref.Edit();
+							edit.PutString("Log",Data.log_file);
+							edit.Apply();
+						}
+
+					}
+					File.AppendAllText(Data.log_file, ">DMS lancée le "+DateTime.Now.ToString("F")+"\n");
+				
+
+
+
+
+
+
+
+				
 
 					bool App_Connec = false;
 					while (!App_Connec) {

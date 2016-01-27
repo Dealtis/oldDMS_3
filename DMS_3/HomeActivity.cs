@@ -16,7 +16,7 @@ using Android.Views;
 using Android.Widget;
 using Android.Locations;
 using System.Json;
-
+using Java.Text;
 using DMS_3.BDD;
 using SQLite;
 using Environment = System.Environment;
@@ -91,7 +91,6 @@ namespace DMS_3
 			} else {
 				Toast.MakeText (this, "GPS Désactiver!", ToastLength.Long).Show ();
 			}
-
 			Thread ThreadAppInteg = new Thread(new ThreadStart(this.Threadapp));
 			ThreadAppInteg.Start();
 		}
@@ -138,6 +137,8 @@ namespace DMS_3
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			DBRepository dbr = new DBRepository ();
+
+
 			//concaténation de la date
 			if (DateTime.Now.Day < 10) {
 				datedujour_day = "0" + DateTime.Now.Day;
@@ -229,6 +230,8 @@ namespace DMS_3
 
 
 			Console.WriteLine ("\nTask InsertData done");
+			File.AppendAllText(Data.log_file, "Task InsertData done"+DateTime.Now.ToString("t")+"\n");
+
 		}
 
 		void  ComPosGps ()
@@ -238,6 +241,7 @@ namespace DMS_3
 			//recupation des messages / notifications / POS GPS
 			//maj du badge
 			Console.WriteLine ("\nTask ComPosGps done");
+			File.AppendAllText(Data.log_file, "Task ComPosGps done"+DateTime.Now.ToString("t")+"\n");
 		}
 
 		void  ComWebService ()
@@ -262,6 +266,7 @@ namespace DMS_3
 				}
 			}
 			Console.WriteLine ("\nTask ComWebService done");
+			File.AppendAllText(Data.log_file, "Task ComWebService done"+DateTime.Now.ToString("t")+"\n");
 		}
 
 		public void OnLocationChanged (Android.Locations.Location location)
@@ -280,6 +285,20 @@ namespace DMS_3
 		{
 			
 		}
+		protected override void OnStop()
+		{	
+
+			File.AppendAllText(Data.log_file, "OnStop le "+DateTime.Now.ToString("G")+"\n");
+			base.OnStop();
+		}
+
+		protected override void OnRestart()
+		{	
+
+			File.AppendAllText(Data.log_file, "OnRestart le "+DateTime.Now.ToString("G")+"\n");
+			base.OnRestart();
+		}
+
 	}
 }
 
