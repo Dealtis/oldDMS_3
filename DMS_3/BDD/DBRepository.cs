@@ -177,25 +177,25 @@ namespace DMS_3.BDD
 			return output;
 
 		}
+		//setUserdata
 
-		//USER CHECK LOGIN
-		public string user_login_Transics(string user_AndsoftUserTEXT)
+		public string setUserdata(string UserAndsoft)
 		{		
 			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			string output = string.Empty;
-
-			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUserTEXT));
-
+			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(UserAndsoft));
 			foreach (var item in query) {
-				output = item.user_TransicsUser;
-				Console.WriteLine ("\nUSER CONNECTE" + item.user_TransicsUser);
+				Data.userAndsoft = item.user_AndsoftUser;
+				Data.userTransics = item.user_TransicsUser;
+				output = "setUserdata good";
+				Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
 			}
 			return output;
 
 		}
-
+	
 		//VERIF SI POS DEJA INTEGRER
 		public bool pos_AlreadyExist(string numCommande, string groupage)
 		{

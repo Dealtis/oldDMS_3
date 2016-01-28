@@ -81,8 +81,7 @@ namespace DMS_3
 				if (usercheck) {
 					//UPDATE DE LA BDD AVEC CE USER
 					AndHUD.Shared.ShowSuccess(this, "Bienvenue", MaskType.Black, TimeSpan.FromSeconds(2));
-					Data.userAndsoft = user.Text.ToUpper ();
-					Data.userTransics = dbr.user_login_Transics (user.Text.ToUpper ());
+					dbr.setUserdata (user.Text.ToUpper ());
 					StartActivity(typeof(HomeActivity));
 				} else {
 					AndHUD.Shared.ShowError(this, "Mauvais mot de passe", MaskType.Black, TimeSpan.FromSeconds(2));

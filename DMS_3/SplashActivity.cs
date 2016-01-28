@@ -125,7 +125,9 @@ namespace DMS_3
 					DBRepository dbr = new DBRepository ();
 					var user_Login = dbr.is_user_Log_In();
 					if (!(user_Login==string.Empty)) {
-						Data.userAndsoft = user_Login;
+						//Data.userAndsoft = user_Login;
+						dbr.setUserdata(user_Login);
+						File.AppendAllText(Data.log_file,"Connexion de "+Data.userAndsoft+" à "+DateTime.Now.ToString("t")+"\n");
 						StartActivity(new Intent(Application.Context, typeof (HomeActivity)));
 					}else{
 						StartActivity(new Intent(Application.Context, typeof (MainActivity)));

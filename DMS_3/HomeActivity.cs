@@ -35,11 +35,8 @@ namespace DMS_3
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
 
+
 		String datedujour;
-		String datedujour_day;
-		String datedujour_mouth;
-		String datedujour_hour;
-		String datedujour_minute;
 
 		String posgps;
 
@@ -64,6 +61,10 @@ namespace DMS_3
 			//Mettre le lblTitle: User + versionNumber
 			Context context = this.ApplicationContext;
 			var version = context.PackageManager.GetPackageInfo(context.PackageName, 0).VersionName;
+
+			//click button
+			LinearLayout btn_Livraison = FindViewById<LinearLayout> (Resource.Id.columnlayout1_1);
+			btn_Livraison.Click += delegate { btn_Livraison_Click();};
 
 			//btn deconnexion, userlogin false et update
 
@@ -118,8 +119,8 @@ namespace DMS_3
 							}						
 						).ContinueWith (
 							v => {
-								Console.WriteLine ("\nHello from ComPosGps.");
-								ComPosGps ();//TOUTES LES 2MIN
+								Console.WriteLine ("\nHello from ComPosNotifMsg.");
+								ComPosNotifMsg ();//TOUTES LES 2MIN
 							}
 						);
 					}
@@ -139,32 +140,8 @@ namespace DMS_3
 			DBRepository dbr = new DBRepository ();
 
 
-			//concaténation de la date
-			if (DateTime.Now.Day < 10) {
-				datedujour_day = "0" + DateTime.Now.Day;
-			} else {
-				datedujour_day = (DateTime.Now.Day).ToString();
-			}
 
-			if (DateTime.Now.Month < 10) {
-				datedujour_mouth = "0" + DateTime.Now.Month;
-			} else {
-				datedujour_mouth = (DateTime.Now.Month).ToString();
-			}
-
-			if (DateTime.Now.Hour < 10) {
-				datedujour_hour = "0" + DateTime.Now.Hour;
-			} else {
-				datedujour_hour = (DateTime.Now.Hour).ToString();
-			}
-
-			if (DateTime.Now.Minute < 10) {
-				datedujour_minute = "0" + DateTime.Now.Minute;
-			} else {
-				datedujour_minute = (DateTime.Now.Minute).ToString();
-			}
-
-			datedujour = DateTime.Now.Year + datedujour_mouth + datedujour_mouth + datedujour_day;
+			datedujour = DateTime.Now.ToString("yyyyMMdd");
 
 			//récupération de donnée via le webservice
 			string content_integdata = String.Empty;
@@ -209,9 +186,7 @@ namespace DMS_3
 					string _urlb = "http://dms.jeantettransport.com/api/groupage?voybdx="+ numGroupage+"";
 					var webClient = new WebClient ();
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
-					//webClient.Encoding = Encoding.UTF8;
 					content_grpcloture = webClient.DownloadString (_urlb);
-
 					JsonArray jsonVal = JsonArray.Parse (content_grpcloture) as JsonArray;
 					var jsonArr = jsonVal;
 					foreach (var item in jsonArr) {						
@@ -228,17 +203,17 @@ namespace DMS_3
 
 			}
 
-
 			Console.WriteLine ("\nTask InsertData done");
 			File.AppendAllText(Data.log_file, "Task InsertData done"+DateTime.Now.ToString("t")+"\n");
 
 		}
 
-		void  ComPosGps ()
+		void  ComPosNotifMsg ()
 		{
 			//recupération des messages wervice
 			//insertion en base
 			//recupation des messages / notifications / POS GPS
+			//Post sur le webservice
 			//maj du badge
 			Console.WriteLine ("\nTask ComPosGps done");
 			File.AppendAllText(Data.log_file, "Task ComPosGps done"+DateTime.Now.ToString("t")+"\n");
@@ -299,6 +274,10 @@ namespace DMS_3
 			base.OnRestart();
 		}
 
+		void btn_Livraison_Click ()
+		{
+			StartActivity(typeof(ListeLivraisonsActivity));
+		}
 	}
 }
 

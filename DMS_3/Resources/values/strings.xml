@@ -5,6 +5,9 @@
 	<string name="user">Utilisateur</string>
 	<string name="password">Mot de passe</string>
 	<string name="Valider">Valider</string>
+	<string name="all">#</string>
+
+
 
 
 	<dimen name="dim5">5dp</dimen>
