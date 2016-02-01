@@ -33,6 +33,7 @@ namespace DMS_3.BDD
 				var db = new SQLiteConnection(dbPath);
 				db.CreateTable<TableUser>();
 				db.CreateTable<TablePositions>();
+				db.CreateTable<TableStatutPositions>();
 				Console.Out.WriteLine("\nTable User Crée");
 				string result = "Table crée !";
 				return result;
@@ -139,6 +140,31 @@ namespace DMS_3.BDD
 			}
 		}
 
+		public string insertDataStatutpositions (string codesuiviliv, string statut, string libellesuiviliv,string commandesuiviliv, string memosuiviliv, string datesuiviliv, string datajson)
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				TableStatutPositions item = new TableStatutPositions();
+				item.commandesuiviliv = commandesuiviliv;
+				item.codesuiviliv = codesuiviliv;
+				item.statut = statut;
+				item.libellesuiviliv = libellesuiviliv;
+				item.memosuiviliv = memosuiviliv;
+				item.datesuiviliv = datesuiviliv;
+				item.datajson = datajson;
+				db.Insert(item);
+				return "Insertion good";
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+
+			}
+		}
+
 		//USER CHECK LOGIN
 		public bool user_Check(string user_AndsoftUserTEXT,string user_PasswordTEXT)
 		{		
@@ -160,6 +186,19 @@ namespace DMS_3.BDD
 
 			return output;
 
+		}
+
+		public string updatePosition (int idposition,string statut, string txtAnomalie, string txtRemarque, string codeAnomalie, string imgpath)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = "";
+			var row = db.Get<TablePositions>(idposition);
+			row.StatutLivraison = statut;
+			db.Update(row);
+			output = "UPDATE POSITIONS " + row.Id;
+			return output;
 		}
 
 		//USER CHECK LOGIN

@@ -71,6 +71,9 @@
     <Reference Include="Xamarin.Android.Support.v7.RecyclerView">
       <HintPath>..\packages\Xamarin.Android.Support.v7.RecyclerView.23.1.1.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
     </Reference>
+    <Reference Include="FortySevenDeg.SwipeListView">
+      <HintPath>..\Components\android-swipelistview-2.0.0\lib\android\FortySevenDeg.SwipeListView.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -82,9 +85,11 @@
     <Compile Include="HomeActivity.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="BDD\TablePositions.cs" />
-    <Compile Include="BDD\StatutPositions.cs" />
     <Compile Include="ListeLivraisonsActivity.cs" />
     <Compile Include="ListeEnlevementsActivity.cs" />
+    <Compile Include="ListViewAdapter.cs" />
+    <Compile Include="DetailActivity.cs" />
+    <Compile Include="BDD\TableStatutPositions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -116,6 +121,15 @@
     <AndroidResource Include="Resources\drawable\SBBadgeBG.png" />
     <AndroidResource Include="Resources\drawable\SBBadgeBGUP.png" />
     <AndroidResource Include="Resources\layout\ListeLivraisons.axml" />
+    <AndroidResource Include="Resources\layout\ListeViewRow.axml" />
+    <AndroidResource Include="Resources\layout\ListeViewRowEnlevement.axml" />
+    <AndroidResource Include="Resources\layout\ListeViewRowValide.axml" />
+    <AndroidResource Include="Resources\layout\ListeViewRowAnomalie.axml" />
+    <AndroidResource Include="Resources\layout\ListeViewRowAnomaliePJ.axml" />
+    <AndroidResource Include="Resources\drawable\choice_selected.xml" />
+    <AndroidResource Include="Resources\drawable\choice_unselected.xml" />
+    <AndroidResource Include="Resources\layout\Anomalie.axml" />
+    <AndroidResource Include="Resources\layout\boxsearch.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
@@ -147,6 +161,10 @@
     </XamarinComponentReference>
     <XamarinComponentReference Include="AndroidSwipeLayout">
       <Version>1.2.0.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="android-swipelistview">
+      <Version>2.0.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

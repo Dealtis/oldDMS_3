@@ -73,13 +73,7 @@ namespace DMS_3
 					File.AppendAllText(Data.log_file, ">DMS lancée le "+DateTime.Now.ToString("F")+"\n");
 				
 
-
-
-
-
-
-
-				
+			
 
 					bool App_Connec = false;
 					while (!App_Connec) {

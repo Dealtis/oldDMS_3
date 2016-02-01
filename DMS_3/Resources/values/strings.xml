@@ -6,8 +6,40 @@
 	<string name="password">Mot de passe</string>
 	<string name="Valider">Valider</string>
 	<string name="all">#</string>
+	<string name="trait">Traités</string>
 
-
+	<string-array name="anomalielivraisonlist">
+		<item>Choisir une anomalie</item>
+		<item>Restaure en non traite</item>
+		<item>Livre avec manquant</item>
+		<item>Livre avec reserves pour avaries</item>
+		<item>Livre avec manquants + avaries</item>
+		<item>Livre mais recepisse non rendu</item>
+		<item>Avise (avis de passage)</item>
+		<item>Refuse pour avaries</item>
+		<item>Refuse manquant partiel</item>
+		<item>Refus divers ou sans motifs</item>
+		<item>Refuse livraison trop tardive</item>
+		<item>Refuse manque BL</item>
+		<item>Refuse non commande</item>
+		<item>Refuse cause port du</item>
+		<item>Refuse cause contre remboursement</item>
+		<item>Rendu non liv : compl. adresse</item>
+		<item>Rendu non justifie</item>
+		<item>Fermeture hebdomadaire</item>
+        <item>Non charge</item>
+        <item>Inventaire</item>
+        <item>Refuse manquant partiel</item>
+    </string-array>
+    <string-array name="anomalieramasselist">
+    	<item>Choisir une anomalie</item>
+        <item>Restaure en non traite</item>       
+        <item>Ramasse pas faite</item>
+        <item>Positions non chargees</item>
+        <item>Avis de passage</item>
+        <item>Fermeture hebdomadaire</item>
+        <item>Ramasse diverse</item>
+    </string-array>
 
 
 	<dimen name="dim5">5dp</dimen>

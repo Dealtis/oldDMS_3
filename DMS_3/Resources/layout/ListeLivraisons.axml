@@ -57,4 +57,38 @@
             android:id="@+id/btn_4"
             android:visibility="gone" />
     </LinearLayout>
+    <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bodylist"
+        android:listSelector="#00000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        swipe:swipeFrontView="@+id/front"
+        swipe:swipeBackView="@+id/back"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeMode="left"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeOpenOnLongPress="false"
+        android:layout_weight=".6"
+        swipe:swipeOffsetLeft="@dimen/dim250"
+        swipe:swipeOffsetRight="@dimen/dim250" />
+    <LinearLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim75"
+        android:id="@+id/footer">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_traite"
+            android:text="@string/trait"
+            android:layout_weight=".8" />
+        <Button
+            android:id="@+id/btn_search"
+            android:text="S"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </LinearLayout>

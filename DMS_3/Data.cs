@@ -16,6 +16,9 @@ namespace DMS_3
 		//Log DATA
 		public static string log_file;
 
+		//GPS
+		public static string GPS;
+
 		public static Data Instance
 		{
 			get
@@ -55,6 +58,8 @@ namespace DMS_3
 				return false;
 			}
 		}
+
+
 
 	}
 }

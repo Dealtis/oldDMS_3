@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/layoutanomalie">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1" />
+    <Spinner
+        android:id="@+id/spinnerAnomalie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:phoneNumber="false"
+        android:password="false"
+        android:inputType="textLongMessage" />
+    <ImageView
+        android:src="@android:drawable/ic_menu_gallery"
+        android:layout_width="match_parent"
+        android:id="@+id/imageView1"
+        android:layout_height="223.9dp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+        <Button
+            android:text="Photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/openCamera"
+            android:layout_gravity="bottom"
+            android:layout_alignParentRight="true"
+            android:layout_weight=".5"
+            android:textColor="#ff000000" />
+    </RelativeLayout>
+</LinearLayout>

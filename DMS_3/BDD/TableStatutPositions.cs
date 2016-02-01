@@ -15,14 +15,14 @@ using SQLite;
 
 namespace DMS_3
 {
-	[Table ("StatutPositions")]			
-	public class StatutPositions
+	[Table ("TableStatutPositions")]			
+	public class TableStatutPositions
 	{		
 		//Table StatutPositions
 		[PrimaryKey, AutoIncrement, Column("_Id")]
 		public int Id { get; set; }
 		public String codesuiviliv { get; set; }
-		public int statut { get; set; }
+		public String statut { get; set; }
 		public String commandesuiviliv { get; set; }
 		public String datesuiviliv { get; set; }
 		public String libellesuiviliv { get; set; }

@@ -38,8 +38,6 @@ namespace DMS_3
 
 		String datedujour;
 
-		String posgps;
-
 		LocationManager locMgr;
 
 		bool Is_thread_Running = false;
@@ -68,6 +66,10 @@ namespace DMS_3
 
 			//btn deconnexion, userlogin false et update
 
+			//TEST
+			DBRepository dbr = new DBRepository ();
+			var IntegData = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+			var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",2,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
 		}
 
 		protected override void OnStart()
@@ -126,7 +128,7 @@ namespace DMS_3
 					}
 
 					//30s TODO
-					Thread.Sleep (TimeSpan.FromSeconds (30));
+					Thread.Sleep (TimeSpan.FromMinutes (2));
 				}	
 			
 			}
@@ -225,16 +227,17 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
-			var table = db.Table<StatutPositions> ();
+			var table = db.Table<TableStatutPositions> ();
 
 			foreach (var item in table) {
 				try {
 					string _url = "http://dms.jeantettransport.com/api/livraisongroupage";
 					var webClient = new WebClient ();
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
-					webClient.UploadString (_url, item.datajson);
+					//TODO
+					//webClient.UploadString (_url, item.datajson);
 					//Sup pde la row dans statut pos
-					var row = db.Get<StatutPositions>(item.Id);
+					var row = db.Get<TableStatutPositions>(item.Id);
 					db.Delete(row);
 				} catch (Exception e) {
 					Console.WriteLine (e);
@@ -246,7 +249,7 @@ namespace DMS_3
 
 		public void OnLocationChanged (Android.Locations.Location location)
 		{
-			posgps = location.Latitude.ToString() +";"+ location.Longitude.ToString();
+			Data.GPS = location.Latitude.ToString() +";"+ location.Longitude.ToString();
 		}
 		public void OnProviderDisabled (string provider)
 		{
