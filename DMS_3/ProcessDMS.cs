@@ -24,10 +24,11 @@ using Environment = System.Environment;
 namespace DMS_3
 {
 	[Service]
-	public class ProcessDMS : Service
+	public class ProcessDMS : Service, ILocationListener
 	{
 		System.Threading.Timer _timer;
 		String datedujour;
+		LocationManager locMgr;
 		public override void OnStart (Android.Content.Intent intent, int startId)
 		{
 			base.OnStart (intent, startId);
@@ -35,6 +36,16 @@ namespace DMS_3
 			Log.Debug ("SimpleService", "SimpleService started");
 
 			DoStuff ();
+
+			// initialize location manager
+			locMgr = GetSystemService (Context.LocationService) as LocationManager;
+
+			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
+				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
+				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider, 2000, 1, this);
+			} else {
+				//Toast.MakeText (this, "GPS Désactiver!", ToastLength.Long).Show ();
+			}
 		}
 
 		public override void OnDestroy ()
@@ -87,9 +98,6 @@ namespace DMS_3
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			DBRepository dbr = new DBRepository ();
-
-
-
 			datedujour = DateTime.Now.ToString("yyyyMMdd");
 
 			//récupération de donnée via le webservice
@@ -104,7 +112,7 @@ namespace DMS_3
 				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
 				var jsonArr = jsonVal;
 				foreach (var row in jsonArr) {
-					var checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
+					bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
 					Console.WriteLine ("\n"+checkpos+" "+row["userandsoft"]);
 					if (!checkpos) {
 						var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],Data.userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
@@ -190,6 +198,23 @@ namespace DMS_3
 			}
 			Console.WriteLine ("\nTask ComWebService done");
 			File.AppendAllText(Data.log_file, "Task ComWebService done"+DateTime.Now.ToString("t")+"\n");
+		}
+
+		public void OnLocationChanged (Android.Locations.Location location)
+		{
+			Data.GPS = location.Latitude.ToString() +";"+ location.Longitude.ToString();
+		}
+		public void OnProviderDisabled (string provider)
+		{
+
+		}
+		public void OnProviderEnabled (string provider)
+		{
+
+		}
+		public void OnStatusChanged (string provider, Availability status, Bundle extras)
+		{
+
 		}
 	}
 }

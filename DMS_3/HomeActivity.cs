@@ -24,7 +24,7 @@ using Environment = System.Environment;
 namespace DMS_3
 {
 	[Activity (Label = "HomeActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]			
-	public class HomeActivity : Activity, ILocationListener
+	public class HomeActivity : Activity
 	{
 		TextView lblTitle;
 		TextView peekupBadgeText;
@@ -35,7 +35,7 @@ namespace DMS_3
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
 
-		LocationManager locMgr;
+
 
 		//bool Is_thread_Running = false;
 
@@ -86,37 +86,13 @@ namespace DMS_3
 			base.OnResume();
 			//Afficher ou non les badges
 
-			// initialize location manager
-			locMgr = GetSystemService (Context.LocationService) as LocationManager;
-
-			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
-				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
-				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider, 2000, 1, this);
-			} else {
-				Toast.MakeText (this, "GPS Désactiver!", ToastLength.Long).Show ();
-			}
+		
 
 		
 //			Thread ThreadAppInteg = new Thread(new ThreadStart(this.Threadapp));
 //			ThreadAppInteg.Start();
 		}
 
-		public void OnLocationChanged (Android.Locations.Location location)
-		{
-			Data.GPS = location.Latitude.ToString() +";"+ location.Longitude.ToString();
-		}
-		public void OnProviderDisabled (string provider)
-		{
-			
-		}
-		public void OnProviderEnabled (string provider)
-		{
-
-		}
-		public void OnStatusChanged (string provider, Availability status, Bundle extras)
-		{
-			
-		}
 		protected override void OnStop()
 		{	
 
