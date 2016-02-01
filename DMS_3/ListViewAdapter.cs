@@ -22,6 +22,8 @@ namespace DMS_3
 		EditText EdittxtRem;
 		string txtRem;
 		ImageView _imageView;
+		private AlertDialog.Builder dialog;
+
 		public ListViewAdapterMenu(Context context,List<TablePositions> items) : base() {
 			mItems = items;
 			mContext = context;
@@ -91,7 +93,8 @@ namespace DMS_3
 		}
 		void Btnvalid_Click (int position)
 		{
-			AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+			dialog = new AlertDialog.Builder(mContext);
+			AlertDialog alert = dialog.Create();
 			dialog.SetMessage ("Voulez-vous valider cette position ?");
 			//afficher le cr si CR
 			//afficher le champ mémo
@@ -111,6 +114,7 @@ namespace DMS_3
 				//dismiss la position
 				mItems.RemoveAt(position);
 				NotifyDataSetChanged();
+				alert.Cancel();
 			});
 			dialog.SetNegativeButton("Non", delegate {
 				AndHUD.Shared.ShowError(mContext, "Annulée!", AndroidHUD.MaskType.Clear, TimeSpan.FromSeconds(1));
@@ -120,7 +124,7 @@ namespace DMS_3
 
 		void BtnAnomalie_Click (int position)
 		{
-			AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+			dialog = new AlertDialog.Builder(mContext);
 
 			dialog.SetTitle("Anomalie");
 			var viewAD =  LayoutInflater.From (mContext).Inflate (Resource.Layout.Anomalie, null, false);
@@ -218,6 +222,7 @@ namespace DMS_3
 				//dismiss la position
 				mItems.RemoveAt(position);
 				NotifyDataSetChanged();
+
 			});
 			dialog.SetNegativeButton("Non", delegate {
 				AndHUD.Shared.ShowError(mContext, "Annulée!", AndroidHUD.MaskType.Clear, TimeSpan.FromSeconds(1));
@@ -236,5 +241,8 @@ namespace DMS_3
 				EdittxtRem.Visibility = Android.Views.ViewStates.Visible;
 			}
 		}
+
+
+
 	}
 }

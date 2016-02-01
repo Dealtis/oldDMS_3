@@ -89,7 +89,6 @@ namespace DMS_3
 				//afficher le btn 1 et 2
 				btngrp1.Visibility = ViewStates.Visible;
 				btngrp1.Text = Arraygrp[1];
-
 				btngrp2.Visibility = ViewStates.Visible;
 				btngrp2.Text = Arraygrp[2];
 				break;
@@ -97,10 +96,8 @@ namespace DMS_3
 				//afficher le btn 1,2 et 3
 				btngrp1.Visibility = ViewStates.Visible;
 				btngrp1.Text = Arraygrp[1];
-
 				btngrp2.Visibility = ViewStates.Visible;
 				btngrp2.Text = Arraygrp[2];
-
 				btngrp3.Visibility = ViewStates.Visible;
 				btngrp3.Text = Arraygrp[3];
 				break;
