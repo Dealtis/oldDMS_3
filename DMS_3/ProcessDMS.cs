@@ -84,8 +84,7 @@ namespace DMS_3
 						}
 					);
 				}
-			}
-				, null, 0, 120000);
+			}, null, 0, 120000);
 		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)

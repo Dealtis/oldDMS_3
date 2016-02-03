@@ -146,7 +146,7 @@ namespace DMS_3
 
 			}else{
 				var activity2 = new Intent(this, typeof(DetailActivity));
-				activity2.PutExtra("ID",bodyItems[e.Position].Id);
+				activity2.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
 				string id = Intent.GetStringExtra("ID");
 				StartActivity(activity2);
 			}

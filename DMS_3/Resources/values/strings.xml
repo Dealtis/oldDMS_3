@@ -7,6 +7,11 @@
 	<string name="Valider">Valider</string>
 	<string name="all">#</string>
 	<string name="trait">Traités</string>
+	<string name="commande">Commande</string>
+	<string name="livraison">Livraison</string>
+	<string name="enlevement">Enlevement</string>
+	<string name="client">Client</string>
+	<string name="anomalie">Anomalie</string>
 
 	<string-array name="anomalielivraisonlist">
 		<item>Choisir une anomalie</item>

@@ -42,36 +42,44 @@ namespace DMS_3
 		public override View GetView(int position, View convertView, ViewGroup parent)
 		{
 			View row = convertView;
-
+			LayoutInflater inflater = (LayoutInflater) mContext.GetSystemService(Context.LayoutInflaterService);
+			int xml_type = 0;
 
 			if (row == null) {
-
-
 				switch (mItems [position].StatutLivraison) {
 				default:
 					break;
 				case "0":
 					if (mItems [position].typeMission == "L") {
-						row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRow, null, false);
+						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRow, null, false);
+						xml_type = Resource.Layout.ListeViewRow;
 					} else {
-						row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowEnlevement, null, false);
+						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowRamasse, null, false);
+						xml_type = Resource.Layout.ListeViewRowEnlevement;
 					}
 					break;
 				case "1":
-					row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowValide, null, false);
+					//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowValide, null, false);
+					xml_type = Resource.Layout.ListeViewRowValide;
 					break;
 				case "2":
 					if (mItems [position].imgpath == null) {
-						row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomalie, null, false);
+						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomalie, null, false);
+						xml_type = Resource.Layout.ListeViewRowAnomalie;
 					} else {
-						row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomaliePJ,null,false);
+						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomaliePJ,null,false);
+						xml_type = Resource.Layout.ListeViewRowAnomaliePJ;
 					}
 					break;
 				}
-				if(mItems[position].imgpath == "SUPPLIV"){
+				//if(mItems[position].imgpath == "SUPPLIV"){
+					//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowStroke,null,false);
+					//xml_type = Resource.Layout.ListeViewRowStroke;
 
-				}
+				//}
+				row = inflater.Inflate(xml_type,parent,false);
 			}
+
 			TextView textLeft = row.FindViewById<TextView> (Resource.Id.textleft);
 			TextView textMid = row.FindViewById<TextView> (Resource.Id.textmid);
 			TextView textRight = row.FindViewById<TextView> (Resource.Id.txtright);

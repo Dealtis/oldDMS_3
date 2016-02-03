@@ -161,7 +161,6 @@ namespace DMS_3.BDD
 			catch (Exception ex)
 			{
 				return "Erreur : " + ex.Message;
-
 			}
 		}
 
@@ -181,7 +180,6 @@ namespace DMS_3.BDD
 				row.user_IsLogin = true;
 				db.Update(row);
 				Console.WriteLine ("UPDATE GOOD" + row.user_IsLogin);
-
 			}
 
 			return output;
@@ -270,9 +268,100 @@ namespace DMS_3.BDD
 			return output;
 		}
 
+		//SELECT PAR ID
+		public TablePositions GetPositionsData(int id)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+
+			TablePositions data = new TablePositions ();
+			var item = db.Get<TablePositions>(id);
+			data.codeLivraison = item.codeLivraison;
+			data. numCommande = item.numCommande;
+			data. nomClient = item.nomClient;
+			data. refClient = item.refClient;
+			data. nomPayeur = item.nomPayeur;
+			data. adresseLivraison = item.adresseLivraison;
+			data. CpLivraison = item.CpLivraison;
+			data. villeLivraison = item.villeLivraison;
+			data. dateHeure = item.dateHeure;
+			data. dateExpe = item.dateExpe;
+			data. nbrColis = item.nbrColis;
+			data. nbrPallette = item.nbrPallette;
+			data. poids = item.poids;
+			data. adresseExpediteur = item.adresseExpediteur;
+			data. CpExpediteur = item.CpExpediteur;
+			data. villeExpediteur = item.villeExpediteur;
+			data. nomExpediteur = item.nomExpediteur;
+			data. StatutLivraison = item.StatutLivraison;
+			data .instrucLivraison = item.instrucLivraison;
+			data. groupage = item.groupage;
+			data. ADRLiv = item.ADRLiv;
+			data .ADRGrp = item.ADRGrp;
+			data .planDeTransport = item.planDeTransport;
+			data. typeMission = item.typeMission;
+			data.typeSegment = item.typeSegment;
+			data.CR = item.CR;
+			data .nomClientLivraison = item.nomClientLivraison;
+			data .villeClientLivraison = item.villeClientLivraison;
+			data .Datemission = item.Datemission;
+			data. Ordremission = item.Ordremission;
+
+			data .Userandsoft = item.Userandsoft;
+
+			data .remarque = item.remarque;
+			data .codeAnomalie = item.codeAnomalie;
+			data .libeAnomalie = item.libeAnomalie;
+
+			data.imgpath = item.imgpath;
+			return data;
+		}			
+
+		public int GetidPrev (int id)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			int idprev;
+			//get int ordremission
+			var item = db.Get<TablePositions>(id);
+			idprev = (item.Ordremission) - 1;
+			//getordremission -1
+			var query = db.Table<TablePositions>().Where (v => v.Ordremission.Equals(idprev));
+			//getordremission -1
+			foreach (var row in query) {
+				idprev = row.Id;
+			}
+			if (idprev < 0) {
+				idprev = 0;
+			}
+			return 	idprev;
+		}
+
+		public int GetidNext (int id)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			int idnext;
+			//get int ordremission
+			var item = db.Get<TablePositions>(id);
+			idnext = (item.Ordremission)+ 1;
+			var query = db.Table<TablePositions>().Where (v => v.Ordremission.Equals(idnext));
+			//getordremission -1
+
+			foreach (var row in query) {
+				idnext = row.Id;
+			}
+
+			if (idnext < 0) {
+				idnext = 0;
+			}
+			return 	idnext;
 
 
 
-			
+		}
 	}
 }

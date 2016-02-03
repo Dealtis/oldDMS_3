@@ -20,6 +20,7 @@ using Java.Text;
 using DMS_3.BDD;
 using SQLite;
 using Environment = System.Environment;
+using Android.Support.V4;
 
 namespace DMS_3
 {
@@ -63,11 +64,12 @@ namespace DMS_3
 
 			//btn deconnexion, userlogin false et update
 
+
 			//TEST
 			DBRepository dbr = new DBRepository ();
-			var IntegData = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
-			var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",2,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
-		
+			var IntegData = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",0,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+			var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+			var IntegData2 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",2,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
 			//LANCEMENT DU SERVICE
 			StartService (new Intent (this, typeof(ProcessDMS)));
 		
