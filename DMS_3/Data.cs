@@ -1,7 +1,13 @@
 ﻿using System;
 using System.IO;
+using Java.IO;
 using System.Net;
+using Android.Graphics;
+using System.Threading;
+using File = System.IO.File;
+using Console = System.Console;
 
+using Xamarin;
 namespace DMS_3
 {
 	class Data
@@ -19,6 +25,11 @@ namespace DMS_3
 		//GPS
 		public static string GPS;
 
+		//PHOTO
+		public static Java.IO.File _file;
+		public static Java.IO.File _dir;
+		public static Bitmap bitmap;
+
 		public static Data Instance
 		{
 			get
@@ -31,7 +42,7 @@ namespace DMS_3
 			}
 		}
 
-		public bool  UploadFile(string FtpUrl, string fileName, string userName, string password,string UploadDirectory="")
+		public bool  UploadFile(string FtpUrl, string fileName, string userName, string password,string UploadDirectory)
 		{
 			try{
 				string PureFileName = new FileInfo(fileName).Name;
@@ -53,8 +64,11 @@ namespace DMS_3
 				return true;
 
 			} catch (Exception ex) {
+				Insights.Report(ex);
 				File.AppendAllText(Data.log_file,"Upload file"+fileName+" error :"+ex+"\n");
 				Console.Out.Write("Upload file"+fileName+" error\n");
+				Thread.Sleep(TimeSpan.FromMinutes(2));
+				UploadFile (FtpUrl, fileName, userName, password, UploadDirectory);
 				return false;
 			}
 		}

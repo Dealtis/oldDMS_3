@@ -16,9 +16,9 @@ using SQLite;
 using AndroidHUD;
 namespace DMS_3
 {
-	
-	[Activity (Label = "ListeLivraisonsActivity",Theme = "@android:style/Theme.Black.NoTitleBar", NoHistory = true)]			
-	public class ListeLivraisonsActivity : Activity
+
+	[Activity (Label = "ListeTraitee",Theme = "@android:style/Theme.Black.NoTitleBar")]			
+	public class ListeTraitee : Activity
 	{	
 
 		string[] Arraygrp = new string[10];
@@ -28,23 +28,17 @@ namespace DMS_3
 		public bool insertdone;
 		public ListViewAdapterMenu adapter;
 
-		Button btngrpAll;
-		Button btngrp1;
-		Button btngrp2;
-		Button btngrp3;
-		Button btngrp4;
-
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 
 			SetContentView (Resource.Layout.ListeLivraisons);
 			//declaration des clicks btns
-			btngrpAll = FindViewById<Button> (Resource.Id.btn_all);
-			btngrp1 = FindViewById<Button> (Resource.Id.btn_1);
-			btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
-			btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
-			btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
+			Button btngrpAll = FindViewById<Button> (Resource.Id.btn_all);
+			Button btngrp1 = FindViewById<Button> (Resource.Id.btn_1);
+			Button btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
+			Button btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
+			Button btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
 			Button btnsearch = FindViewById<Button> (Resource.Id.btn_search);
 			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
 
@@ -68,18 +62,11 @@ namespace DMS_3
 			};
 
 
-
-
-		}
-
-		protected override void OnResume()
-		{
-			base.OnResume();
 			//Mise dans un Array des Groupage
 			string dbPath = System.IO.Path.Combine(System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
-			var grp = db.Query<TablePositions> ("SELECT * FROM TablePositions WHERE StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ?  GROUP BY groupage",0,"L","LIV",Data.userAndsoft);
+			var grp = db.Query<TablePositions> ("SELECT * FROM TablePositions WHERE StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ? OR StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ?  GROUP BY groupage",1,"L","LIV",Data.userAndsoft,2,"L","LIV",Data.userAndsoft);
 
 			int i = 1;
 			int countGrp = 0;
@@ -151,8 +138,10 @@ namespace DMS_3
 			bodyListView.Adapter = adapter;
 
 			//bodyListView.ItemClick += MListView_ItemClick;
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= 'L' AND typeSegment= 'LIV'  AND Userandsoft = '"+Data.userAndsoft+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
+
 		}
+
 
 		void HandleFrontViewClicked (object sender, SwipeListViewClickedEventArgs e)
 		{
@@ -174,27 +163,27 @@ namespace DMS_3
 
 		void btngrpAll_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= 'L' AND typeSegment= 'LIV'  AND Userandsoft = '"+Data.userAndsoft+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp1_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= 'L' AND typeSegment= 'LIV'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[1]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[1]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[1]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp2_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= 'L' AND typeSegment= 'LIV'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[2]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[2]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[2]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp3_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= 'L' AND typeSegment= 'LIV'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[3]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[3]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[3]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp4_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= 'L' AND typeSegment= 'LIV'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[4]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[4]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[4]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btnsearch_Click ()
@@ -219,9 +208,7 @@ namespace DMS_3
 
 		void btntrait_Click ()
 		{
-			Intent intent = new Intent (this, typeof(ListeTraitee));
-			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_fade_in,Resource.Animation.abc_fade_out);
+			StartActivity(typeof(ListeLivraisonsActivity));
 		}
 
 		public void initListView (string requete)
@@ -267,7 +254,7 @@ namespace DMS_3
 		{		
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
+			this.OverridePendingTransition (Resource.Animation.abc_fade_in,Resource.Animation.abc_fade_out);
 		}
 	}
 }

@@ -12,11 +12,12 @@ using Android.Preferences;
 
 using AndroidHUD;
 using System.Json;
+using Xamarin;
 
 
 namespace DMS_3
 {
-	[Activity (Label = "DMS_3", Icon = "@mipmap/icon",ConfigurationChanges=Android.Content.PM.ConfigChanges.Orientation)]
+	[Activity (Label = "DMS_3", Icon = "@mipmap/icon",ConfigurationChanges=Android.Content.PM.ConfigChanges.Orientation, NoHistory = true)]
 	public class MainActivity : Activity
 	{
 		Button btn_Login;
@@ -121,7 +122,7 @@ namespace DMS_3
 					}
 				} catch (System.Exception ex) {
 					System.Console.WriteLine (ex);
-
+					Insights.Report(ex);
 					AndHUD.Shared.ShowError(this, "Une erreur c'est produite", MaskType.Black, TimeSpan.FromSeconds(5));
 				}
 			}else{

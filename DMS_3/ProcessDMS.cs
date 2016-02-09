@@ -21,6 +21,9 @@ using DMS_3.BDD;
 using Java.Text;
 using SQLite;
 using Environment = System.Environment;
+using Xamarin;
+using Android.Media;
+
 namespace DMS_3
 {
 	[Service]
@@ -32,8 +35,6 @@ namespace DMS_3
 		public override void OnStart (Android.Content.Intent intent, int startId)
 		{
 			base.OnStart (intent, startId);
-
-			Log.Debug ("SimpleService", "SimpleService started");
 
 			DoStuff ();
 
@@ -100,7 +101,7 @@ namespace DMS_3
 			datedujour = DateTime.Now.ToString("yyyyMMdd");
 
 			//récupération de donnée via le webservice
-			string content_integdata = String.Empty;
+			string content_integdata = "[]";
 			try {
 				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + Data.userTransics + "&datecommande=" + datedujour + "";
 				var webClient = new WebClient ();
@@ -122,8 +123,14 @@ namespace DMS_3
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
+				Insights.Report(ex);
 			}
 
+			//SON
+			if (content_integdata == "[]") {
+			} else {
+				alert ();
+			}
 
 			//maj des badges fonctions
 			//TODO
@@ -153,6 +160,7 @@ namespace DMS_3
 				catch (Exception ex) {
 					content_grpcloture = "[]";
 					Console.WriteLine ("\n"+ex);
+					Insights.Report(ex);
 				}
 
 			}
@@ -164,14 +172,134 @@ namespace DMS_3
 
 		void  ComPosNotifMsg ()
 		{
-			//recupération des messages wervice
+			//recupération des messages webservice
 			//insertion en base
 			//recupation des messages / notifications / POS GPS
 			//Post sur le webservice
 			//maj du badge
+
+				//API GPS OK
+				string _url = "http://dms.jeantettransport.com/api/leslie";
+				string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
+					(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection (dbPath);
+
+				DBRepository dbr = new DBRepository ();
+				var webClient = new WebClient ();
+
+				try {
+
+				string content_msg = String.Empty;
+					//ROUTINE INTEG MESSAGE
+					try {
+					
+						//API LIVRER OK
+						string _urlb = "http://dms.jeantettransport.com/api/leslie?codechauffeur=" + Data.userAndsoft +"";
+						var webClientb = new WebClient ();
+						webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
+						//webClient.Encoding = Encoding.UTF8;
+
+						content_msg = webClientb.DownloadString (_urlb);
+					} catch (Exception ex) {
+						content_msg = "[]";
+						Insights.Report (ex,Xamarin.Insights.Severity.Error);
+
+					}
+
+				JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
+					var jsonarr = jsonVal;
+					foreach (var item in jsonarr) {
+					switch(item ["texteMessage"].ToString().Substring(0,9))
+						{
+						case "%%SUPPLIV":
+						var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+						dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+						dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, Convert.ToInt32 (item ["numMessage"].ToString()));
+							break;
+						case "%%RETOLIV":
+						var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+						var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+							break;
+						case "%%SUPPGRP":
+						var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+						var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+							break;
+						case "%%GETFLOG":
+							//Thread thread = new Thread(() => UploadFile("ftp://77.158.93.75",ApplicationData.log_file,"DMS","Linuxr00tn",""));
+							Thread thread = new Thread(() => Data.Instance.UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
+							thread.Start ();
+							break;
+						default:
+						var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1, Convert.ToInt32 (item ["numMessage"].ToString()));
+						var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now, Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+							alertsms ();
+						Console.WriteLine (item ["numMessage"].ToString());
+							Console.WriteLine (resinteg);
+							break;
+						}
+					}
+
+				String datajson = string.Empty;
+				String datagps=string.Empty;;
+				String datamsg=string.Empty;;
+				String datanotif=string.Empty;;
+
+
+
+				datagps = "{\"posgps\":\"" + Data.GPS + "\",\"userandsoft\":\"" + Data.userAndsoft + "\"}";
+
+				var tablestatutmessage = db.Query<TableNotifications> ("SELECT * FROM TableNotifications");
+
+				//SEND NOTIF
+				foreach (var item in tablestatutmessage) {
+					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.numMessage+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
+				}
+
+				//SEND MESSAGE
+				var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2");
+				foreach (var item in tablemessage) {
+					datamsg += "{\"codeChauffeur\":\"" + item.codeChauffeur + "\",\"texteMessage\":\"" + item.texteMessage + "\",\"utilisateurEmetteur\":\""+item.utilisateurEmetteur+"\",\"dateImportMessage\":\""+item.dateImportMessage+"\",\"typeMessage\":\""+item.typeMessage+"\"},";
+
+				}
+				if(datanotif == ""){
+					datanotif ="{}";
+				}else{
+					datanotif = datanotif.Remove(datanotif.Length - 1);
+				}
+				if(datamsg == ""){
+					datamsg ="{}";
+				}else{
+					datamsg = datamsg.Remove(datamsg.Length - 1);
+				}
+
+				datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+
+				//API MSG/NOTIF/GPS
+
+					try{
+						webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+						webClient.UploadString (_url,datajson);
+						foreach (var item in tablestatutmessage) {
+							var resultdelete = dbr.deletenotif(item.Id);
+						}
+						foreach (var item in tablemessage) {
+							var updatestatutmessage = db.Query<Message> ("UPDATE Message SET statutMessage = 3 WHERE _Id = ?",item.Id);
+						}
+					}
+					catch (Exception e)
+					{
+						Insights.Report (e,Xamarin.Insights.Severity.Error);
+					}
+
+
+				} catch (Exception ex) {
+					Insights.Report (ex,Xamarin.Insights.Severity.Error);
+					Console.Out.Write(ex);
+				}
 			Console.WriteLine ("\nTask ComPosGps done");
 			File.AppendAllText(Data.log_file, "Task ComPosGps done"+DateTime.Now.ToString("t")+"\n");
 		}
+		
 
 		void  ComWebService ()
 		{
@@ -193,6 +321,7 @@ namespace DMS_3
 					db.Delete(row);
 				} catch (Exception e) {
 					Console.WriteLine (e);
+					Insights.Report(e);
 				}
 			}
 			Console.WriteLine ("\nTask ComWebService done");
@@ -214,6 +343,22 @@ namespace DMS_3
 		public void OnStatusChanged (string provider, Availability status, Bundle extras)
 		{
 
+		}
+
+		public void alert()
+		{
+
+			MediaPlayer _player;
+			_player = MediaPlayer.Create(this,Resource.Raw.beep4);
+			_player.Start();
+		}
+
+		public void alertsms()
+		{
+
+			MediaPlayer _player;
+			_player = MediaPlayer.Create(this,Resource.Raw.msg3);
+			_player.Start();
 		}
 	}
 }

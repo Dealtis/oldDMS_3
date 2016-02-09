@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/layoutlistlivraison"
+    android:background="#ffffffff">
+<!--    android:drawableLeft="@drawable/plushuitmille"
+            android:drawablePadding="-15dip"
+
+            android:drawableLeft="@drawable/moinshuitmille"
+            android:drawablePadding="-15dip-->
+<!-- Content here -->
+    <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listViewBox"
+        android:layout_weight=".8"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/editnewmsg"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/btnsend"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</LinearLayout>

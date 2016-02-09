@@ -63,7 +63,7 @@ namespace DMS_3
 					xml_type = Resource.Layout.ListeViewRowValide;
 					break;
 				case "2":
-					if (mItems [position].imgpath == null) {
+					if (mItems [position].imgpath == null || mItems [position].imgpath == "") {
 						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomalie, null, false);
 						xml_type = Resource.Layout.ListeViewRowAnomalie;
 					} else {
@@ -86,13 +86,13 @@ namespace DMS_3
 			Button btnvalid = row.FindViewById<Button> (Resource.Id.btn_valider);
 			Button btnanomalie = row.FindViewById<Button> (Resource.Id.btn_anomalie);
 
-			btnvalid.Click += delegate {
-				Btnvalid_Click(position);
-			};
+//			btnvalid.Click += delegate {
+//				Btnvalid_Click(position);
+//			};
 
-			btnanomalie.Click += delegate {
-				BtnAnomalie_Click(position);
-			};
+//			btnanomalie.Click += delegate {
+//				BtnAnomalie_Click(position);
+//			};
 
 			textLeft.Text = "OT: "+mItems[position].numCommande+" "+mItems[position].planDeTransport;
 			textMid.Text = mItems[position].CpLivraison+"."+mItems[position].villeLivraison+"\tCol: "+mItems[position].nbrColis+" Pal:"+mItems[position].nbrPallette;

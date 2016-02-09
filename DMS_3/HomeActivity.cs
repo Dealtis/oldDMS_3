@@ -21,6 +21,7 @@ using DMS_3.BDD;
 using SQLite;
 using Environment = System.Environment;
 using Android.Support.V4;
+using Xamarin;
 
 namespace DMS_3
 {
@@ -60,7 +61,9 @@ namespace DMS_3
 
 			//click button
 			LinearLayout btn_Livraison = FindViewById<LinearLayout> (Resource.Id.columnlayout1_1);
+			LinearLayout btn_Message = FindViewById<LinearLayout> (Resource.Id.columnlayout2_1);
 			btn_Livraison.Click += delegate { btn_Livraison_Click();};
+			btn_Message.Click += delegate { btn_Message_Click();};
 
 			//btn deconnexion, userlogin false et update
 
@@ -68,8 +71,12 @@ namespace DMS_3
 			//TEST
 			DBRepository dbr = new DBRepository ();
 			var IntegData = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",0,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
-			var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
-			var IntegData2 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",2,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+			//var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+			//var IntegData2 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",2,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+
+			//Xamarin Insight
+			Insights.Initialize("d3afeb59463d5bdc09194186b94fc991016faf1f", this);
+			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 			//LANCEMENT DU SERVICE
 			StartService (new Intent (this, typeof(ProcessDMS)));
 		
@@ -86,13 +93,6 @@ namespace DMS_3
 		protected override void OnResume()
 		{
 			base.OnResume();
-			//Afficher ou non les badges
-
-		
-
-		
-//			Thread ThreadAppInteg = new Thread(new ThreadStart(this.Threadapp));
-//			ThreadAppInteg.Start();
 		}
 
 		protected override void OnStop()
@@ -103,15 +103,23 @@ namespace DMS_3
 		}
 
 		protected override void OnRestart()
-		{	
-
+		{
 			File.AppendAllText(Data.log_file, "OnRestart le "+DateTime.Now.ToString("G")+"\n");
 			base.OnRestart();
 		}
 
 		void btn_Livraison_Click ()
 		{
-			StartActivity(typeof(ListeLivraisonsActivity));
+			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+			this.StartActivity (intent);
+			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+		}
+
+		void btn_Message_Click ()
+		{
+			Intent intent = new Intent (this, typeof(MessageActivity));
+			this.StartActivity (intent);
+			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 	}
 }

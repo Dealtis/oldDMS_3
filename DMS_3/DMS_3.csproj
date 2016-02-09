@@ -12,10 +12,10 @@
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>DMS_3</AssemblyName>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,12 +86,16 @@
     <Compile Include="Data.cs" />
     <Compile Include="BDD\TablePositions.cs" />
     <Compile Include="ListeLivraisonsActivity.cs" />
-    <Compile Include="ListeEnlevementsActivity.cs" />
     <Compile Include="ListViewAdapter.cs" />
     <Compile Include="DetailActivity.cs" />
     <Compile Include="BDD\TableStatutPositions.cs" />
     <Compile Include="ProcessDMS.cs" />
     <Compile Include="AnomalieActivity.cs" />
+    <Compile Include="ListeTraitee.cs" />
+    <Compile Include="BDD\TableNotifications.cs" />
+    <Compile Include="BDD\TableMessages.cs" />
+    <Compile Include="MessageActivity.cs" />
+    <Compile Include="ListeViewMessageAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -134,10 +138,18 @@
     <AndroidResource Include="Resources\layout\boxsearch.axml" />
     <AndroidResource Include="Resources\layout\DetailPosition.axml" />
     <AndroidResource Include="Resources\layout\swipe.axml" />
+    <AndroidResource Include="Resources\Raw\beep4.mp3" />
+    <AndroidResource Include="Resources\Raw\msg3.mp3" />
+    <AndroidResource Include="Resources\anim\slideIn_right.xml" />
+    <AndroidResource Include="Resources\layout\ChatLayout.axml" />
+    <AndroidResource Include="Resources\layout\RowLeft.axml" />
+    <AndroidResource Include="Resources\layout\RowRight.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
     <Folder Include="BDD\" />
+    <Folder Include="Resources\Raw\" />
+    <Folder Include="Resources\anim\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.11.3\build\MonoAndroid10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.3\build\MonoAndroid10\Xamarin.Insights.targets')" />

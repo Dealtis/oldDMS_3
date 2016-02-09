@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using SQLite;
 using Android.Graphics;
+using Xamarin;
 
 namespace DMS_3.BDD
 {		
@@ -34,13 +35,15 @@ namespace DMS_3.BDD
 				db.CreateTable<TableUser>();
 				db.CreateTable<TablePositions>();
 				db.CreateTable<TableStatutPositions>();
+				db.CreateTable<TableMessages>();
+				db.CreateTable<TableNotifications>();
 				Console.Out.WriteLine("\nTable User Crée");
 				string result = "Table crée !";
 				return result;
 			}
 			catch (Exception ex)
 			{	
-
+				Insights.Report(ex);
 				return "Erreur : " + ex.Message;
 
 			}
@@ -82,6 +85,7 @@ namespace DMS_3.BDD
 			}
 			catch (Exception ex)
 			{
+				Insights.Report(ex);
 				return "Erreur : " + ex.Message;
 
 			}
@@ -136,10 +140,61 @@ namespace DMS_3.BDD
 			catch (Exception ex)
 			{
 				return "Erreur : " + ex.Message;
+			}
+		}
+
+
+		//Insertion des données Message
+
+		public string InsertDataMessage(string codeChauffeur,string utilisateurEmetteur, string texteMessage, int statutMessage, DateTime dateImportMessage, int typeMessage, int numMessage)
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				TableMessages item = new TableMessages();
+				item.codeChauffeur = codeChauffeur;
+				item.utilisateurEmetteur =  utilisateurEmetteur;				
+				item.texteMessage = texteMessage;
+				item.statutMessage = statutMessage;
+				item.dateImportMessage = dateImportMessage;
+				item.typeMessage = typeMessage;
+				item.numMessage = numMessage;
+				db.Insert(item);
+				return "Insertion good";
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
 
 			}
 		}
 
+		//Insertion des données STATUT MESSAGE
+		public string InsertDataStatutMessage(int statutNotificationMessage, DateTime dateNotificationMessage, int numMessage, string numCommande, string groupage)
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				TableNotifications item = new TableNotifications();
+				item.statutNotificationMessage = statutNotificationMessage;
+				item.dateNotificationMessage =  dateNotificationMessage;				
+				item.numMessage = numMessage;
+				item.numCommande = numCommande;
+				item.groupage = groupage;
+				db.Insert(item);
+				return "\n"+statutNotificationMessage+" "+numCommande;
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+
+			}
+
+		}
 		public string insertDataStatutpositions (string codesuiviliv, string statut, string libellesuiviliv,string commandesuiviliv, string memosuiviliv, string datesuiviliv, string datajson)
 		{
 			try
@@ -268,6 +323,25 @@ namespace DMS_3.BDD
 			return output;
 		}
 
+		//supp notification
+		public string deletenotif(int id)
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal),"ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				db.Delete<TableNotifications>(id);
+				string result = "delete";
+				return result;
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+
+			}
+		}
+
 		//SELECT PAR ID
 		public TablePositions GetPositionsData(int id)
 		{
@@ -362,6 +436,19 @@ namespace DMS_3.BDD
 
 
 
+		}
+
+		public string updateposimgpath (int i, string path)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = "";
+			var row = db.Get<TablePositions>(i);
+			row.imgpath = path;
+			db.Update(row);
+			output = "UPDATE POSITIONS " + row.Id;
+			return output;
 		}
 	}
 }
