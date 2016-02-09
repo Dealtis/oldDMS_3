@@ -101,7 +101,7 @@ namespace DMS_3
 			datedujour = DateTime.Now.ToString("yyyyMMdd");
 
 			//récupération de donnée via le webservice
-			string content_integdata = "[]";
+			string content_integdata = String.Empty;
 			try {
 				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + Data.userTransics + "&datecommande=" + datedujour + "";
 				var webClient = new WebClient ();
@@ -111,14 +111,23 @@ namespace DMS_3
 				//intégration des données dans la BDD
 				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
 				var jsonArr = jsonVal;
-				foreach (var row in jsonArr) {
-					bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
-					Console.WriteLine ("\n"+checkpos+" "+row["userandsoft"]);
-					if (!checkpos) {
-						var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],Data.userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
-						Console.WriteLine ("\n"+IntegUser);
+				if (content_integdata != "[]") {
+					foreach (var row in jsonArr) {
+						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
+						Console.WriteLine ("\n"+checkpos+" "+row["userandsoft"]);
+						if (!checkpos) {
+							var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],Data.userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
+							Console.WriteLine ("\n"+IntegUser);
+						}
 					}
 				}
+
+				//SON
+				if (content_integdata == "[]") {
+				} else {
+					alert ();
+				}
+
 
 			} catch (Exception ex) {
 				content_integdata = "[]";
@@ -126,11 +135,7 @@ namespace DMS_3
 				Insights.Report(ex);
 			}
 
-			//SON
-			if (content_integdata == "[]") {
-			} else {
-				alert ();
-			}
+
 
 			//maj des badges fonctions
 			//TODO
@@ -225,7 +230,7 @@ namespace DMS_3
 						var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
 							break;
 						case "%%GETFLOG":
-							//Thread thread = new Thread(() => UploadFile("ftp://77.158.93.75",ApplicationData.log_file,"DMS","Linuxr00tn",""));
+							//("ftp://77.158.93.75");
 							Thread thread = new Thread(() => Data.Instance.UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
 							thread.Start ();
 							break;
