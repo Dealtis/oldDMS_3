@@ -467,9 +467,6 @@ namespace DMS_3.BDD
 			Data.Instance.setEnlevementIndicator (cRam);
 			Data.Instance.setMessageIndicator (cMsg);
 			return 	0;
-
-
-
 		}
 	}
 }

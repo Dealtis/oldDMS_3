@@ -102,8 +102,7 @@ namespace DMS_3
 
 			//récupération de donnée via le webservice
 			string content_integdata = String.Empty;
-			try {
-				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + Data.userTransics + "&datecommande=" + datedujour + "";
+			try {				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + Data.userTransics + "&datecommande=" + datedujour + "";
 				var webClient = new WebClient ();
 				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 				content_integdata = webClient.DownloadString (_url);
@@ -114,7 +113,6 @@ namespace DMS_3
 				if (content_integdata != "[]") {
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
-						Console.WriteLine ("\n"+checkpos+" "+row["userandsoft"]);
 						if (!checkpos) {
 							var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],Data.userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
 							Console.WriteLine ("\n"+IntegUser);
