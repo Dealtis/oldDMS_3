@@ -172,7 +172,6 @@ namespace DMS_3
 				} catch (Exception ex) {
 					
 				}
-
 				}
 			);
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));

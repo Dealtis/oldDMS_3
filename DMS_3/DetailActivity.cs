@@ -29,6 +29,7 @@ namespace DMS_3
 		int i;
 		int idprev;
 		int idnext;
+
 		TablePositions data;
 
 		TextView codelivraison;

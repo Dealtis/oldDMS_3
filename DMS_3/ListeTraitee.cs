@@ -41,7 +41,7 @@ namespace DMS_3
 			Button btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
 			Button btnsearch = FindViewById<Button> (Resource.Id.btn_search);
 			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
-
+			btntrait.Text = "Livraisons";
 			btngrpAll.Click += delegate {
 				btngrpAll_Click();
 			};
@@ -208,7 +208,9 @@ namespace DMS_3
 
 		void btntrait_Click ()
 		{
-			StartActivity(typeof(ListeLivraisonsActivity));
+			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+			this.StartActivity (intent);
+			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
 		}
 
 		public void initListView (string requete)

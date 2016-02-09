@@ -143,7 +143,7 @@ namespace DMS_3
 			_imageView = viewAD.FindViewById<ImageView>(Resource.Id.imageView1);
 			Button button = viewAD.FindViewById<Button>(Resource.Id.openCamera);
 
-			//todo prise de photo
+
 			_imageView.Visibility = ViewStates.Gone;
 			button.Visibility = ViewStates.Gone;
 

@@ -221,7 +221,7 @@ namespace DMS_3
 		{
 			Intent intent = new Intent (this, typeof(ListeTraitee));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_fade_in,Resource.Animation.abc_fade_out);
+			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
 		public void initListView (string requete)
