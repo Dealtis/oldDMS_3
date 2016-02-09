@@ -1,27 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Json;
+using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.Net;
-using System.Net;
 using Android.App;
 using Android.Content;
+using Android.Locations;
+using Android.Net;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4;
 using Android.Views;
 using Android.Widget;
-using Android.Locations;
-using System.Json;
-using Java.Text;
+using AndroidHUD;
 using DMS_3.BDD;
+using Java.Text;
 using SQLite;
-using Environment = System.Environment;
-using Android.Support.V4;
 using Xamarin;
+using Environment = System.Environment;
 
 namespace DMS_3
 {
@@ -63,6 +64,7 @@ namespace DMS_3
 			LinearLayout btn_Livraison = FindViewById<LinearLayout> (Resource.Id.columnlayout1_1);
 			LinearLayout btn_Message = FindViewById<LinearLayout> (Resource.Id.columnlayout2_1);
 			btn_Livraison.Click += delegate { btn_Livraison_Click();};
+			btn_Livraison.LongClick += Btn_Livraison_LongClick;
 			btn_Message.Click += delegate { btn_Message_Click();};
 
 			//btn deconnexion, userlogin false et update
@@ -80,6 +82,21 @@ namespace DMS_3
 			//LANCEMENT DU SERVICE
 			StartService (new Intent (this, typeof(ProcessDMS)));
 		
+		}
+
+		void Btn_Livraison_LongClick (object sender, View.LongClickEventArgs e)
+		{
+			
+			RunOnUiThread (() => {
+				try {
+					Data.Instance.InsertData ();
+					AndHUD.Shared.ShowSuccess(this, "Mise à jour réussite!", MaskType.Clear, TimeSpan.FromSeconds(2));
+				} catch (Exception ex) {
+					Console.WriteLine ("\n"+ex);
+					AndHUD.Shared.ShowError(this, "Error : "+ex, MaskType.Black, TimeSpan.FromSeconds(2));
+				}
+			}
+			);
 		}
 
 		protected override void OnStart()

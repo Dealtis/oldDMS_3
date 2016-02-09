@@ -6,8 +6,12 @@ using Android.Graphics;
 using System.Threading;
 using File = System.IO.File;
 using Console = System.Console;
-
+using SQLite;
+using DMS_3.BDD;
 using Xamarin;
+using System.Json;
+using Android.Media;
+
 namespace DMS_3
 {
 	class Data
@@ -29,7 +33,7 @@ namespace DMS_3
 		public static Java.IO.File _file;
 		public static Java.IO.File _dir;
 		public static Bitmap bitmap;
-
+		String datedujour;
 		public static Data Instance
 		{
 			get
@@ -73,8 +77,77 @@ namespace DMS_3
 			}
 		}
 
+		public void  InsertData ()
+		{	
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			DBRepository dbr = new DBRepository ();
+			datedujour = DateTime.Now.ToString("yyyyMMdd");
 
+			//récupération de donnée via le webservice
+			string content_integdata = "[]";
+			try {
+				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + Data.userTransics + "&datecommande=" + datedujour + "";
+				var webClient = new WebClient ();
+				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+				content_integdata = webClient.DownloadString (_url);
+				Console.Out.WriteLine ("\nWebclient integdata Terminé");
+				//intégration des données dans la BDD
+				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
+				var jsonArr = jsonVal;
+				foreach (var row in jsonArr) {
+					bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
+					Console.WriteLine ("\n"+checkpos+" "+row["userandsoft"]);
+					if (!checkpos) {
+						var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],Data.userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
+						Console.WriteLine ("\n"+IntegUser);
+					}
+				}
 
+			} catch (Exception ex) {
+				content_integdata = "[]";
+				Console.WriteLine ("\n"+ex);
+				Insights.Report(ex);
+			}
+
+			//maj des badges fonctions
+			//TODO
+
+			//verification des groupages et suppression des cloturer
+
+			//select des grp's
+			string content_grpcloture = String.Empty;
+			var tablegroupage = db.Query<TablePositions> ("SELECT groupage FROM TablePositions group by groupage");
+			foreach (var row in tablegroupage)
+			{
+				string numGroupage = row.groupage;
+				try {
+					string _urlb = "http://dms.jeantettransport.com/api/groupage?voybdx="+ numGroupage+"";
+					var webClient = new WebClient ();
+					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+					content_grpcloture = webClient.DownloadString (_urlb);
+					JsonArray jsonVal = JsonArray.Parse (content_grpcloture) as JsonArray;
+					var jsonArr = jsonVal;
+					foreach (var item in jsonArr) {						
+						if (item["numCommande"] == "CLO") {
+							//suppression du groupage en question si clo
+							var suppgrp = dbr.supp_grp(numGroupage);
+						}
+					}
+				}
+				catch (Exception ex) {
+					content_grpcloture = "[]";
+					Console.WriteLine ("\n"+ex);
+					Insights.Report(ex);
+				}
+
+			}
+
+			Console.WriteLine ("\nTask InsertData done");
+			File.AppendAllText(Data.log_file, "Task InsertData done"+DateTime.Now.ToString("t")+"\n");
+
+		}
 	}
 }
 

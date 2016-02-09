@@ -168,9 +168,9 @@ namespace DMS_3
 						rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg,100, fs);
 					}
 					Data.Instance.UploadFile("ftp://77.158.93.75",compImg,"DMS","Linuxr00tn","");
-					
+
 				} catch (Exception ex) {
-					
+					Console.WriteLine ("\n"+ex);
 				}
 				}
 			);
