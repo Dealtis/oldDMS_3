@@ -34,6 +34,12 @@ namespace DMS_3
 		public static Java.IO.File _dir;
 		public static Bitmap bitmap;
 		String datedujour;
+
+		//BADGES
+		private int livraisonIndicator;
+		private int enlevementIndicator;
+		private int messageIndicator;
+
 		public static Data Instance
 		{
 			get
@@ -44,6 +50,29 @@ namespace DMS_3
 				}
 				return instance;
 			}
+		}
+		public int getLivraisonIndicator()
+		{ return livraisonIndicator; }
+
+		public void setLivraisonIndicator (int _livraisonIndicator)
+		{
+			livraisonIndicator = _livraisonIndicator;
+		}
+
+		public int getEnlevementIndicator()
+		{ return enlevementIndicator; }
+
+		public void setEnlevementIndicator (int _enlevementIndicator)
+		{
+			enlevementIndicator = _enlevementIndicator;
+		}
+
+		public int getMessageIndicator()
+		{ return messageIndicator; }
+
+		public void setMessageIndicator (int _messageIndicator)
+		{
+			messageIndicator = _messageIndicator;
 		}
 
 		public bool  UploadFile(string FtpUrl, string fileName, string userName, string password,string UploadDirectory)

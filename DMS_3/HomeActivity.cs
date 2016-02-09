@@ -38,7 +38,7 @@ namespace DMS_3
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
 
-
+		System.Timers.Timer indicatorTimer;
 
 		//bool Is_thread_Running = false;
 
@@ -54,7 +54,11 @@ namespace DMS_3
 			deliveryBadgeText = FindViewById<TextView>(Resource.Id.deliveryBadgeText);
 			deliveryBadge = FindViewById<RelativeLayout>(Resource.Id.deliveryBadge);
 			peekupBadge = FindViewById<RelativeLayout>(Resource.Id.peekupBadge);
-			newMsgBadge = FindViewById<RelativeLayout>(Resource.Id.deliveryBadge);
+			newMsgBadge = FindViewById<RelativeLayout>(Resource.Id.newMsgBadge);
+
+			peekupBadge.Visibility = ViewStates.Gone;
+			deliveryBadge.Visibility = ViewStates.Gone;
+			newMsgBadge.Visibility = ViewStates.Gone;
 
 			//Mettre le lblTitle: User + versionNumber
 			Context context = this.ApplicationContext;
@@ -83,6 +87,9 @@ namespace DMS_3
 			//Xamarin Insight
 			Insights.Initialize("d3afeb59463d5bdc09194186b94fc991016faf1f", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
+
+			//SET des badges
+			dbr.SETBadges(Data.userAndsoft);
 			//LANCEMENT DU SERVICE
 			StartService (new Intent (this, typeof(ProcessDMS)));
 		
@@ -114,11 +121,45 @@ namespace DMS_3
 		protected override void OnResume()
 		{
 			base.OnResume();
+
+			indicatorTimer = new System.Timers.Timer();
+			indicatorTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnIndicatorTimerHandler);
+			indicatorTimer.Interval = 1000;
+			indicatorTimer.Enabled = true;
+			indicatorTimer.Start();
+		}
+
+		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
+		{
+			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
+			if (Data.Instance.getLivraisonIndicator () < 1) {
+				RunOnUiThread (() =>deliveryBadgeText.Visibility = ViewStates.Gone);
+				RunOnUiThread (() =>deliveryBadge.Visibility = ViewStates.Gone);
+			} else {
+				RunOnUiThread (() =>deliveryBadgeText.Text = Data.Instance.getLivraisonIndicator ().ToString());
+				RunOnUiThread (() =>deliveryBadge.Visibility = ViewStates.Visible);
+			}
+
+			if (Data.Instance.getEnlevementIndicator () < 1) {
+				RunOnUiThread (() =>peekupBadge.Visibility = ViewStates.Gone);
+				RunOnUiThread (() =>peekupBadgeText.Visibility = ViewStates.Gone);
+			} else {
+				RunOnUiThread (() =>peekupBadgeText.Text = Data.Instance.getEnlevementIndicator ().ToString());
+				RunOnUiThread (() =>peekupBadge.Visibility = ViewStates.Visible);
+			}
+
+			if (Data.Instance.getMessageIndicator () < 1) {
+				RunOnUiThread (() => newMsgBadge.Visibility = ViewStates.Gone);
+				RunOnUiThread (() => newMsgBadgeText.Visibility = ViewStates.Gone);
+			} else {
+				RunOnUiThread (() => newMsgBadgeText.Text = Data.Instance.getMessageIndicator ().ToString ());
+				RunOnUiThread (() => newMsgBadge.Visibility = ViewStates.Visible);
+			}
 		}
 
 		protected override void OnStop()
 		{	
-
+			indicatorTimer.Stop ();
 			File.AppendAllText(Data.log_file, "OnStop le "+DateTime.Now.ToString("G")+"\n");
 			base.OnStop();
 		}

@@ -450,5 +450,26 @@ namespace DMS_3.BDD
 			output = "UPDATE POSITIONS " + row.Id;
 			return output;
 		}
+
+		//GET NUMBER LIV RAM ET MSG
+
+		public int SETBadges (string userandsoft)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+
+			var cLIV = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("L")).Count();
+			var cRam = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("C")).Count();
+			var cMsg = db.Table<TableMessages>().Where (v => v.statutMessage.Equals(0)).Count();
+
+			Data.Instance.setLivraisonIndicator (cLIV);
+			Data.Instance.setEnlevementIndicator (cRam);
+			Data.Instance.setMessageIndicator (cMsg);
+			return 	0;
+
+
+
+		}
 	}
 }
