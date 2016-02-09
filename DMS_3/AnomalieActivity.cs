@@ -32,6 +32,8 @@ namespace DMS_3
 		string txtRem;
 		ImageView _imageView;
 		TablePositions data;
+
+		string type;
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
@@ -39,6 +41,8 @@ namespace DMS_3
 
 			id = Intent.GetStringExtra ("ID");
 			i = int.Parse(id);
+
+			type = Intent.GetStringExtra ("TYPE");
 
 			DBRepository dbr = new DBRepository ();
 			data = dbr.GetPositionsData (i);
@@ -60,8 +64,12 @@ namespace DMS_3
 			buttonvalider.Click += Buttonvalider_Click;
 
 			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
-			var adapter = ArrayAdapter.CreateFromResource (
-				this, Resource.Array.anomalielivraisonlist, Android.Resource.Layout.SimpleSpinnerItem);
+			ArrayAdapter adapter;
+			if (type == "RAM") {
+				adapter = ArrayAdapter.CreateFromResource (this, Resource.Array.anomalieramasselist, Android.Resource.Layout.SimpleSpinnerItem);
+			} else {
+				adapter = ArrayAdapter.CreateFromResource (this, Resource.Array.anomalielivraisonlist, Android.Resource.Layout.SimpleSpinnerItem);
+			}
 
 			adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
 			spinner.Adapter = adapter;
@@ -140,9 +148,22 @@ namespace DMS_3
 			case "Inventaire":
 				codeanomalie = "RENINV";
 				break;
+			case "Ramasse pas faite":
+				codeanomalie = "RAMPFT";
+				break;
+			case "Positions non chargees":
+				codeanomalie = "RENNCG";
+				break;
+			case "Avis de passage":
+				codeanomalie = "RENAVI";
+				break;
+			case "Ramasse diverse":
+				codeanomalie = "RAMDIV";
+				break;
 			case "Restaure en non traite":
 				codeanomalie = "RESTNT";
 				break;
+
 			default:
 				break;
 			}

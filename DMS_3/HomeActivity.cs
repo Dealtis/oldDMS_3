@@ -62,8 +62,12 @@ namespace DMS_3
 
 			//click button
 			LinearLayout btn_Livraison = FindViewById<LinearLayout> (Resource.Id.columnlayout1_1);
+			LinearLayout btn_Enlevement = FindViewById<LinearLayout> (Resource.Id.columnlayout1_2);
 			LinearLayout btn_Message = FindViewById<LinearLayout> (Resource.Id.columnlayout2_1);
+
 			btn_Livraison.Click += delegate { btn_Livraison_Click();};
+
+			btn_Enlevement.Click += delegate { btn_Enlevement_Click ();};
 			btn_Livraison.LongClick += Btn_Livraison_LongClick;
 			btn_Message.Click += delegate { btn_Message_Click();};
 
@@ -73,7 +77,7 @@ namespace DMS_3
 			//TEST
 			DBRepository dbr = new DBRepository ();
 			var IntegData = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",0,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
-			//var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
+			var IntegData1 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","C","RAM","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",1,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
 			//var IntegData2 = dbr.InsertDataPosition("codeLivraison","numCommande","refClient","nomPayeur","nomExpediteur","adresseExpediteur","villeExpediteur","CpExpediteur","dateExpe","nomClient","adresseLivraison","villeLivraison","CpLivraison","dateHeure","poids","2","4","instrucLivraison","L","LIV","groupage1","ADRCom","ADRGrp","0","CR",DateTime.Now.Day,"Datemission",2,"planDeTransport",Data.userAndsoft,"nomClientLivraison","villeClientLivraison",null);
 
 			//Xamarin Insight
@@ -128,6 +132,15 @@ namespace DMS_3
 		void btn_Livraison_Click ()
 		{
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+			intent.PutExtra("TYPE","LIV");
+			this.StartActivity (intent);
+			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+		}
+
+		void btn_Enlevement_Click ()
+		{
+			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+			intent.PutExtra("TYPE","RAM");
 			this.StartActivity (intent);
 			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}

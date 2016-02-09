@@ -44,6 +44,10 @@ namespace DMS_3
 		TextView destfinal;
 		ImageView _imageView;
 
+		string type;
+		string tyValide;
+
+
 		private AlertDialog.Builder dialog;
 
 		protected override void OnCreate (Bundle savedInstanceState)
@@ -53,6 +57,12 @@ namespace DMS_3
 			id = Intent.GetStringExtra ("ID");
 			i = int.Parse(id);
 
+			type = Intent.GetStringExtra ("TYPE");
+			if (type == "RAM") {
+				tyValide = "RAMCFM";
+			} else {				
+				tyValide = "LIVCFM";
+			}
 			DBRepository dbr = new DBRepository ();
 			data = dbr.GetPositionsData (i);
 			idprev = dbr.GetidPrev (i);
@@ -175,11 +185,11 @@ namespace DMS_3
 			dialog.SetCancelable (true);
 			dialog.SetPositiveButton("Oui", delegate {
 				//mise du statut de la position à 1
-				dbr.updatePosition(i,"1","Validée",mémo,"LIVCFM",null);
+				dbr.updatePosition(i,"1","Validée",mémo,tyValide,null);
 				//creation du JSON
-				string JSON ="{\"codesuiviliv\":\"RAMCFM\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/YYYY HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/YYYY HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions("LIVCFM","1","Commande Validée",data.numCommande,"Validée",DateTime.Now.ToString("dd/MM/YYYY HH:mm"),JSON);
+				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,"Validée",DateTime.Now.ToString("dd/MM/YYYY HH:mm"),JSON);
 				StartActivity(typeof(ListeLivraisonsActivity));
 
 			});
@@ -191,10 +201,12 @@ namespace DMS_3
 
 		void Btnanomalie_Click (object sender, EventArgs e)
 		{
-			var activity2 = new Intent(this, typeof(AnomalieActivity));
-			activity2.PutExtra("ID",Convert.ToString(i));
-			string id = Intent.GetStringExtra("ID");
-			StartActivity(activity2);
+			
+			Intent intent = new Intent (this, typeof(AnomalieActivity));
+			intent.PutExtra("ID",Convert.ToString(i));
+			intent.PutExtra("TYPE",type);
+			this.StartActivity (intent);
+			this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 		}
 		public override bool OnTouchEvent(MotionEvent e)
 		{
