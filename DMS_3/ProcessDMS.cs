@@ -151,14 +151,13 @@ namespace DMS_3
 					var webClient = new WebClient ();
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					content_grpcloture = webClient.DownloadString (_urlb);
-					JsonArray jsonVal = JsonArray.Parse (content_grpcloture) as JsonArray;
-					var jsonArr = jsonVal;
-					foreach (var item in jsonArr) {						
-						if (item["numCommande"] == "CLO") {
+					JsonValue jsonVal = JsonObject.Parse(content_grpcloture);
+					//JsonArray jsonVal = JsonArray.Parse (content_grpcloture) as JsonArray;
+					//var jsonArr = jsonVal;							
+					if (jsonVal["etat"].ToString() == "\"CLO\""){
 							//suppression du groupage en question si clo
 							var suppgrp = dbr.supp_grp(numGroupage);
-						}
-					}
+					}					
 				}
 				catch (Exception ex) {
 					content_grpcloture = "[]";
@@ -208,24 +207,24 @@ namespace DMS_3
 						Insights.Report (ex,Xamarin.Insights.Severity.Error);
 
 					}
-
-				JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
+				if (content_msg != "[]") {
+					JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
 					var jsonarr = jsonVal;
 					foreach (var item in jsonarr) {
 					switch(item ["texteMessage"].ToString().Substring(0,9))
 						{
 						case "%%SUPPLIV":
-						var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
-						dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
-						dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, Convert.ToInt32 (item ["numMessage"].ToString()));
+							var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+							dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
+							dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, item ["numMessage"]);
 							break;
 						case "%%RETOLIV":
-						var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
-						var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+							var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+							var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 							break;
 						case "%%SUPPGRP":
-						var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
-						var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+							var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+							var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 							break;
 						case "%%GETFLOG":
 							//("ftp://77.158.93.75");
@@ -233,15 +232,15 @@ namespace DMS_3
 							thread.Start ();
 							break;
 						default:
-						var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1, Convert.ToInt32 (item ["numMessage"].ToString()));
-						var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now, Convert.ToInt32 (item ["numMessage"].ToString()),"","");
+							var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1,item ["numMessage"]);
+							var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
 							alertsms ();
 						Console.WriteLine (item ["numMessage"].ToString());
 							Console.WriteLine (resinteg);
 							break;
 						}
 					}
-
+				}
 				String datajson = string.Empty;
 				String datagps=string.Empty;;
 				String datamsg=string.Empty;;

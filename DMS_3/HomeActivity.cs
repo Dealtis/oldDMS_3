@@ -77,15 +77,10 @@ namespace DMS_3
 			//btn deconnexion, userlogin false et update
 
 
-			//TEST
-			DBRepository dbr = new DBRepository ();
-
 			//Xamarin Insight
 			Insights.Initialize("d3afeb59463d5bdc09194186b94fc991016faf1f", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
-			//SET des badges
-			dbr.SETBadges(Data.userAndsoft);
 			//LANCEMENT DU SERVICE
 			StartService (new Intent (this, typeof(ProcessDMS)));
 		
@@ -127,6 +122,11 @@ namespace DMS_3
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
 		{
+
+			//SET des badges
+
+			DBRepository dbr = new DBRepository ();
+			dbr.SETBadges(Data.userAndsoft);
 			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
 			if (Data.Instance.getLivraisonIndicator () < 1) {
 				RunOnUiThread (() =>deliveryBadgeText.Visibility = ViewStates.Gone);
