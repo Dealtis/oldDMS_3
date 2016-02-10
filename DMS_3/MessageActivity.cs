@@ -100,7 +100,9 @@ namespace DMS_3
 			var db = new SQLiteConnection (dbPath);
 
 
-			RunOnUiThread(() => adapter.NotifyDataSetChanged());
+			Intent intent = new Intent (this, typeof(MessageActivity));
+			this.StartActivity (intent);
+			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
 
 
 		}

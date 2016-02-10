@@ -115,6 +115,9 @@ namespace DMS_3
 		{
 			base.OnResume();
 
+
+			var version = this.PackageManager.GetPackageInfo(this.PackageName, 0).VersionName;
+			lblTitle.Text = Data.userAndsoft + " " + version;
 			indicatorTimer = new System.Timers.Timer();
 			indicatorTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnIndicatorTimerHandler);
 			indicatorTimer.Interval = 1000;
@@ -132,7 +135,6 @@ namespace DMS_3
 
 			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
 			if (Data.Instance.getLivraisonIndicator () < 1) {
-				RunOnUiThread (() =>deliveryBadgeText.Visibility = ViewStates.Gone);
 				RunOnUiThread (() =>deliveryBadge.Visibility = ViewStates.Gone);
 			} else {
 				RunOnUiThread (() =>deliveryBadgeText.Text = Data.Instance.getLivraisonIndicator ().ToString());
@@ -141,7 +143,6 @@ namespace DMS_3
 
 			if (Data.Instance.getEnlevementIndicator () < 1) {
 				RunOnUiThread (() =>peekupBadge.Visibility = ViewStates.Gone);
-				RunOnUiThread (() =>peekupBadgeText.Visibility = ViewStates.Gone);
 			} else {
 				RunOnUiThread (() =>peekupBadgeText.Text = Data.Instance.getEnlevementIndicator ().ToString());
 				RunOnUiThread (() =>peekupBadge.Visibility = ViewStates.Visible);
@@ -149,7 +150,6 @@ namespace DMS_3
 
 			if (Data.Instance.getMessageIndicator () < 1) {
 				RunOnUiThread (() => newMsgBadge.Visibility = ViewStates.Gone);
-				RunOnUiThread (() => newMsgBadgeText.Visibility = ViewStates.Gone);
 			} else {
 				RunOnUiThread (() => newMsgBadgeText.Text = Data.Instance.getMessageIndicator ().ToString ());
 				RunOnUiThread (() => newMsgBadge.Visibility = ViewStates.Visible);

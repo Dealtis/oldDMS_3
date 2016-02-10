@@ -40,8 +40,9 @@ namespace DMS_3
 		{
 			base.OnStart (intent, startId);
 
-			userAndsoft = intent.GetStringExtra ("userAndsoft");
-			userTransics = intent.GetStringExtra ("userTransics");
+			DBRepository dbr = new DBRepository ();
+			userAndsoft = dbr.getUserAndsoft ();
+			userTransics = dbr.getUserTransics ();
 
 			DoStuff ();
 
@@ -218,33 +219,39 @@ namespace DMS_3
 					JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
 					var jsonarr = jsonVal;
 					foreach (var item in jsonarr) {
-					switch(item ["texteMessage"].ToString().Substring(0,9))
-						{
-						case "%%SUPPLIV":
-							var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
-							dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
-							dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, item ["numMessage"]);
-							break;
-						case "%%RETOLIV":
-							var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
-							var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
-							break;
-						case "%%SUPPGRP":
-							var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
-							var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
-							break;
-						case "%%GETFLOG":
-							//("ftp://77.158.93.75");
-							//Thread thread = new Thread(() => Data.Instance.UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
-							//thread.Start ();
-							break;
-						default:
+						if (item["texteMessage"].ToString().Length < 9) {
 							var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1,item ["numMessage"]);
 							var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
-							alertsms ();
-						Console.WriteLine (item ["numMessage"].ToString());
-							Console.WriteLine (resinteg);
-							break;
+							alertsms ();	
+						}else{
+						switch(item ["texteMessage"].ToString().Substring(0,9))
+							{
+							case "%%SUPPLIV":
+								var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+								dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
+								dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, item ["numMessage"]);
+								break;
+							case "%%RETOLIV":
+								var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+								var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
+								break;
+							case "%%SUPPGRP":
+								var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+								var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
+								break;
+							case "%%GETFLOG":
+								//("ftp://77.158.93.75");
+								//Thread thread = new Thread(() => Data.Instance.UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
+								//thread.Start ();
+								break;
+							default:
+								var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1,item ["numMessage"]);
+								var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
+								alertsms ();
+								Console.WriteLine (item ["numMessage"].ToString());
+								Console.WriteLine (resinteg);
+								break;
+							}
 						}
 					}
 				}
@@ -292,7 +299,7 @@ namespace DMS_3
 							var resultdelete = dbr.deletenotif(item.Id);
 						}
 						foreach (var item in tablemessage) {
-							var updatestatutmessage = db.Query<Message> ("UPDATE Message SET statutMessage = 3 WHERE _Id = ?",item.Id);
+						var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
 						}
 					}
 					catch (Exception e)
@@ -316,7 +323,7 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
-			var table = db.Table<TableStatutPositions> ();
+			var table = db.Query<TableStatutPositions> ("Select * FROM TableStatutPositions");
 
 			foreach (var item in table) {
 				try {
@@ -324,7 +331,7 @@ namespace DMS_3
 					var webClient = new WebClient ();
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					//TODO
-					//webClient.UploadString (_url, item.datajson);
+					webClient.UploadString (_url, item.datajson);
 					//Sup pde la row dans statut pos
 					var row = db.Get<TableStatutPositions>(item.Id);
 					db.Delete(row);

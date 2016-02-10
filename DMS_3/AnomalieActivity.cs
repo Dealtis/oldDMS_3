@@ -20,7 +20,7 @@ using Uri = Android.Net.Uri;
 using DMS_3.BDD;
 namespace DMS_3
 {
-	[Activity (Label = "AnomalieActivity")]			
+	[Activity (Label = "AnomalieActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, NoHistory = true)]			
 	public class AnomalieActivity : Activity
 	{	
 
@@ -61,7 +61,10 @@ namespace DMS_3
 				buttonphoto.Click += TakeAPicture;
 			}
 
-			buttonvalider.Click += Buttonvalider_Click;
+			buttonvalider.Click += delegate {
+				Buttonvalider_Click();
+			};
+			;
 
 			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
 			ArrayAdapter adapter;
@@ -87,7 +90,7 @@ namespace DMS_3
 			}
 		}
 
-		void Buttonvalider_Click (object sender, EventArgs e)
+		void Buttonvalider_Click ()
 		{
 
 			txtRem = EdittxtRem.Text;
@@ -170,12 +173,18 @@ namespace DMS_3
 
 			DBRepository dbr = new DBRepository ();
 			//mise du statut de la position à 1
-			dbr.updatePosition(i,"2",txtspinner,txtRem,codeanomalie,null);
+			if (txtspinner == "Restaure en non traite") {
+				dbr.updatePosition(i,"0",txtspinner,txtRem,codeanomalie,null);
+
+			} else {
+				dbr.updatePosition(i,"2",txtspinner,txtRem,codeanomalie,null);
+			}
+
 
 			//creation du JSON
-			string JSON ="{\"codesuiviliv\":\""+codeanomalie+"\",\"memosuiviliv\":\""+txtRem+"\",\"libellesuiviliv\":\""+txtspinner+"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/YYYY HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+			string JSON ="{\"codesuiviliv\":\""+codeanomalie+"\",\"memosuiviliv\":\""+txtRem+"\",\"libellesuiviliv\":\""+txtspinner+"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 			//création de la notification webservice // statut de position
-			dbr.insertDataStatutpositions(codeanomalie,"2",txtspinner,data.numCommande,txtRem,DateTime.Now.ToString("dd/MM/YYYY HH:mm"),JSON);
+			dbr.insertDataStatutpositions(codeanomalie,"2",txtspinner,data.numCommande,txtRem,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
 
 
 			string compImg = String.Empty;

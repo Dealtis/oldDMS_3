@@ -44,6 +44,8 @@ namespace DMS_3
 		TextView destfinal;
 		ImageView _imageView;
 
+		Button btnvalide;
+
 		string type;
 		string tyValide;
 
@@ -84,7 +86,7 @@ namespace DMS_3
 			destfinal = FindViewById<TextView> (Resource.Id.destfinal);
 			_imageView = FindViewById<ImageView> (Resource.Id._imageView);
 
-			Button btnvalide = FindViewById<Button> (Resource.Id.valide);
+			btnvalide = FindViewById<Button> (Resource.Id.valide);
 			Button btnanomalie = FindViewById <Button> (Resource.Id.anomalie);
 
 
@@ -104,6 +106,11 @@ namespace DMS_3
 			infosupp.Gravity = GravityFlags.Center;
 			infoclient.Gravity = GravityFlags.Center;
 
+			//hide Btn Valide
+
+			if (data.StatutLivraison == "1") {
+				btnvalide.Visibility = ViewStates.Gone;
+			}
 
 
 			//TITLE
@@ -187,9 +194,9 @@ namespace DMS_3
 				//mise du statut de la position à 1
 				dbr.updatePosition(i,"1","Validée",mémo,tyValide,null);
 				//creation du JSON
-				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/YYYY HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,"Validée",DateTime.Now.ToString("dd/MM/YYYY HH:mm"),JSON);
+				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,"Validée",DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
 				StartActivity(typeof(ListeLivraisonsActivity));
 
 			});

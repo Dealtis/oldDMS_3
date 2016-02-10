@@ -85,7 +85,7 @@ namespace DMS_3
 					txtstatut ="Envoyé";
 				}
 
-				txtdatestatut.Text="Le "+mItems[position].dateImportMessage.Day+" à "+mItems[position].dateImportMessage.Hour+":"+mItems[position].dateImportMessage.Minute+" "+txtstatut+" par "+mItems[position].utilisateurEmetteur;
+				txtdatestatut.Text="Le "+mItems[position].dateImportMessage.Day+" à "+mItems[position].dateImportMessage.Hour+":"+mItems[position].dateImportMessage.Minute+" "+txtstatut+"";
 			}
 
 			return row;

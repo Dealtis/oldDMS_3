@@ -287,6 +287,35 @@ namespace DMS_3.BDD
 			return output;
 
 		}
+
+		public string getUserAndsoft()
+		{		
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = string.Empty;
+			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(1));
+			foreach (var item in query) {				
+				output = item.user_AndsoftUser;
+			}
+			return output;
+
+		}
+
+		public string getUserTransics()
+		{		
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = string.Empty;
+			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(1));
+			foreach (var item in query) {				
+				output = item.user_TransicsUser;
+			}
+			return output;
+
+		}
+
 	
 		//VERIF SI POS DEJA INTEGRER
 		public bool pos_AlreadyExist(string numCommande, string groupage)
@@ -459,8 +488,8 @@ namespace DMS_3.BDD
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 
-			var cLIV = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("L")).Count();
-			var cRam = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("C")).Count();
+			var cLIV = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("L")).Where (v => v.StatutLivraison.Equals("0")).Count();
+			var cRam = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("C")).Where (v => v.StatutLivraison.Equals("0")).Count();
 			var cMsg = db.Table<TableMessages>().Where (v => v.statutMessage.Equals(0)).Count();
 
 			Data.Instance.setLivraisonIndicator (cLIV);

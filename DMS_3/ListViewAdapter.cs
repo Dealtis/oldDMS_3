@@ -116,9 +116,9 @@ namespace DMS_3
 				//mise du statut de la position à 1
 				dbr.updatePosition(mItems[position].Id,"1","Validée",mémo,"LIVCFM",null);
 				//creation du JSON
-				string JSON ="{\"codesuiviliv\":\"RAMCFM\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+mItems[position].numCommande+"\",\"groupagesuiviliv\":\""+mItems[position].groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/YYYY HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+				string JSON ="{\"codesuiviliv\":\"RAMCFM\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+mItems[position].numCommande+"\",\"groupagesuiviliv\":\""+mItems[position].groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions("LIVCFM","1","Commande Validée",mItems[position].numCommande,"Validée",DateTime.Now.ToString("dd/MM/YYYY HH:mm"),JSON);
+				dbr.insertDataStatutpositions("LIVCFM","1","Commande Validée",mItems[position].numCommande,"Validée",DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
 				//dismiss la position
 				mItems.RemoveAt(position);
 				NotifyDataSetChanged();
@@ -224,9 +224,9 @@ namespace DMS_3
 				//mise du statut de la position à 1
 				dbr.updatePosition(mItems[position].Id,"2",txtspinner,txtRem,codeanomalie,null);
 				//creation du JSON
-				string JSON ="{\"codesuiviliv\":\""+codeanomalie+"\",\"memosuiviliv\":\""+txtRem+"\",\"libellesuiviliv\":\""+txtspinner+"\",\"commandesuiviliv\":\""+mItems[position].numCommande+"\",\"groupagesuiviliv\":\""+mItems[position].groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/YYYY HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+				string JSON ="{\"codesuiviliv\":\""+codeanomalie+"\",\"memosuiviliv\":\""+txtRem+"\",\"libellesuiviliv\":\""+txtspinner+"\",\"commandesuiviliv\":\""+mItems[position].numCommande+"\",\"groupagesuiviliv\":\""+mItems[position].groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions(codeanomalie,"2",txtspinner,mItems[position].numCommande,txtRem,DateTime.Now.ToString("dd/MM/YYYY HH:mm"),JSON);
+				dbr.insertDataStatutpositions(codeanomalie,"2",txtspinner,mItems[position].numCommande,txtRem,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
 				//dismiss la position
 				mItems.RemoveAt(position);
 				NotifyDataSetChanged();
