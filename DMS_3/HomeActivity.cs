@@ -82,7 +82,9 @@ namespace DMS_3
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
 			//LANCEMENT DU SERVICE
-			StartService (new Intent (this, typeof(ProcessDMS)));
+			StartService (
+				new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
+			);
 		
 		}
 
@@ -127,6 +129,7 @@ namespace DMS_3
 
 			DBRepository dbr = new DBRepository ();
 			dbr.SETBadges(Data.userAndsoft);
+
 			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
 			if (Data.Instance.getLivraisonIndicator () < 1) {
 				RunOnUiThread (() =>deliveryBadgeText.Visibility = ViewStates.Gone);
