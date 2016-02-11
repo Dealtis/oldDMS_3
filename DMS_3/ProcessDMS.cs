@@ -241,8 +241,8 @@ namespace DMS_3
 								break;
 							case "%%GETFLOG":
 								//("ftp://77.158.93.75");
-								//Thread thread = new Thread(() => Data.Instance.UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
-								//thread.Start ();
+								Thread thread = new Thread(() => UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
+								thread.Start ();
 								break;
 							default:
 								var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1,item ["numMessage"]);
@@ -376,6 +376,37 @@ namespace DMS_3
 			MediaPlayer _player;
 			_player = MediaPlayer.Create(this,Resource.Raw.msg3);
 			_player.Start();
+		}
+
+		public bool  UploadFile(string FtpUrl, string fileName, string userName, string password,string UploadDirectory)
+		{
+			try{
+				string PureFileName = new FileInfo(fileName).Name;
+				String uploadUrl = String.Format("{0}{1}/{2}", FtpUrl,UploadDirectory,PureFileName);
+				FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(uploadUrl);
+				req.Proxy = null;
+				req.Method = WebRequestMethods.Ftp.UploadFile;
+				req.Credentials = new NetworkCredential(userName,password);
+				req.UseBinary = true;
+				req.UsePassive = true;
+				byte[] data = System.IO.File.ReadAllBytes(fileName);
+				req.ContentLength = data.Length;
+				System.IO.Stream stream = req.GetRequestStream();
+				stream.Write(data, 0, data.Length);
+				stream.Close();
+				FtpWebResponse res = (FtpWebResponse)req.GetResponse();
+				File.AppendAllText(Data.log_file,"Upload file"+fileName+" good\n");
+				Console.Out.Write("Upload file"+fileName+" good\n");
+				return true;
+
+			} catch (Exception ex) {
+				Insights.Report(ex);
+				File.AppendAllText(Data.log_file,"Upload file"+fileName+" error :"+ex+"\n");
+				Console.Out.Write("Upload file"+fileName+" error\n");
+				Thread.Sleep(TimeSpan.FromMinutes(2));
+				UploadFile (FtpUrl, fileName, userName, password, UploadDirectory);
+				return false;
+			}
 		}
 	}
 }

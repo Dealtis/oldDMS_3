@@ -214,7 +214,6 @@ namespace DMS_3
 
 		void btnsearch_Click ()
 		{
-
 			//TODO
 			AlertDialog.Builder dialog = new AlertDialog.Builder(this);		
 			dialog.SetTitle("Rechercher");

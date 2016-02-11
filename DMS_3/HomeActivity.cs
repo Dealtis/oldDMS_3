@@ -26,20 +26,17 @@ using Environment = System.Environment;
 
 namespace DMS_3
 {
-	[Activity (Label = "HomeActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]			
+	[Activity (Label = "HomeActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, NoHistory = true)]			
 	public class HomeActivity : Activity
 	{
 		TextView lblTitle;
 		TextView peekupBadgeText;
 		TextView newMsgBadgeText;
 		TextView deliveryBadgeText;
-
 		RelativeLayout deliveryBadge;
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
-
 		System.Timers.Timer indicatorTimer;
-
 		//bool Is_thread_Running = false;
 
 		protected override void OnCreate (Bundle savedInstanceState)
@@ -55,7 +52,6 @@ namespace DMS_3
 			deliveryBadge = FindViewById<RelativeLayout>(Resource.Id.deliveryBadge);
 			peekupBadge = FindViewById<RelativeLayout>(Resource.Id.peekupBadge);
 			newMsgBadge = FindViewById<RelativeLayout>(Resource.Id.newMsgBadge);
-
 			peekupBadge.Visibility = ViewStates.Gone;
 			deliveryBadge.Visibility = ViewStates.Gone;
 			newMsgBadge.Visibility = ViewStates.Gone;
@@ -68,10 +64,13 @@ namespace DMS_3
 			LinearLayout btn_Livraison = FindViewById<LinearLayout> (Resource.Id.columnlayout1_1);
 			LinearLayout btn_Enlevement = FindViewById<LinearLayout> (Resource.Id.columnlayout1_2);
 			LinearLayout btn_Message = FindViewById<LinearLayout> (Resource.Id.columnlayout2_1);
+			LinearLayout btn_Config = FindViewById<LinearLayout> (Resource.Id.columnlayout4_2);
+
 
 			btn_Livraison.Click += delegate { btn_Livraison_Click();};
 			btn_Enlevement.Click += delegate { btn_Enlevement_Click ();};
 			btn_Livraison.LongClick += Btn_Livraison_LongClick;
+			btn_Config.LongClick += Btn_Config_LongClick;
 			btn_Message.Click += delegate { btn_Message_Click();};
 
 			//btn deconnexion, userlogin false et update
@@ -89,8 +88,7 @@ namespace DMS_3
 		}
 
 		void Btn_Livraison_LongClick (object sender, View.LongClickEventArgs e)
-		{
-			
+		{			
 			RunOnUiThread (() => {
 				try {
 					Data.Instance.InsertData ();
@@ -99,8 +97,32 @@ namespace DMS_3
 					Console.WriteLine ("\n"+ex);
 					AndHUD.Shared.ShowError(this, "Error : "+ex, MaskType.Black, TimeSpan.FromSeconds(2));
 				}
-			}
-			);
+			});
+		}
+
+		void Btn_Config_LongClick (object sender, View.LongClickEventArgs e)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+			builder.SetTitle("Deconnexion");
+
+			builder.SetMessage("Voulez-vous vous déconnecter ?");
+			builder.SetCancelable(false);
+			builder.SetPositiveButton("Annuler", delegate {  });
+			builder.SetNegativeButton("Déconnexion", delegate {
+				DBRepository dbr = new DBRepository ();
+				dbr.logout();
+				Data.userAndsoft = null;
+				Data.userTransics = null;
+				StopService (
+					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
+				);
+				Intent intent = new Intent (this, typeof(MainActivity));
+				this.StartActivity (intent);
+				this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+
+			});
+			builder.Show();
 		}
 
 		protected override void OnStart()
@@ -127,9 +149,7 @@ namespace DMS_3
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
 		{
-
 			//SET des badges
-
 			DBRepository dbr = new DBRepository ();
 			dbr.SETBadges(Data.userAndsoft);
 
@@ -190,6 +210,11 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(MessageActivity));
 			this.StartActivity (intent);
 			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+		}
+
+		public override void OnBackPressed ()
+		{
+			
 		}
 	}
 }

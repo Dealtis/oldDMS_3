@@ -1800,6 +1800,9 @@ namespace DMS_3
 			// aapt resource value: 0x7f0800a4
 			public const int cancel_action = 2131230884;
 			
+			// aapt resource value: 0x7f0800b5
+			public const int checkBox1 = 2131230901;
+			
 			// aapt resource value: 0x7f080040
 			public const int checkbox = 2131230784;
 			
@@ -2025,6 +2028,9 @@ namespace DMS_3
 			// aapt resource value: 0x7f080034
 			public const int parentPanel = 2131230772;
 			
+			// aapt resource value: 0x7f0800b4
+			public const int partic = 2131230900;
+			
 			// aapt resource value: 0x7f0800a1
 			public const int password = 2131230881;
 			
@@ -2043,8 +2049,20 @@ namespace DMS_3
 			// aapt resource value: 0x7f080042
 			public const int radio = 2131230786;
 			
+			// aapt resource value: 0x7f0800ba
+			public const int radioButton1 = 2131230906;
+			
+			// aapt resource value: 0x7f0800b9
+			public const int radioButton2 = 2131230905;
+			
+			// aapt resource value: 0x7f0800b8
+			public const int radioGroup1 = 2131230904;
+			
 			// aapt resource value: 0x7f08006f
 			public const int relativeLayout1 = 2131230831;
+			
+			// aapt resource value: 0x7f0800b7
+			public const int relativeLayout2 = 2131230903;
 			
 			// aapt resource value: 0x7f080027
 			public const int reveal = 2131230759;
@@ -2168,6 +2186,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f08009d
 			public const int textViewStatus = 2131230877;
+			
+			// aapt resource value: 0x7f0800b6
+			public const int textcr = 2131230902;
 			
 			// aapt resource value: 0x7f0800b2
 			public const int textds = 2131230898;
@@ -2425,6 +2446,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f040036
 			public const int swipe = 2130968630;
+			
+			// aapt resource value: 0x7f040037
+			public const int valideDialBox = 2130968631;
 			
 			static Layout()
 			{

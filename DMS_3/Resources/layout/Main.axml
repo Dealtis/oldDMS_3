@@ -18,14 +18,18 @@
             android:gravity="center"
             android:layout_width="@dimen/dim200"
             android:layout_height="@dimen/dim50"
-            android:hint="@string/user" />
+            android:hint="@string/user"
+            android:inputType="text"
+            android:imeOptions="actionNext" />
         <EditText
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/password"
             android:layout_width="@dimen/dim200"
             android:layout_height="@dimen/dim50"
             android:hint="@string/password"
-            android:gravity="center" />
+            android:gravity="center"
+            android:inputType="text"
+            android:imeOptions="actionDone" />
         <Button
             android:id="@+id/btnlogin"
             android:layout_width="wrap_content"

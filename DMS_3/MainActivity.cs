@@ -1,17 +1,16 @@
 ﻿using System;
-using Android.Content;
-using Android.Net;
+using System.Json;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Widget;
+using Android.Content;
+using Android.Net;
 using Android.OS;
-using DMS_3.BDD;
 using Android.Preferences;
-
+using Android.Widget;
 using AndroidHUD;
-using System.Json;
+using DMS_3.BDD;
 using Xamarin;
 
 

@@ -181,22 +181,54 @@ namespace DMS_3
 			DBRepository dbr = new DBRepository ();
 			dialog = new AlertDialog.Builder(this);
 			AlertDialog alert = dialog.Create();
-			dialog.SetMessage ("Voulez-vous valider cette position ?");
+
 			//afficher le cr si CR
 			//cheque
 			//afficher le champ mémo
-			//TODO
-			string mémo = "Mémo à venir";
-			//afficher la checkbox si partic
+			var viewAD = this.LayoutInflater.Inflate (Resource.Layout.valideDialBox, null);
+			var check1 = viewAD.FindViewById<RadioButton> (Resource.Id.radioButton1);
+			var check2 = viewAD.FindViewById<RadioButton> (Resource.Id.radioButton2);
+			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
+			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
+			if (data.CR == "" || data.CR == "0") {
+				check1.Visibility = ViewStates.Gone;
+				check2.Visibility = ViewStates.Gone;
+				txtCR.Visibility = ViewStates.Gone;
+				dialog.SetMessage ("Voulez-vous valider cette position ?");
+			} else {
+				check1.Visibility = ViewStates.Visible;
+				check2.Visibility = ViewStates.Visible;
+				txtCR.Visibility = ViewStates.Visible;
+				txtCR.Text = data.CR;
+				dialog.SetMessage ("Avez vous perçu le CR,?\n Si oui, valider cette livraison ?");
+			}
+
+
+			//afficher la checkbox si partic
+			dialog.SetView(viewAD);
 			dialog.SetCancelable (true);
 			dialog.SetPositiveButton("Oui", delegate {
+				
+				//case btn check
+				string typecr;
+				if (check2.Checked) {
+					typecr="CHEQUE";
+					string JSONCHEQUE ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"cheque\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONCHEQUE);
+				}
+				if (check1.Checked) {
+					typecr="ESPECE";
+					string JSONESPECE ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"espece\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONESPECE);
+				}
+
 				//mise du statut de la position à 1
-				dbr.updatePosition(i,"1","Validée",mémo,tyValide,null);
+				dbr.updatePosition(i,"1","Validée",mémo.Text,tyValide,null);
 				//creation du JSON
-				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+mémo+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+mémo.Text+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,"Validée",DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
+				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
 				StartActivity(typeof(ListeLivraisonsActivity));
 
 			});

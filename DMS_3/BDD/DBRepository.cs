@@ -294,7 +294,7 @@ namespace DMS_3.BDD
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(1));
+			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
 			foreach (var item in query) {				
 				output = item.user_AndsoftUser;
 			}
@@ -308,9 +308,26 @@ namespace DMS_3.BDD
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(1));
+			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
 			foreach (var item in query) {				
 				output = item.user_TransicsUser;
+			}
+			return output;
+
+		}
+
+		public string logout()
+		{		
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = string.Empty;
+			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+			foreach (var item in query) {
+				var row = db.Get<TableUser>(item.Id);
+				row.user_IsLogin = false;
+				db.Update(row);
+				output = "UPDATE USER LOGOUT " + row.user_AndsoftUser;
 			}
 			return output;
 
