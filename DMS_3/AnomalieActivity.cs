@@ -20,7 +20,7 @@ using Uri = Android.Net.Uri;
 using DMS_3.BDD;
 namespace DMS_3
 {
-	[Activity (Label = "AnomalieActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, NoHistory = true)]			
+	[Activity (Label = "AnomalieActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]			
 	public class AnomalieActivity : Activity
 	{	
 

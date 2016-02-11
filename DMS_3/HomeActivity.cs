@@ -26,7 +26,7 @@ using Environment = System.Environment;
 
 namespace DMS_3
 {
-	[Activity (Label = "HomeActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, NoHistory = true)]			
+	[Activity (Label = "HomeActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]			
 	public class HomeActivity : Activity
 	{
 		TextView lblTitle;
