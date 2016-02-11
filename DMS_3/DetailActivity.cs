@@ -188,7 +188,7 @@ namespace DMS_3
 			var viewAD = this.LayoutInflater.Inflate (Resource.Layout.valideDialBox, null);
 			var check1 = viewAD.FindViewById<RadioButton> (Resource.Id.radioButton1);
 			var check2 = viewAD.FindViewById<RadioButton> (Resource.Id.radioButton2);
-			var checkP = viewAD.FindViewById<RadioButton> (Resource.Id.checkBox1);
+			var checkP = viewAD.FindViewById<CheckBox> (Resource.Id.checkBox1);
 			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
 			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
