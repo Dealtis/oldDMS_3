@@ -188,6 +188,7 @@ namespace DMS_3
 			var viewAD = this.LayoutInflater.Inflate (Resource.Layout.valideDialBox, null);
 			var check1 = viewAD.FindViewById<RadioButton> (Resource.Id.radioButton1);
 			var check2 = viewAD.FindViewById<RadioButton> (Resource.Id.radioButton2);
+			var checkP = viewAD.FindViewById<RadioButton> (Resource.Id.checkBox1);
 			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
 			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
@@ -221,6 +222,11 @@ namespace DMS_3
 					typecr="ESPECE";
 					string JSONESPECE ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"espece\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONESPECE);
+				}
+				if (checkP.Checked) {
+					typecr="PARTIC";
+					string JSONPARTIC ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"espece\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONPARTIC);
 				}
 
 				//mise du statut de la position à 1
