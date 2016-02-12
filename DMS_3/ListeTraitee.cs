@@ -28,11 +28,23 @@ namespace DMS_3
 		public bool insertdone;
 		public ListViewAdapterMenu adapter;
 
+		string type;
+		string tyS;
+		string tyM;
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
-
 			SetContentView (Resource.Layout.ListeLivraisons);
+
+			type = Intent.GetStringExtra ("TYPE");
+			if (type == "RAM") {
+				tyS = "RAM";
+				tyM = "C";
+			} else {				
+				tyS = "LIV";
+				tyM = "L";
+			}
+
 			//declaration des clicks btns
 			Button btngrpAll = FindViewById<Button> (Resource.Id.btn_all);
 			Button btngrp1 = FindViewById<Button> (Resource.Id.btn_1);
@@ -66,7 +78,7 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine(System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
-			var grp = db.Query<TablePositions> ("SELECT * FROM TablePositions WHERE StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ? OR StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ?  GROUP BY groupage",1,"L","LIV",Data.userAndsoft,2,"L","LIV",Data.userAndsoft);
+			var grp = db.Query<TablePositions> ("SELECT * FROM TablePositions WHERE StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ? OR StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ?  GROUP BY groupage",1,tyM,tyS,Data.userAndsoft,2,"L","LIV",Data.userAndsoft);
 
 			int i = 1;
 			int countGrp = 0;
@@ -138,7 +150,7 @@ namespace DMS_3
 			bodyListView.Adapter = adapter;
 
 			//bodyListView.ItemClick += MListView_ItemClick;
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
 
 		}
 
@@ -163,27 +175,27 @@ namespace DMS_3
 
 		void btngrpAll_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp1_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[1]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[1]+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[1]+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[1]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp2_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[2]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[2]+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[2]+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[2]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp3_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[3]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[3]+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[3]+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[3]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btngrp4_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[4]+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[4]+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[4]+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyM+"' AND Userandsoft='"+Data.userAndsoft+"' AND groupage='"+Arraygrp[4]+"'  ORDER BY Ordremission DESC");
 		}
 
 		void btnsearch_Click ()
@@ -198,7 +210,7 @@ namespace DMS_3
 			dialog.SetView (viewAD);
 			dialog.SetCancelable (true);
 			dialog.SetPositiveButton("Chercher", delegate {
-				initListView("SELECT * FROM TablePositions WHERE  typeMission='L' AND typeSegment='LIV' AND Userandsoft = '"+Data.userAndsoft+"' AND (numCommande LIKE '%"+editrecherche.Text+"%' OR  villeLivraison LIKE '%"+editrecherche.Text+"%' OR nomPayeur LIKE '%\"+input.Text+\"%'OR CpLivraison LIKE '%"+editrecherche.Text+"%' OR refClient LIKE '%"+editrecherche.Text+"%' OR nomClient LIKE'%"+editrecherche.Text+"%')");
+				initListView("SELECT * FROM TablePositions WHERE  typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft = '"+Data.userAndsoft+"' AND (numCommande LIKE '%"+editrecherche.Text+"%' OR  villeLivraison LIKE '%"+editrecherche.Text+"%' OR nomPayeur LIKE '%\"+input.Text+\"%'OR CpLivraison LIKE '%"+editrecherche.Text+"%' OR refClient LIKE '%"+editrecherche.Text+"%' OR nomClient LIKE'%"+editrecherche.Text+"%')");
 			});
 			dialog.SetNegativeButton("Non", delegate {
 				AndHUD.Shared.ShowError(this, "Annulée!", AndroidHUD.MaskType.Clear, TimeSpan.FromSeconds(1));
@@ -207,10 +219,11 @@ namespace DMS_3
 		}
 
 		void btntrait_Click ()
-		{
-			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
-			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
+		{			
+				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+				intent.PutExtra("TYPE",type);
+				this.StartActivity (intent);
+				this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);		
 		}
 
 		public void initListView (string requete)

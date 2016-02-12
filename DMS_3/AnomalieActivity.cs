@@ -99,7 +99,6 @@ namespace DMS_3
 			case "Livre avec manquant":
 				codeanomalie = "LIVRMQ";
 				break;
-
 			case "Livre avec reserves pour avaries":
 				codeanomalie = "LIVRCA";
 				break;

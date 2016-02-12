@@ -234,6 +234,7 @@ namespace DMS_3
 		void btntrait_Click ()
 		{
 			Intent intent = new Intent (this, typeof(ListeTraitee));
+			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
 			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}

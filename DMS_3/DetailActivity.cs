@@ -204,7 +204,9 @@ namespace DMS_3
 				txtCR.Text = data.CR;
 				dialog.SetMessage ("Avez vous perçu le CR,?\n Si oui, valider cette livraison ?");
 			}
-
+			if (type =="RAM") {
+				checkP.Visibility = ViewStates.Gone;
+			}
 
 			//afficher la checkbox si partic
 			dialog.SetView(viewAD);
