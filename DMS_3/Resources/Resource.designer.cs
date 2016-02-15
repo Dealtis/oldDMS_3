@@ -1336,32 +1336,35 @@ namespace DMS_3
 			// aapt resource value: 0x7f07004d
 			public const int dim10 = 2131165261;
 			
-			// aapt resource value: 0x7f070051
-			public const int dim100 = 2131165265;
-			
 			// aapt resource value: 0x7f070052
-			public const int dim150 = 2131165266;
+			public const int dim100 = 2131165266;
 			
 			// aapt resource value: 0x7f070053
-			public const int dim200 = 2131165267;
-			
-			// aapt resource value: 0x7f070054
-			public const int dim250 = 2131165268;
+			public const int dim150 = 2131165267;
 			
 			// aapt resource value: 0x7f07004e
-			public const int dim35 = 2131165262;
+			public const int dim20 = 2131165262;
+			
+			// aapt resource value: 0x7f070054
+			public const int dim200 = 2131165268;
+			
+			// aapt resource value: 0x7f070055
+			public const int dim250 = 2131165269;
+			
+			// aapt resource value: 0x7f07004f
+			public const int dim35 = 2131165263;
 			
 			// aapt resource value: 0x7f07004c
 			public const int dim5 = 2131165260;
 			
-			// aapt resource value: 0x7f07004f
-			public const int dim50 = 2131165263;
-			
-			// aapt resource value: 0x7f070055
-			public const int dim500 = 2131165269;
-			
 			// aapt resource value: 0x7f070050
-			public const int dim75 = 2131165264;
+			public const int dim50 = 2131165264;
+			
+			// aapt resource value: 0x7f070056
+			public const int dim500 = 2131165270;
+			
+			// aapt resource value: 0x7f070051
+			public const int dim75 = 2131165265;
 			
 			// aapt resource value: 0x7f070044
 			public const int disabled_alpha_material_dark = 2131165252;
@@ -1620,79 +1623,85 @@ namespace DMS_3
 			public const int bleu_button = 2130837575;
 			
 			// aapt resource value: 0x7f020048
-			public const int choice_selected = 2130837576;
+			public const int button_white_background = 2130837576;
 			
 			// aapt resource value: 0x7f020049
-			public const int choice_unselected = 2130837577;
+			public const int choice_selected = 2130837577;
 			
 			// aapt resource value: 0x7f02004a
-			public const int dealtis_fonte = 2130837578;
+			public const int choice_unselected = 2130837578;
 			
 			// aapt resource value: 0x7f02004b
-			public const int delivery = 2130837579;
+			public const int dealtis_fonte = 2130837579;
 			
 			// aapt resource value: 0x7f02004c
-			public const int Enl = 2130837580;
+			public const int delivery = 2130837580;
 			
 			// aapt resource value: 0x7f02004d
-			public const int gray_button = 2130837581;
+			public const int Enl = 2130837581;
 			
 			// aapt resource value: 0x7f02004e
-			public const int ic_errorstatus = 2130837582;
+			public const int gray_button = 2130837582;
 			
 			// aapt resource value: 0x7f02004f
-			public const int ic_successstatus = 2130837583;
+			public const int ic_errorstatus = 2130837583;
 			
 			// aapt resource value: 0x7f020050
-			public const int iconapp = 2130837584;
+			public const int ic_successstatus = 2130837584;
 			
 			// aapt resource value: 0x7f020051
-			public const int Liv = 2130837585;
+			public const int iconapp = 2130837585;
 			
 			// aapt resource value: 0x7f020052
-			public const int LivAdr = 2130837586;
+			public const int Liv = 2130837586;
 			
 			// aapt resource value: 0x7f020053
-			public const int Logout = 2130837587;
+			public const int LivAdr = 2130837587;
 			
 			// aapt resource value: 0x7f020054
-			public const int newMsg = 2130837588;
-			
-			// aapt resource value: 0x7f020060
-			public const int notification_template_icon_bg = 2130837600;
+			public const int Logout = 2130837588;
 			
 			// aapt resource value: 0x7f020055
-			public const int peekup = 2130837589;
+			public const int magnifier13 = 2130837589;
 			
 			// aapt resource value: 0x7f020056
-			public const int roundedbg = 2130837590;
+			public const int newMsg = 2130837590;
+			
+			// aapt resource value: 0x7f020062
+			public const int notification_template_icon_bg = 2130837602;
 			
 			// aapt resource value: 0x7f020057
-			public const int roundedbgdark = 2130837591;
+			public const int peekup = 2130837591;
 			
 			// aapt resource value: 0x7f020058
-			public const int row_anomalie_background = 2130837592;
+			public const int roundedbg = 2130837592;
 			
 			// aapt resource value: 0x7f020059
-			public const int row_null_background = 2130837593;
+			public const int roundedbgdark = 2130837593;
 			
 			// aapt resource value: 0x7f02005a
-			public const int row_valide_background = 2130837594;
+			public const int row_anomalie_background = 2130837594;
 			
 			// aapt resource value: 0x7f02005b
-			public const int SBBadgeBG = 2130837595;
+			public const int row_null_background = 2130837595;
 			
 			// aapt resource value: 0x7f02005c
-			public const int SBBadgeBGUP = 2130837596;
+			public const int row_valide_background = 2130837596;
 			
 			// aapt resource value: 0x7f02005d
-			public const int splash_screen = 2130837597;
+			public const int SBBadgeBG = 2130837597;
 			
 			// aapt resource value: 0x7f02005e
-			public const int Val = 2130837598;
+			public const int SBBadgeBGUP = 2130837598;
 			
 			// aapt resource value: 0x7f02005f
-			public const int whitefield = 2130837599;
+			public const int splash_screen = 2130837599;
+			
+			// aapt resource value: 0x7f020060
+			public const int Val = 2130837600;
+			
+			// aapt resource value: 0x7f020061
+			public const int whitefield = 2130837601;
 			
 			static Drawable()
 			{
@@ -2524,6 +2533,9 @@ namespace DMS_3
 		
 		public partial class String
 		{
+			
+			// aapt resource value: 0x7f090021
+			public const int Recherche = 2131296289;
 			
 			// aapt resource value: 0x7f090019
 			public const int Valider = 2131296281;

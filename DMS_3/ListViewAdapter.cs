@@ -51,25 +51,16 @@ namespace DMS_3
 					break;
 				case "0":
 					if (mItems [position].typeMission == "L") {
-						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRow, null, false);
 						xml_type = Resource.Layout.ListeViewRow;
 					} else {
-						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowRamasse, null, false);
 						xml_type = Resource.Layout.ListeViewRowEnlevement;
 					}
 					break;
 				case "1":
-					//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowValide, null, false);
 					xml_type = Resource.Layout.ListeViewRowValide;
 					break;
 				case "2":
-					if (mItems [position].imgpath == null || mItems [position].imgpath == "") {
-						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomalie, null, false);
-						xml_type = Resource.Layout.ListeViewRowAnomalie;
-					} else {
-						//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowAnomaliePJ,null,false);
-						xml_type = Resource.Layout.ListeViewRowAnomaliePJ;
-					}
+					xml_type = Resource.Layout.ListeViewRowAnomalie;
 					break;
 				}
 				//if(mItems[position].imgpath == "SUPPLIV"){
@@ -86,9 +77,9 @@ namespace DMS_3
 			Button btnvalid = row.FindViewById<Button> (Resource.Id.btn_valider);
 			Button btnanomalie = row.FindViewById<Button> (Resource.Id.btn_anomalie);
 
-			textLeft.SetTypeface (Data.LatoBold, Android.Graphics.TypefaceStyle.Normal);
-			textMid.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
-			textRight.SetTypeface (Data.LatoLight, Android.Graphics.TypefaceStyle.Normal);
+			textLeft.SetTypeface (Data.LatoBlack, Android.Graphics.TypefaceStyle.Normal);
+			textMid.SetTypeface (Data.LatoBold, Android.Graphics.TypefaceStyle.Normal);
+			textRight.SetTypeface (Data.LatoBold, Android.Graphics.TypefaceStyle.Normal);
 
 			textLeft.Text = "OT: "+mItems[position].numCommande+" "+mItems[position].planDeTransport;
 			textMid.Text = mItems[position].CpLivraison+"."+mItems[position].villeLivraison+"\tCol: "+mItems[position].nbrColis+" Pal:"+mItems[position].nbrPallette;

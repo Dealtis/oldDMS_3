@@ -154,6 +154,8 @@
     <AndroidResource Include="Resources\drawable\Val.png" />
     <AndroidResource Include="Resources\drawable\row_anomalie_background.xml" />
     <AndroidResource Include="Resources\drawable\row_null_background.xml" />
+    <AndroidResource Include="Resources\drawable\button_white_background.xml" />
+    <AndroidResource Include="Resources\drawable\magnifier13.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

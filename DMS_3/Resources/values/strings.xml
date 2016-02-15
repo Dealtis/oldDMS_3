@@ -12,6 +12,8 @@
 	<string name="enlevement">Enlevement</string>
 	<string name="client">Client</string>
 	<string name="anomalie">Anomalie</string>
+	<string name="Recherche">Recherche</string>
+
 
 	<string-array name="anomalielivraisonlist">
 		<item>Choisir une anomalie</item>
@@ -49,6 +51,7 @@
 
 	<dimen name="dim5">5dp</dimen>
 	<dimen name="dim10">10dp</dimen>
+	<dimen name="dim20">20dp</dimen>
 	<dimen name="dim35">35dp</dimen>
 	<dimen name="dim50">50dp</dimen>
 	<dimen name="dim75">75dp</dimen>
