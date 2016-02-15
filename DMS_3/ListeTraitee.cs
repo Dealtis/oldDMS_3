@@ -150,7 +150,7 @@ namespace DMS_3
 			bodyListView.Adapter = adapter;
 
 			//bodyListView.ItemClick += MListView_ItemClick;
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='L' AND typeSegment='LIV' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
 
 		}
 
