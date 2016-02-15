@@ -78,7 +78,7 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine(System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
-			var grp = db.Query<TablePositions> ("SELECT * FROM TablePositions WHERE StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ? OR StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ?  GROUP BY groupage",1,tyM,tyS,Data.userAndsoft,2,"L","LIV",Data.userAndsoft);
+			var grp = db.Query<TablePositions> ("SELECT * FROM TablePositions WHERE StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ? OR StatutLivraison = ? AND typeMission= ? AND typeSegment= ?  AND Userandsoft = ?  GROUP BY groupage",1,tyM,tyS,Data.userAndsoft,2,tyM,tyS,Data.userAndsoft);
 
 			int i = 1;
 			int countGrp = 0;
