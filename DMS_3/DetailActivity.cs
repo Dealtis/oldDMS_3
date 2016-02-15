@@ -309,10 +309,12 @@ namespace DMS_3
 			if (data.StatutLivraison == "1" || data.StatutLivraison == "2") {
 				Intent intent = new Intent (this, typeof(ListeTraitee));
 				this.StartActivity (intent);
+				intent.PutExtra("TYPE",type);
 				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 			} else {
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				this.StartActivity (intent);
+				intent.PutExtra("TYPE",type);
 				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 			}
 		}
