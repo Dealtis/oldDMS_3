@@ -254,6 +254,22 @@ namespace DMS_3.BDD
 			return output;
 		}
 
+		public string updatePositionSuppliv (string numCommande)
+		{
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = "";
+			var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande));
+			foreach (var item in query) {
+				output = "YALO";
+				var row = db.Get<TablePositions> (item.Id);
+				row.imgpath = "SUPPLIV";
+				db.Update(row);
+				Console.WriteLine ("UPDATE SUPPLIV" + row.numCommande);
+			}
+			return output;
+		}
 		//USER CHECK LOGIN
 		public string is_user_Log_In()
 		{		

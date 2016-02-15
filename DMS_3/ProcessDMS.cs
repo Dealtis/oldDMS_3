@@ -228,12 +228,13 @@ namespace DMS_3
 						switch(item ["texteMessage"].ToString().Substring(1,9))
 							{
 							case "%%SUPPLIV":
-								var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+								//var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = ? WHERE numCommande = ?","SUPPLIV",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
+								var updatestat = dbr.updatePositionSuppliv((item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
 								dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
-								dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, item ["numMessage"]);
+								dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11)+" a été supprimée de votre tournée",0,DateTime.Now,1, item ["numMessage"]);
 								break;
 							case "%%RETOLIV":
-								var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+								var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
 								var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 								break;
 							case "%%SUPPGRP":

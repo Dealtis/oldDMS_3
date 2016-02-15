@@ -269,7 +269,8 @@ namespace DMS_3
 					CpExpediteur = item.CpExpediteur,
 					villeExpediteur = item.villeLivraison,
 					nomClientLivraison = item.nomClientLivraison,
-					villeClientLivraison = item.villeClientLivraison
+					villeClientLivraison = item.villeClientLivraison,
+					imgpath = item.imgpath,
 
 				});
 
