@@ -123,6 +123,7 @@ namespace DMS_3
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
 						if (!checkpos) {
 							var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
+							var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,0,row["numCommande"],row["groupage"]);
 							Console.WriteLine ("\n"+IntegUser);
 						}
 					}
