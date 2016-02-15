@@ -257,10 +257,9 @@ namespace DMS_3
 					}
 				}
 				String datajson = string.Empty;
-				String datagps=string.Empty;;
-				String datamsg=string.Empty;;
-				String datanotif=string.Empty;;
-
+				String datagps=string.Empty;
+				String datamsg=string.Empty;
+				String datanotif=string.Empty;
 
 
 				datagps = "{\"posgps\":\"" + GPS + "\",\"userandsoft\":\"" + userAndsoft + "\"}";
@@ -276,7 +275,6 @@ namespace DMS_3
 				var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2");
 				foreach (var item in tablemessage) {
 					datamsg += "{\"codeChauffeur\":\"" + item.codeChauffeur + "\",\"texteMessage\":\"" + item.texteMessage + "\",\"utilisateurEmetteur\":\""+item.utilisateurEmetteur+"\",\"dateImportMessage\":\""+item.dateImportMessage+"\",\"typeMessage\":\""+item.typeMessage+"\"},";
-
 				}
 				if(datanotif == ""){
 					datanotif ="{}";
@@ -292,29 +290,25 @@ namespace DMS_3
 				datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
 
 				//API MSG/NOTIF/GPS
-
-					try{
-						webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
-						webClient.UploadString (_url,datajson);
-						foreach (var item in tablestatutmessage) {
-							var resultdelete = dbr.deletenotif(item.Id);
-						}
-						foreach (var item in tablemessage) {
-						var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
-						}
+				try{
+					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+					webClient.UploadString (_url,datajson);
+					foreach (var item in tablestatutmessage) {
+						var resultdelete = dbr.deletenotif(item.Id);
 					}
-					catch (Exception e)
-					{
-						Insights.Report (e,Xamarin.Insights.Severity.Error);
+					foreach (var item in tablemessage) {
+					var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
 					}
-
-
+				}
+				catch (Exception e)
+				{
+					Insights.Report (e,Xamarin.Insights.Severity.Error);
+				}
 				} catch (Exception ex) {
 					Insights.Report (ex,Xamarin.Insights.Severity.Error);
 					Console.Out.Write(ex);
 				}
 			Console.WriteLine ("\nTask ComPosGps done");
-			//File.AppendAllText(Data.log_file, "Task ComPosGps done"+DateTime.Now.ToString("t")+"\n");
 		}
 		
 

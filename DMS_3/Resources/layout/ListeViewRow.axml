@@ -13,23 +13,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView1"
             android:layout_weight="6" />
-        <Button
-            android:layout_width="89.5dp"
-            android:layout_height="match_parent"
-            android:singleLine="true"
-            android:text="A"
-            android:minWidth="@dimen/dim50"
-            android:minHeight="@dimen/dim50"
-            android:id="@+id/btn_anomalie" />
-        <Button
-            android:layout_width="89.5dp"
-            android:layout_height="match_parent"
-            android:singleLine="true"
-            android:text="V"
-            android:minWidth="@dimen/dim50"
-            android:minHeight="@dimen/dim50"
-            android:id="@+id/btn_valider"
-            android:layout_weight=".2" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"

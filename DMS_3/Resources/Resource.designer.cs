@@ -1776,8 +1776,8 @@ namespace DMS_3
 			// aapt resource value: 0x7f08008b
 			public const int btn_all = 2131230859;
 			
-			// aapt resource value: 0x7f080097
-			public const int btn_anomalie = 2131230871;
+			// aapt resource value: 0x7f08009a
+			public const int btn_anomalie = 2131230874;
 			
 			// aapt resource value: 0x7f080095
 			public const int btn_search = 2131230869;
@@ -1785,8 +1785,8 @@ namespace DMS_3
 			// aapt resource value: 0x7f080094
 			public const int btn_traite = 2131230868;
 			
-			// aapt resource value: 0x7f080098
-			public const int btn_valider = 2131230872;
+			// aapt resource value: 0x7f08009b
+			public const int btn_valider = 2131230875;
 			
 			// aapt resource value: 0x7f0800a2
 			public const int btnlogin = 2131230882;
@@ -2193,11 +2193,11 @@ namespace DMS_3
 			// aapt resource value: 0x7f0800b2
 			public const int textds = 2131230898;
 			
-			// aapt resource value: 0x7f080099
-			public const int textleft = 2131230873;
+			// aapt resource value: 0x7f080097
+			public const int textleft = 2131230871;
 			
-			// aapt resource value: 0x7f08009a
-			public const int textmid = 2131230874;
+			// aapt resource value: 0x7f080098
+			public const int textmid = 2131230872;
 			
 			// aapt resource value: 0x7f0800a9
 			public const int time = 2131230889;
@@ -2214,8 +2214,8 @@ namespace DMS_3
 			// aapt resource value: 0x7f0800b1
 			public const int txtName = 2131230897;
 			
-			// aapt resource value: 0x7f08009b
-			public const int txtright = 2131230875;
+			// aapt resource value: 0x7f080099
+			public const int txtright = 2131230873;
 			
 			// aapt resource value: 0x7f080009
 			public const int up = 2131230729;

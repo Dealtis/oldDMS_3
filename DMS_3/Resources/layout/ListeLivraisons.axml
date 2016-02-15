@@ -65,7 +65,7 @@
         swipe:swipeFrontView="@+id/front"
         swipe:swipeBackView="@+id/back"
         swipe:swipeCloseAllItemsWhenMoveList="true"
-        swipe:swipeMode="none"
+        swipe:swipeMode="left"
         swipe:swipeActionRight="reveal"
         swipe:swipeActionLeft="reveal"
         swipe:swipeOpenOnLongPress="false"
