@@ -145,12 +145,22 @@
     <AndroidResource Include="Resources\layout\RowLeft.axml" />
     <AndroidResource Include="Resources\layout\RowRight.axml" />
     <AndroidResource Include="Resources\layout\valideDialBox.axml" />
+    <AndroidResource Include="Resources\drawable\row_valide_background.xml" />
+    <AndroidResource Include="Resources\drawable\Anom.png" />
+    <AndroidResource Include="Resources\drawable\Anompj.png" />
+    <AndroidResource Include="Resources\drawable\Enl.png" />
+    <AndroidResource Include="Resources\drawable\Liv.png" />
+    <AndroidResource Include="Resources\drawable\LivAdr.png" />
+    <AndroidResource Include="Resources\drawable\Val.png" />
+    <AndroidResource Include="Resources\drawable\row_anomalie_background.xml" />
+    <AndroidResource Include="Resources\drawable\row_null_background.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
     <Folder Include="BDD\" />
     <Folder Include="Resources\Raw\" />
     <Folder Include="Resources\anim\" />
+    <Folder Include="Assets\fonts\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\SQLitePCL.raw.0.8.6\build\MonoAndroid\SQLitePCL.raw.targets" Condition="Exists('..\packages\SQLitePCL.raw.0.8.6\build\MonoAndroid\SQLitePCL.raw.targets')" />
@@ -188,5 +198,12 @@
       <Version>23.0.1.3</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\fonts\Lato-Black.ttf" />
+    <AndroidAsset Include="Assets\fonts\Lato-Bold.ttf" />
+    <AndroidAsset Include="Assets\fonts\Lato-Light.ttf" />
+    <AndroidAsset Include="Assets\fonts\Lato-Medium.ttf" />
+    <AndroidAsset Include="Assets\fonts\Lato-Regular.ttf" />
   </ItemGroup>
 </Project>

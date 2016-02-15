@@ -238,7 +238,7 @@ namespace DMS_3
 								var resstatutbis = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 								break;
 							case "%%SUPPGRP":
-								var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
+								var supgrp = db.Query<TablePositions>("DELETE from TablePositions where groupage = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
 								var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 								break;
 							case "%%GETFLOG":

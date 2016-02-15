@@ -11,6 +11,7 @@ using DMS_3.BDD;
 using Xamarin;
 using System.Json;
 using Android.Media;
+using Android.App;
 
 namespace DMS_3
 {
@@ -39,6 +40,14 @@ namespace DMS_3
 		private int livraisonIndicator;
 		private int enlevementIndicator;
 		private int messageIndicator;
+
+		//FONT
+
+		public static Typeface LatoBlack =  Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Black.ttf");
+		public static Typeface LatoBold = Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Bold.ttf");
+		public static Typeface LatoLight = Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Light.ttf");
+		public static Typeface LatoMedium = Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Medium.ttf");
+		public static Typeface LatoRegular = Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Regular.ttf");
 
 		public static Data Instance
 		{

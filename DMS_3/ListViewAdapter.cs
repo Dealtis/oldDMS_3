@@ -86,13 +86,9 @@ namespace DMS_3
 			Button btnvalid = row.FindViewById<Button> (Resource.Id.btn_valider);
 			Button btnanomalie = row.FindViewById<Button> (Resource.Id.btn_anomalie);
 
-//			btnvalid.Click += delegate {
-//				Btnvalid_Click(position);
-//			};
-
-//			btnanomalie.Click += delegate {
-//				BtnAnomalie_Click(position);
-//			};
+			textLeft.SetTypeface (Data.LatoBold, Android.Graphics.TypefaceStyle.Normal);
+			textMid.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
+			textRight.SetTypeface (Data.LatoLight, Android.Graphics.TypefaceStyle.Normal);
 
 			textLeft.Text = "OT: "+mItems[position].numCommande+" "+mItems[position].planDeTransport;
 			textMid.Text = mItems[position].CpLivraison+"."+mItems[position].villeLivraison+"\tCol: "+mItems[position].nbrColis+" Pal:"+mItems[position].nbrPallette;

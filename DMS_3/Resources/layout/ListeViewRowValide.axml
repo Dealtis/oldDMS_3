@@ -37,7 +37,7 @@
         android:tag="front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ff4e4e4e">
+        android:background="@drawable/row_valide_background">
         <TextView
             android:text="LEFT"
             android:id="@+id/textleft"
