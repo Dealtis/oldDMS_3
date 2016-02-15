@@ -92,7 +92,7 @@ namespace DMS_3
 			RunOnUiThread (() => {
 				try {
 					Data.Instance.InsertData ();
-					AndHUD.Shared.ShowSuccess(this, "Mise à jour réussite!", MaskType.Clear, TimeSpan.FromSeconds(2));
+					AndHUD.Shared.ShowSuccess(this, "Mise à jour réussit!", MaskType.Clear, TimeSpan.FromSeconds(2));
 				} catch (Exception ex) {
 					Console.WriteLine ("\n"+ex);
 					AndHUD.Shared.ShowError(this, "Error : "+ex, MaskType.Black, TimeSpan.FromSeconds(2));

@@ -70,8 +70,8 @@
         swipe:swipeActionLeft="reveal"
         swipe:swipeOpenOnLongPress="false"
         android:layout_weight=".6"
-        swipe:swipeOffsetLeft="10dp"
-        swipe:swipeOffsetRight="10dp" />
+        swipe:swipeOffsetLeft="1000dp"
+        swipe:swipeOffsetRight="10000dp" />
     <LinearLayout
         android:minWidth="25px"
         android:minHeight="25px"
