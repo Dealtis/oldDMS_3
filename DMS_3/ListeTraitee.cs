@@ -162,6 +162,7 @@ namespace DMS_3
 			}else{
 				Intent intent = new Intent (this, typeof(DetailActivity));
 				intent.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
+				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
 				this.OverridePendingTransition (Resource.Animation.slideIn_right,Resource.Animation.abc_fade_out);
 			}
