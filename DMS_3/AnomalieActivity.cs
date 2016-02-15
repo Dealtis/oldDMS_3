@@ -204,6 +204,7 @@ namespace DMS_3
 				}
 			);
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
 			this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 		}
@@ -270,7 +271,17 @@ namespace DMS_3
 			builder.SetMessage("Voulez-vous annulée l'anomalie ?");
 			builder.SetCancelable(false);
 			builder.SetPositiveButton("Oui", delegate {
-				StartActivity(typeof(ListeLivraisonsActivity));
+				if (data.StatutLivraison == "1" || data.StatutLivraison == "2") {
+					Intent intent = new Intent (this, typeof(ListeTraitee));
+					intent.PutExtra("TYPE",type);
+					this.StartActivity (intent);
+					this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+				} else {
+					Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+					intent.PutExtra("TYPE",type);
+					this.StartActivity (intent);
+					this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+				}
 			});
 			builder.SetNegativeButton("Non", delegate {  });
 

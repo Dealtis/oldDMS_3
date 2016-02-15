@@ -237,7 +237,10 @@ namespace DMS_3
 				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+mémo.Text+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
 				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
-				StartActivity(typeof(ListeLivraisonsActivity));
+
+				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+				intent.PutExtra("TYPE",type);
+				this.StartActivity (intent);
 
 			});
 			dialog.SetNegativeButton("Non", delegate {

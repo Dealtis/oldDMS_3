@@ -225,7 +225,7 @@ namespace DMS_3
 							var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
 							alertsms ();	
 						}else{
-						switch(item ["texteMessage"].ToString().Substring(0,9))
+						switch(item ["texteMessage"].ToString().Substring(1,9))
 							{
 							case "%%SUPPLIV":
 								var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = 'SUPPLIV' WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 2).Substring(10));
