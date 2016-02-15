@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:singleLine="true"
-            android:textSize="@dimen/dim20" />
+            android:textSize="@dimen/dim14" />
         <TextView
             android:text="MID"
             android:id="@+id/textmid"
@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:singleLine="true"
-            android:textSize="@dimen/dim20" />
+            android:textSize="@dimen/dim14" />
         <TextView
             android:text="RIGHT"
             android:id="@+id/txtright"
@@ -47,6 +47,6 @@
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:singleLine="true"
-            android:textSize="@dimen/dim20" />
+            android:textSize="@dimen/dim14" />
     </LinearLayout>
 </FrameLayout>

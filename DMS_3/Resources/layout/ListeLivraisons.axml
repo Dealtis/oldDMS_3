@@ -103,6 +103,6 @@
             android:layout_height="match_parent"
             android:background="@drawable/button_white_background"
             android:textColor="@color/primary"
-            android:text="@string/Recherche" />
+            android:text="S" />
     </LinearLayout>
 </LinearLayout>

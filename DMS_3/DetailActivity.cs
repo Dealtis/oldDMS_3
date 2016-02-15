@@ -85,8 +85,8 @@ namespace DMS_3
 			anomalie = FindViewById<TextView> (Resource.Id.infoanomalie);
 			destfinal = FindViewById<TextView> (Resource.Id.destfinal);
 			_imageView = FindViewById<ImageView> (Resource.Id._imageView);
-
 			btnvalide = FindViewById<Button> (Resource.Id.valide);
+
 			Button btnanomalie = FindViewById <Button> (Resource.Id.anomalie);
 
 
