@@ -37,7 +37,7 @@
         android:tag="front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ff4e4e4e">
+        android:background="@drawable/row_null_background">
         <TextView
             android:text="LEFT"
             android:id="@+id/textleft"
@@ -63,4 +63,12 @@
             android:layout_weight="0.8"
             android:singleLine="true" />
     </LinearLayout>
+    <ImageView
+        android:src="@drawable/enl"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView1"
+        android:layoutDirection="ltr"
+        android:paddingLeft="@dimen/dim10"
+        android:tint="@color/white" />
 </FrameLayout>
