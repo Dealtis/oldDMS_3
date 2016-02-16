@@ -120,8 +120,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="@drawable/button_white_background"
-            android:textColor="@color/primary" />
+            android:background="@drawable/row_valide_background"
+            android:textColor="@color/white"
+            android:minHeight="@dimen/dim75" />
         <Button
             android:text="@string/anomalie"
             android:id="@+id/anomalie"
@@ -129,7 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="@drawable/button_white_background"
-            android:textColor="@color/primary" />
+            android:background="@drawable/row_anomalie_background"
+            android:textColor="@color/white"
+            android:minHeight="@dimen/dim75" />
     </LinearLayout>
 </LinearLayout>

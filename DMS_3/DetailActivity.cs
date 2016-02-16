@@ -158,11 +158,9 @@ namespace DMS_3
 
 				anomalie.Visibility = ViewStates.Visible;
 				anomaliet.Visibility = ViewStates.Visible;
-
+				anomalie.Text = data.codeAnomalie + data.libeAnomalie + "\n" + data.remarque;					
 				//set IMG
-
 				_imageView.Visibility = ViewStates.Visible;
-
 				Bitmap imgbitmap = data.imgpath.LoadAndResizeBitmap (500, 500);
 				_imageView.SetImageBitmap (imgbitmap);
 				break;

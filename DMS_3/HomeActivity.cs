@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Telephony;
 using Android.App;
 using Android.Content;
 using Android.Locations;
@@ -56,9 +57,6 @@ namespace DMS_3
 			deliveryBadge.Visibility = ViewStates.Gone;
 			newMsgBadge.Visibility = ViewStates.Gone;
 
-			//Mettre le lblTitle: User + versionNumber
-			Context context = this.ApplicationContext;
-			var version = context.PackageManager.GetPackageInfo(context.PackageName, 0).VersionName;
 
 			//click button
 			LinearLayout btn_Livraison = FindViewById<LinearLayout> (Resource.Id.columnlayout1_1);
@@ -72,8 +70,6 @@ namespace DMS_3
 			btn_Livraison.LongClick += Btn_Livraison_LongClick;
 			btn_Config.LongClick += Btn_Config_LongClick;
 			btn_Message.Click += delegate { btn_Message_Click();};
-
-			//btn deconnexion, userlogin false et update
 
 
 			//Xamarin Insight
@@ -114,6 +110,7 @@ namespace DMS_3
 				dbr.logout();
 				Data.userAndsoft = null;
 				Data.userTransics = null;
+				File.AppendAllText(Data.log_file, "[LOGOUT]Coupure du service le "+DateTime.Now.ToString("G")+"\n");
 				StopService (
 					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
 				);

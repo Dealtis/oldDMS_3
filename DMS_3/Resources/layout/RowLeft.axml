@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/tableRow1"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:background="@color/primary">
         <TextView
             android:text="Ceci est un test de message un petit peu long, pour voir comment cela réagie"
             android:id="@+id/txtName"

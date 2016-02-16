@@ -59,7 +59,7 @@ namespace DMS_3
 			btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
 			btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
 			btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
-			Button btnsearch = FindViewById<Button> (Resource.Id.btn_search);
+			LinearLayout btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
 			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
 
 			btngrpAll.Click += delegate {
