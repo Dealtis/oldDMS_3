@@ -41,7 +41,8 @@
             android:layout_gravity="bottom"
             android:layout_alignParentLeft="true"
             android:layout_weight=".5"
-            android:textColor="#ff000000" />
+            android:textColor="@color/white"
+            android:background="@drawable/row_valide_background" />
         <Button
             android:text="Photo"
             android:layout_width="@dimen/dim150"
@@ -50,6 +51,7 @@
             android:layout_gravity="bottom"
             android:layout_alignParentRight="true"
             android:layout_weight=".5"
-            android:textColor="#ff000000" />
+            android:textColor="@color/white"
+            android:background="@drawable/row_null_background" />
     </RelativeLayout>
 </LinearLayout>

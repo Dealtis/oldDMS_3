@@ -23,6 +23,7 @@ using SQLite;
 using Environment = System.Environment;
 using Xamarin;
 using Android.Media;
+using Android.Telephony;
 
 
 namespace DMS_3
@@ -36,6 +37,8 @@ namespace DMS_3
 		String userAndsoft;
 		String userTransics;
 		String GPS;
+
+		string log_file;
 		public override void OnStart (Android.Content.Intent intent, int startId)
 		{
 			base.OnStart (intent, startId);
@@ -44,6 +47,34 @@ namespace DMS_3
 			userAndsoft = dbr.getUserAndsoft ();
 			userTransics = dbr.getUserTransics ();
 
+			var t = DateTime.Now.ToString("dd_MM_yy");
+			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+			ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+			string log = pref.GetString("Log", String.Empty);
+			//GetTelId
+			TelephonyManager tel = (TelephonyManager)this.GetSystemService(Context.TelephonyService);
+			var telId = tel.DeviceId;
+
+			//Si il n'y a pas de shared pref
+			if (log == String.Empty){
+				log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
+				ISharedPreferencesEditor edit = pref.Edit();
+				edit.PutString("Log",log_file);
+				edit.Apply();
+			}else{
+				//il y a des shared pref
+				log_file = pref.GetString("Log", String.Empty);
+				if (((File.GetCreationTime(log_file)).CompareTo(DateTime.Now)) > 3) {
+					File.Delete(log_file);
+					log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
+					ISharedPreferencesEditor edit = pref.Edit();
+					edit.PutString("Log",log_file);
+					edit.Apply();
+					log_file = pref.GetString("Log", String.Empty);
+				}
+
+			}
+			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
 			DoStuff ();
 
 			// initialize location manager
@@ -52,8 +83,9 @@ namespace DMS_3
 			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
 				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
 				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider, 2000, 1, this);
+				File.AppendAllText(log_file,"[GPS] Lancer le"+DateTime.Now.ToString("t")+"\n");
 			} else {
-				//Toast.MakeText (this, "GPS Désactiver!", ToastLength.Long).Show ();
+				File.AppendAllText(log_file,"[GPS] Le GPS est désactiver"+DateTime.Now.ToString("t")+"\n");
 			}
 		}
 
@@ -62,8 +94,7 @@ namespace DMS_3
 			base.OnDestroy ();
 
 			_timer.Dispose ();
-
-			Log.Debug ("SimpleService", "SimpleService stopped");       
+			File.AppendAllText(log_file,"[SERVICE] Service Ondestroy call "+DateTime.Now.ToString("t")+"\n");
 		}
 
 		public void DoStuff ()
@@ -78,19 +109,14 @@ namespace DMS_3
 					Task.Factory.StartNew (
 
 						() => {
-							Console.WriteLine ("\nHello from InsertData.");
-							InsertData ();//TOUTES LES 2 MINS
+							Console.WriteLine ("\nHello from ComPosNotifMsg.");
+							ComPosNotifMsg ();//TOUTES LES 2 MINS
 						}					
 					).ContinueWith (
 						t => {
 							Console.WriteLine ("\nHello from ComWebService.");
 							ComWebService ();//TOUTES LES 2MIN
 						}						
-					).ContinueWith (
-						v => {
-							Console.WriteLine ("\nHello from ComPosNotifMsg.");
-							ComPosNotifMsg ();//TOUTES LES 2MIN
-						}
 					);
 				}
 			}, null, 0, 120000);
@@ -110,7 +136,8 @@ namespace DMS_3
 
 			//récupération de donnée via le webservice
 			string content_integdata = String.Empty;
-			try {				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + userTransics + "&datecommande=" + datedujour + "";
+			try {
+				string _url = "http://dms.jeantettransport.com/api/commandeWSV3?codechauffeur=" + userTransics + "&datecommande=" + datedujour + "";
 				var webClient = new WebClient ();
 				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 				content_integdata = webClient.DownloadString (_url);
@@ -123,8 +150,9 @@ namespace DMS_3
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
 						if (!checkpos) {
 							var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
-							var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,0,row["numCommande"],row["groupage"]);
+							var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
 							Console.WriteLine ("\n"+IntegUser);
+							File.AppendAllText(log_file,"[TASK]Intégration d'une position "+IntegUser+" à "+DateTime.Now.ToString("t")+"\n");
 						}
 					}
 				}
@@ -139,6 +167,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
+				File.AppendAllText(log_file,"[ERROR] InserData : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				Insights.Report(ex);
 			}
 
@@ -172,6 +201,7 @@ namespace DMS_3
 					content_grpcloture = "[]";
 					Console.WriteLine ("\n"+ex);
 					Insights.Report(ex);
+					File.AppendAllText(log_file,"[ERROR] Cloture : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 
 			}
@@ -190,7 +220,7 @@ namespace DMS_3
 			//maj du badge
 
 				//API GPS OK
-				string _url = "http://dms.jeantettransport.com/api/leslie";
+				string _url = "http://dms.jeantettransport.com/api/WSV3";
 				string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
 					(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
 				var db = new SQLiteConnection (dbPath);
@@ -205,7 +235,7 @@ namespace DMS_3
 					try {
 					
 						//API LIVRER OK
-						string _urlb = "http://dms.jeantettransport.com/api/leslie?codechauffeur=" + userAndsoft +"";
+						string _urlb = "http://dms.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"";
 						var webClientb = new WebClient ();
 						webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
 						//webClient.Encoding = Encoding.UTF8;
@@ -228,10 +258,10 @@ namespace DMS_3
 						switch(item ["texteMessage"].ToString().Substring(1,9))
 							{
 							case "%%SUPPLIV":
-								//var updatestatt = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = ? WHERE numCommande = ?","SUPPLIV",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
 								var updatestat = dbr.updatePositionSuppliv((item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
 								dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 								dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"],"La position "+(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11)+" a été supprimée de votre tournée",0,DateTime.Now,1, item ["numMessage"]);
+								File.AppendAllText(log_file,"[SYSTEM]Réception d'un SUPPLIV à "+DateTime.Now.ToString("t")+"\n");
 								break;
 							case "%%RETOLIV":
 								var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(item ["texteMessage"].ToString()).Remove((item ["texteMessage"].ToString()).Length - 3).Substring(11));
@@ -242,13 +272,19 @@ namespace DMS_3
 								var ressupgrp = dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 								break;
 							case "%%GETFLOG":
-								//("ftp://77.158.93.75");
+								//ftp://77.158.93.75 or ftp://10.1.2.75
+								File.AppendAllText(log_file,"[SYSTEM]Réception d'un GETFLOG à "+DateTime.Now.ToString("t")+"\n");
 								Thread thread = new Thread(() => UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
 								thread.Start ();
+								dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
+								break;
+							case "%%COMMAND":
+								File.AppendAllText(log_file,"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
+								InsertData ();									
 								break;
 							default:
 								var resinteg = dbr.InsertDataMessage (item ["codeChauffeur"], item ["utilisateurEmetteur"], item ["texteMessage"],0,DateTime.Now,1,item ["numMessage"]);
-								var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
+								dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
 								alertsms ();
 								Console.WriteLine (item ["numMessage"].ToString());
 								Console.WriteLine (resinteg);
@@ -304,10 +340,12 @@ namespace DMS_3
 				catch (Exception e)
 				{
 					Insights.Report (e,Xamarin.Insights.Severity.Error);
+					File.AppendAllText(log_file,"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 				} catch (Exception ex) {
 					Insights.Report (ex,Xamarin.Insights.Severity.Error);
 					Console.Out.Write(ex);
+				File.AppendAllText(log_file,"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 			Console.WriteLine ("\nTask ComPosGps done");
 		}
@@ -334,6 +372,7 @@ namespace DMS_3
 				} catch (Exception e) {
 					Console.WriteLine (e);
 					Insights.Report(e);
+					File.AppendAllText(log_file,"[ERROR] ComWebService : "+e+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 			}
 			Console.WriteLine ("\nTask ComWebService done");
@@ -391,13 +430,13 @@ namespace DMS_3
 				stream.Write(data, 0, data.Length);
 				stream.Close();
 				FtpWebResponse res = (FtpWebResponse)req.GetResponse();
-				File.AppendAllText(Data.log_file,"Upload file"+fileName+" good\n");
+				File.AppendAllText(log_file,"Upload file"+fileName+" good\n");
 				Console.Out.Write("Upload file"+fileName+" good\n");
 				return true;
 
 			} catch (Exception ex) {
 				Insights.Report(ex);
-				File.AppendAllText(Data.log_file,"Upload file"+fileName+" error :"+ex+"\n");
+				File.AppendAllText(log_file,"Upload file"+fileName+" error :"+ex+"\n");
 				Console.Out.Write("Upload file"+fileName+" error\n");
 				Thread.Sleep(TimeSpan.FromMinutes(2));
 				UploadFile (FtpUrl, fileName, userName, password, UploadDirectory);

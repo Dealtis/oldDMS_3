@@ -425,7 +425,6 @@ namespace DMS_3.BDD
 			data. dateExpe = item.dateExpe;
 			data. nbrColis = item.nbrColis;
 			data. nbrPallette = item.nbrPallette;
-			data. poids = item.poids;
 			data. adresseExpediteur = item.adresseExpediteur;
 			data. CpExpediteur = item.CpExpediteur;
 			data. villeExpediteur = item.villeExpediteur;
@@ -443,14 +442,17 @@ namespace DMS_3.BDD
 			data .villeClientLivraison = item.villeClientLivraison;
 			data .Datemission = item.Datemission;
 			data. Ordremission = item.Ordremission;
-
 			data .Userandsoft = item.Userandsoft;
-
 			data .remarque = item.remarque;
 			data .codeAnomalie = item.codeAnomalie;
 			data .libeAnomalie = item.libeAnomalie;
-
 			data.imgpath = item.imgpath;
+
+			if (Convert.ToDouble((item.poids).Replace ('.', ',')) < 1) {
+				data.poids = ((Convert.ToDouble((item.poids).Replace ('.', ','))) * 1000) + " kg";
+			} else {
+				data.poids = item.poids + "tonnes";
+			}
 			return data;
 		}			
 

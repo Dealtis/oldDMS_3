@@ -13,7 +13,8 @@
         android:id="@+id/tableRow1"
         android:layout_marginTop="10dp"
         android:layout_gravity="right"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:background="@color/primaryDark">
         <TextView
             android:text="Ceci est un test de message un petit peu long, pour voir comment cela réagie"
             android:id="@+id/txtName"

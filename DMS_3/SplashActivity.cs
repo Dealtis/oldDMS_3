@@ -16,6 +16,7 @@ using AndroidHUD;
 using DMS_3.BDD;
 using Android.Text.Format;
 using Xamarin;
+using Android.Telephony;
 
 namespace DMS_3
 {
@@ -52,10 +53,12 @@ namespace DMS_3
 					//Shared Preference
 					ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
 					string log = pref.GetString("Log", String.Empty);
-
+					//GetTelId
+					TelephonyManager tel = (TelephonyManager)this.GetSystemService(Context.TelephonyService);
+					var telId = tel.DeviceId;
 					//Si il n'y a pas de shared pref
 					if (log == String.Empty){
-						Data.log_file = Path.Combine (dir_log, t+"_log.txt");
+						Data.log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
 						ISharedPreferencesEditor edit = pref.Edit();
 						edit.PutString("Log",Data.log_file);
 						edit.Apply();
@@ -64,17 +67,16 @@ namespace DMS_3
 						Data.log_file = pref.GetString("Log", String.Empty);
 						if (((File.GetCreationTime(Data.log_file)).CompareTo(DateTime.Now)) > 3) {
 							File.Delete(Data.log_file);
-							Data.log_file = Path.Combine (dir_log, t+"_log.txt");
+							Data.log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
 							ISharedPreferencesEditor edit = pref.Edit();
 							edit.PutString("Log",Data.log_file);
 							edit.Apply();
+							Data.log_file = pref.GetString("Log", String.Empty);
 						}
 
 					}
-					File.AppendAllText(Data.log_file, ">DMS lancée le "+DateTime.Now.ToString("F")+"\n");
-				
-
-			
+					File.AppendAllText(Data.log_file, "[LAUNCH] DMS lancée le "+DateTime.Now.ToString("F")+"\n");
+						
 
 					bool App_Connec = false;
 					while (!App_Connec) {

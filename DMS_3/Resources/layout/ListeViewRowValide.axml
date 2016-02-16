@@ -13,68 +13,65 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView1"
             android:layout_weight="6" />
-        <Button
-            android:layout_width="89.5dp"
-            android:layout_height="match_parent"
-            android:singleLine="true"
-            android:text="A"
-            android:minWidth="@dimen/dim50"
-            android:minHeight="@dimen/dim50"
-            android:id="@+id/btn_anomalie" />
-        <Button
-            android:layout_width="89.5dp"
-            android:layout_height="match_parent"
-            android:singleLine="true"
-            android:text="V"
-            android:minWidth="@dimen/dim50"
-            android:minHeight="@dimen/dim50"
-            android:id="@+id/btn_valider"
-            android:layout_weight=".2" />
     </LinearLayout>
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:id="@+id/front"
         android:tag="front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/row_valide_background">
-        <TextView
-            android:text="LEFT"
-            android:id="@+id/textleft"
-            android:gravity="center"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout1">
+            <ImageView
+                android:src="@drawable/val"
+                android:id="@+id/imageView1"
+                android:layoutDirection="ltr"
+                android:paddingLeft="@dimen/dim10"
+                android:tint="@color/gray"
+                android:layout_width="@dimen/dim50"
+                android:layout_height="match_parent"
+                android:paddingRight="@dimen/dim10" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:singleLine="true"
-            android:textSize="@dimen/dim14"
-            android:textColor="@color/white" />
-        <TextView
-            android:text="MID"
-            android:id="@+id/textmid"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:singleLine="true"
-            android:textSize="@dimen/dim14"
-            android:textColor="@color/white" />
-        <TextView
-            android:text="RIGHT"
-            android:id="@+id/txtright"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:singleLine="true"
-            android:textSize="@dimen/dim14"
-            android:textColor="@color/white" />
+            android:layout_weight=".8">
+            <TextView
+                android:text="LEFT"
+                android:id="@+id/textleft"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/dim14"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3" />
+            <TextView
+                android:text="MID"
+                android:id="@+id/textmid"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/dim14"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3" />
+            <TextView
+                android:text="RIGHT"
+                android:id="@+id/txtright"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/dim14"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3" />
+        </LinearLayout>
     </LinearLayout>
-    <ImageView
-        android:src="@drawable/val"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/imageView1"
-        android:layoutDirection="ltr"
-        android:paddingLeft="@dimen/dim10"
-        android:tint="@color/white" />
 </FrameLayout>
