@@ -58,4 +58,10 @@
         android:password="false"
         android:inputType="textLongMessage"
         android:hint="Remarque supplémentaire (facultatif)" />
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker"
+        android:layerType="hardware"
+        android:layout_gravity="center" />
 </LinearLayout>

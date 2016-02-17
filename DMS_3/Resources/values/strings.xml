@@ -47,7 +47,15 @@
         <item>Fermeture hebdomadaire</item>
         <item>Ramasse diverse</item>
     </string-array>
-
+     <string-array name="nbrpaletteeuropespin">
+    	<item>Nombre de palettes europe</item>
+        <item>1</item>       
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
 
 	<dimen name="dim5">5dp</dimen>
 	<dimen name="dim10">10dp</dimen>

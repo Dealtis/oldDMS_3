@@ -447,6 +447,7 @@ namespace DMS_3.BDD
 			data .codeAnomalie = item.codeAnomalie;
 			data .libeAnomalie = item.libeAnomalie;
 			data.imgpath = item.imgpath;
+			data.nbrPalletteEurope = item.nbrPalletteEurope;
 
 			if (Convert.ToDouble((item.poids).Replace ('.', ',')) < 1) {
 				data.poids = ((Convert.ToDouble((item.poids).Replace ('.', ','))) * 1000) + " kg";

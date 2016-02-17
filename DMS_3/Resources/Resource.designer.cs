@@ -120,6 +120,9 @@ namespace DMS_3
 			// aapt resource value: 0x7f0e0001
 			public const int anomalieramasselist = 2131623937;
 			
+			// aapt resource value: 0x7f0e0002
+			public const int nbrpaletteeuropespin = 2131623938;
+			
 			static Array()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -2060,6 +2063,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f08000b
 			public const int normal = 2131230731;
+			
+			// aapt resource value: 0x7f0800b9
+			public const int numberPicker = 2131230905;
 			
 			// aapt resource value: 0x7f08005d
 			public const int openCamera = 2131230813;
