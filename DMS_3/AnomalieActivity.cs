@@ -76,6 +76,8 @@ namespace DMS_3
 
 			adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
 			spinner.Adapter = adapter;
+
+			//REMISE  à null de la valeur photo
 		}
 
 		void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)
@@ -190,7 +192,8 @@ namespace DMS_3
 		
 			RunOnUiThread (() => {
 				try {
-					Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (data.imgpath);
+					var imgpath = dbr.GetPositionsData(i);
+					Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
 					Bitmap rbmp = Bitmap.CreateScaledBitmap(bmp, bmp.Width/5,bmp.Height/5, true);
 					compImg = data.imgpath.Replace(".jpg", "-1_1.jpg");
 					using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
