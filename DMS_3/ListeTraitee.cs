@@ -24,7 +24,7 @@ namespace DMS_3
 		string[] Arraygrp = new string[10];
 
 		public List<TablePositions> bodyItems;
-		public SwipeListView bodyListView;
+		public ListView bodyListView;
 		public bool insertdone;
 		public ListViewAdapterMenu adapter;
 
@@ -51,7 +51,7 @@ namespace DMS_3
 			Button btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
 			Button btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
 			Button btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
-			Button btnsearch = FindViewById<Button> (Resource.Id.btn_search);
+			LinearLayout btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
 			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
 
 			//FONTS
@@ -60,7 +60,6 @@ namespace DMS_3
 			btngrp2.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btngrp3.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btngrp4.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
-			btnsearch.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btntrait.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 
 			if (type == "RAM") {
@@ -68,7 +67,6 @@ namespace DMS_3
 			} else {
 				btntrait.Text = "Livraisons";
 			}
-
 
 			btngrpAll.Click += delegate {
 				btngrpAll_Click();
@@ -155,11 +153,12 @@ namespace DMS_3
 			}
 
 			//LISTVIEW
-			bodyListView = FindViewById<SwipeListView> (Resource.Id.bodylist);
+			bodyListView = FindViewById<ListView> (Resource.Id.bodylist);
 			bodyItems = new List<TablePositions> ();
 
-			bodyListView.FrontViewClicked += HandleFrontViewClicked;
-			bodyListView.BackViewClicked += HandleBackViewClicked; 
+			bodyListView.ItemClick += MListView_ItemClick;
+			bodyListView.ItemLongClick += MListView_ItemLongClick;
+
 
 
 			adapter = new ListViewAdapterMenu (this, bodyItems);
@@ -169,9 +168,7 @@ namespace DMS_3
 			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
 
 		}
-
-
-		void HandleFrontViewClicked (object sender, SwipeListViewClickedEventArgs e)
+		void MListView_ItemClick (object sender, AdapterView.ItemClickEventArgs e)
 		{
 			if(bodyItems[e.Position].imgpath == "SUPPLIV"){
 
@@ -184,11 +181,10 @@ namespace DMS_3
 			}
 		}
 
-		void HandleBackViewClicked (object sender, SwipeListViewClickedEventArgs e)
+		void MListView_ItemLongClick (object sender, AdapterView.ItemLongClickEventArgs e)
 		{
-			RunOnUiThread(() => bodyListView.CloseAnimate(e.Position));
-		}
 
+		}
 
 		void btngrpAll_Click ()
 		{

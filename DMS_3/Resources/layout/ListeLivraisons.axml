@@ -67,21 +67,13 @@
             android:background="@drawable/button_white_background"
             android:textColor="@color/primary" />
     </LinearLayout>
-    <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bodylist"
-        android:listSelector="#00000000"
+    <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        swipe:swipeFrontView="@+id/front"
-        swipe:swipeBackView="@+id/back"
-        swipe:swipeCloseAllItemsWhenMoveList="true"
-        swipe:swipeMode="left"
-        swipe:swipeActionRight="reveal"
-        swipe:swipeActionLeft="reveal"
-        swipe:swipeOpenOnLongPress="false"
-        android:layout_weight=".6"
-        swipe:swipeOffsetLeft="1000dp"
-        swipe:swipeOffsetRight="10000dp" />
+        android:id="@+id/bodylist"
+        android:layout_weight=".8" />
     <LinearLayout
         android:minWidth="25px"
         android:minHeight="25px"

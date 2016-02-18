@@ -447,7 +447,10 @@ namespace DMS_3.BDD
 			data .codeAnomalie = item.codeAnomalie;
 			data .libeAnomalie = item.libeAnomalie;
 			data.imgpath = item.imgpath;
+<<<<<<< HEAD
 			data.nbrPalletteEurope = item.nbrPalletteEurope;
+=======
+>>>>>>> refs/remotes/origin/DMSvPalette
 
 			if (Convert.ToDouble((item.poids).Replace ('.', ',')) < 1) {
 				data.poids = ((Convert.ToDouble((item.poids).Replace ('.', ','))) * 1000) + " kg";

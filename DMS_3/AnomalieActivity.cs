@@ -76,6 +76,8 @@ namespace DMS_3
 
 			adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
 			spinner.Adapter = adapter;
+
+			//REMISE  à null de la valeur photo
 		}
 
 		void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)
@@ -190,13 +192,15 @@ namespace DMS_3
 		
 			RunOnUiThread (() => {
 				try {
-					Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (data.imgpath);
+					var imgpath = dbr.GetPositionsData(i);
+					Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
 					Bitmap rbmp = Bitmap.CreateScaledBitmap(bmp, bmp.Width/5,bmp.Height/5, true);
-					compImg = data.imgpath.Replace(".jpg", "-1_1.jpg");
+					compImg = imgpath.imgpath.Replace(".jpg", "-1_1.jpg");
 					using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
 						rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg,100, fs);
 					}
-					Data.Instance.UploadFile("ftp://77.158.93.75",compImg,"DMS","Linuxr00tn","");
+					//ftp://77.158.93.75
+					Data.Instance.UploadFile("ftp://10.1.2.75",compImg,"DMS","Linuxr00tn","");
 
 				} catch (Exception ex) {
 					Console.WriteLine ("\n"+ex);
@@ -230,7 +234,8 @@ namespace DMS_3
 		private void TakeAPicture (object sender, EventArgs eventArgs)
 		{
 			Intent intent = new Intent (MediaStore.ActionImageCapture);
-			Data._file = new Java.IO.File (Data._dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
+
+			Data._file = new Java.IO.File (Data._dir, String.Format(""+DateTime.Now.ToString("dd_MM")+"_"+data.numCommande+".jpg", Guid.NewGuid()));
 			intent.PutExtra (MediaStore.ExtraOutput, Uri.FromFile (Data._file));
 			StartActivityForResult (intent, 0);
 		}
