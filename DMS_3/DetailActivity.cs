@@ -193,10 +193,11 @@ namespace DMS_3
 
 			//NUMBER PALETTE EUROPE
 			var numberPaletteEurope = viewAD.FindViewById<NumberPicker> (Resource.Id.numberPicker);
-			numberPaletteEurope.MaxValue = 10;
+			numberPaletteEurope.MaxValue = 250;
 			numberPaletteEurope.MinValue = 0;
 			numberPaletteEurope.Value = 0;
 			numberPaletteEurope.SetOnValueChangedListener(numPal);
+
 
 			if (data.CR == "" || data.CR == "0") {
 				check1.Visibility = ViewStates.Gone;
@@ -207,7 +208,7 @@ namespace DMS_3
 				check1.Visibility = ViewStates.Visible;
 				check2.Visibility = ViewStates.Visible;
 				txtCR.Visibility = ViewStates.Visible;
-				txtCR.Text = data.CR;
+				txtCR.Text = data.CR+" €";
 				dialog.SetMessage ("Avez vous perçu le CR,?\n Si oui, valider cette livraison ?");
 			}
 			if (type =="RAM") {

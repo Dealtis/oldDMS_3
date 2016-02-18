@@ -13,7 +13,7 @@
 	<string name="client">Client</string>
 	<string name="anomalie">Anomalie</string>
 	<string name="Recherche">Recherche</string>
-
+	<string name="nombrepalette">Nombre de palette(s) Europe</string>
 
 	<string-array name="anomalielivraisonlist">
 		<item>Choisir une anomalie</item>

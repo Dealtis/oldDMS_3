@@ -101,6 +101,9 @@ namespace DMS_3
 			// aapt resource value: 0x7f05000a
 			public const int slideIn_right = 2131034122;
 			
+			// aapt resource value: 0x7f05000b
+			public const int slideIOut_left = 2131034123;
+			
 			static Animation()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -2632,6 +2635,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f09001d
 			public const int livraison = 2131296285;
+			
+			// aapt resource value: 0x7f090022
+			public const int nombrepalette = 2131296290;
 			
 			// aapt resource value: 0x7f090018
 			public const int password = 2131296280;
