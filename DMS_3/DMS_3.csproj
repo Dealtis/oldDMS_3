@@ -156,6 +156,10 @@
     <AndroidResource Include="Resources\drawable\row_null_background.xml" />
     <AndroidResource Include="Resources\drawable\button_white_background.xml" />
     <AndroidResource Include="Resources\drawable\magnifier13.png" />
+    <AndroidResource Include="Resources\anim\slideOut_left.xml" />
+    <AndroidResource Include="Resources\drawable\send.png" />
+    <AndroidResource Include="Resources\layout\ListeViewRowStroke.axml" />
+    <AndroidResource Include="Resources\drawable\row_stroke_background.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

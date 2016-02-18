@@ -63,11 +63,11 @@ namespace DMS_3
 					xml_type = Resource.Layout.ListeViewRowAnomalie;
 					break;
 				}
-				//if(mItems[position].imgpath == "SUPPLIV"){
-					//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowStroke,null,false);
-					//xml_type = Resource.Layout.ListeViewRowStroke;
+				if(mItems[position].imgpath == "SUPPLIV"){
+					row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowStroke,null,false);
+					xml_type = Resource.Layout.ListeViewRowStroke;
 
-				//}
+				}
 				row = inflater.Inflate(xml_type,parent,false);
 			}
 
