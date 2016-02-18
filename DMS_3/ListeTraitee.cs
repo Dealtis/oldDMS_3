@@ -51,7 +51,7 @@ namespace DMS_3
 			Button btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
 			Button btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
 			Button btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
-			Button btnsearch = FindViewById<Button> (Resource.Id.btn_search);
+			LinearLayout btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
 			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
 
 			//FONTS
@@ -60,7 +60,6 @@ namespace DMS_3
 			btngrp2.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btngrp3.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btngrp4.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
-			btnsearch.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btntrait.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 
 			if (type == "RAM") {
@@ -68,7 +67,6 @@ namespace DMS_3
 			} else {
 				btntrait.Text = "Livraisons";
 			}
-
 
 			btngrpAll.Click += delegate {
 				btngrpAll_Click();
