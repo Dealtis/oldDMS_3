@@ -58,4 +58,24 @@
         android:password="false"
         android:inputType="textLongMessage"
         android:hint="Remarque supplémentaire (facultatif)" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:gravity="center">
+        <TextView
+            android:text="@string/nombrepalette"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textView1"
+            android:gravity="center"
+            android:paddingRight="@dimen/dim14" />
+        <NumberPicker
+            android:id="@+id/numberPicker"
+            android:layerType="hardware"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </LinearLayout>
 </LinearLayout>

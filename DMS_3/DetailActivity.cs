@@ -51,6 +51,7 @@ namespace DMS_3
 
 
 		private AlertDialog.Builder dialog;
+		private NumberPicker.IOnValueChangeListener numPal;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -123,7 +124,7 @@ namespace DMS_3
 
 			infosupp.Text = data.instrucLivraison;
 			codelivraison.Text = data.numCommande;
-			infolivraison.Text =  data.nomPayeur+"\n"+data.adresseLivraison+"\n"+data.CpLivraison+" "+data.villeLivraison+"\n"+data.nbrColis+" COLIS   "+data.nbrPallette+" PALETTE\n"+data.poids+"\n"+data.dateHeure+"\n"+data.CR;;		
+			infolivraison.Text =  data.nomPayeur+"\n"+data.adresseLivraison+"\n"+data.CpLivraison+" "+data.villeLivraison+"\n"+data.nbrColis+" COLIS   "+data.nbrPallette+" PALETTE\n"+data.nbrPalletteEurope+"P.EUROPE\n"+data.poids+"\n"+data.dateHeure+"\n"+data.CR;;		
 			infoclient.Text = "\n"+data.nomClient + "\nRef: "+data.refClient+"\nTournee : "+data.planDeTransport;
 			client.Text = "Client";
 			anomalie.Text = "\n"+data.libeAnomalie+"\n"+data.remarque;
@@ -190,6 +191,14 @@ namespace DMS_3
 			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
 			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
+			//NUMBER PALETTE EUROPE
+			var numberPaletteEurope = viewAD.FindViewById<NumberPicker> (Resource.Id.numberPicker);
+			numberPaletteEurope.MaxValue = 250;
+			numberPaletteEurope.MinValue = 0;
+			numberPaletteEurope.Value = 0;
+			numberPaletteEurope.SetOnValueChangedListener(numPal);
+
+
 			if (data.CR == "" || data.CR == "0") {
 				check1.Visibility = ViewStates.Gone;
 				check2.Visibility = ViewStates.Gone;
@@ -199,7 +208,7 @@ namespace DMS_3
 				check1.Visibility = ViewStates.Visible;
 				check2.Visibility = ViewStates.Visible;
 				txtCR.Visibility = ViewStates.Visible;
-				txtCR.Text = data.CR;
+				txtCR.Text = data.CR+" €";
 				dialog.SetMessage ("Avez vous perçu le CR,?\n Si oui, valider cette livraison ?");
 			}
 			if (type =="RAM") {

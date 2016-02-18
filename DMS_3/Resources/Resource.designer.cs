@@ -101,6 +101,9 @@ namespace DMS_3
 			// aapt resource value: 0x7f05000a
 			public const int slideIn_right = 2131034122;
 			
+			// aapt resource value: 0x7f05000b
+			public const int slideIOut_left = 2131034123;
+			
 			static Animation()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -119,6 +122,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f0e0001
 			public const int anomalieramasselist = 2131623937;
+			
+			// aapt resource value: 0x7f0e0002
+			public const int nbrpaletteeuropespin = 2131623938;
 			
 			static Array()
 			{
@@ -1821,12 +1827,21 @@ namespace DMS_3
 			// aapt resource value: 0x7f08008b
 			public const int btn_all = 2131230859;
 			
+<<<<<<< HEAD
+			// aapt resource value: 0x7f080095
+			public const int btn_search = 2131230869;
+			
+			// aapt resource value: 0x7f080094
+			public const int btn_traite = 2131230868;
+			
+=======
 			// aapt resource value: 0x7f080093
 			public const int btn_search = 2131230867;
 			
 			// aapt resource value: 0x7f080092
 			public const int btn_traite = 2131230866;
 			
+>>>>>>> refs/remotes/origin/DMSvPalette
 			// aapt resource value: 0x7f0800a0
 			public const int btnlogin = 2131230880;
 			
@@ -2060,6 +2075,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f08000b
 			public const int normal = 2131230731;
+			
+			// aapt resource value: 0x7f0800b9
+			public const int numberPicker = 2131230905;
 			
 			// aapt resource value: 0x7f08005d
 			public const int openCamera = 2131230813;
@@ -2626,6 +2644,9 @@ namespace DMS_3
 			
 			// aapt resource value: 0x7f09001d
 			public const int livraison = 2131296285;
+			
+			// aapt resource value: 0x7f090022
+			public const int nombrepalette = 2131296290;
 			
 			// aapt resource value: 0x7f090018
 			public const int password = 2131296280;

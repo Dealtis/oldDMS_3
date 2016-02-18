@@ -52,21 +52,13 @@ namespace DMS_3
 		public String villeClientLivraison{ get; set; }
 		public String Datemission{ get; set; }
 		public int Ordremission{ get; set; }
-
 		public String Userandsoft{ get; set; }
-
 		public String remarque { get; set; }
 		public String codeAnomalie { get; set; }
 		public String libeAnomalie { get; set; }
-
 		public String imgpath{ get; set; }
-
-
-
-
+		public int nbrPalletteEurope{ get; set; }
 		public int dateBDD { get; set; }
-
-
 	}
 }
 
