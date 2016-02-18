@@ -195,7 +195,7 @@ namespace DMS_3
 					var imgpath = dbr.GetPositionsData(i);
 					Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
 					Bitmap rbmp = Bitmap.CreateScaledBitmap(bmp, bmp.Width/5,bmp.Height/5, true);
-					compImg = data.imgpath.Replace(".jpg", "-1_1.jpg");
+					compImg = imgpath.imgpath.Replace(".jpg", "-1_1.jpg");
 					using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
 						rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg,100, fs);
 					}
@@ -234,7 +234,8 @@ namespace DMS_3
 		private void TakeAPicture (object sender, EventArgs eventArgs)
 		{
 			Intent intent = new Intent (MediaStore.ActionImageCapture);
-			Data._file = new Java.IO.File (Data._dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
+
+			Data._file = new Java.IO.File (Data._dir, String.Format(""+DateTime.Now.ToString("dd_MM")+"_"+data.numCommande+".jpg", Guid.NewGuid()));
 			intent.PutExtra (MediaStore.ExtraOutput, Uri.FromFile (Data._file));
 			StartActivityForResult (intent, 0);
 		}
