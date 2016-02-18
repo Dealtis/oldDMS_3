@@ -125,7 +125,8 @@ namespace DMS_3
 					AndHUD.Shared.ShowError(this, "Une erreur c'est produite", MaskType.Black, TimeSpan.FromSeconds(5));
 				}
 			}else{
-				AndHUD.Shared.ShowError(this, "Pas de connexion", MaskType.Black, TimeSpan.FromSeconds(5));
+				//AndHUD.Shared.ShowError(this, "Pas de connexion", MaskType.Black, TimeSpan.FromSeconds(5));
+				Toast.MakeText (this, "Pas de connexion", ToastLength.Long).Show ();
 			}
 		}
 	}

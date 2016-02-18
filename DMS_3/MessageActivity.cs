@@ -69,7 +69,7 @@ namespace DMS_3
 			mListView.Adapter = adapter;
 
 			//EDITTEXT
-			var btnsend = FindViewById<Button>(Resource.Id.btnsend);
+			var btnsend = FindViewById<LinearLayout>(Resource.Id.btn_send);
 			btnsend.Click += Btnsend_Click;
 
 			//STATUT DES MESSAGES RECU TO 1

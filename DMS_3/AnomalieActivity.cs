@@ -190,23 +190,26 @@ namespace DMS_3
 
 			string compImg = String.Empty;
 		
-			RunOnUiThread (() => {
-				try {
-					var imgpath = dbr.GetPositionsData(i);
-					Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
-					Bitmap rbmp = Bitmap.CreateScaledBitmap(bmp, bmp.Width/5,bmp.Height/5, true);
-					compImg = imgpath.imgpath.Replace(".jpg", "-1_1.jpg");
-					using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
-						rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg,100, fs);
-					}
-					//ftp://77.158.93.75
-					Data.Instance.UploadFile("ftp://10.1.2.75",compImg,"DMS","Linuxr00tn","");
 
-				} catch (Exception ex) {
-					Console.WriteLine ("\n"+ex);
-				}
-				}
+			Task.Factory.StartNew (
+				() => {
+					try {
+						var imgpath = dbr.GetPositionsData (i);
+						Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
+						Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
+						compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
+						using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
+							rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+						}
+						//ftp://77.158.93.75
+						Data.Instance.UploadFile ("ftp://10.1.2.75", compImg, "DMS", "Linuxr00tn", "");
+
+					} catch (Exception ex) {
+						Console.WriteLine ("\n" + ex);
+					}
+				}					
 			);
+
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
