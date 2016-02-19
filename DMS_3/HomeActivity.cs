@@ -80,6 +80,10 @@ namespace DMS_3
 			StartService (
 				new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
 			);
+
+			//SET des badges
+			DBRepository dbr = new DBRepository();
+			dbr.SETBadges(Data.userAndsoft);
 		
 		}
 
@@ -146,9 +150,7 @@ namespace DMS_3
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
 		{
-			//SET des badges
-			DBRepository dbr = new DBRepository ();
-			dbr.SETBadges(Data.userAndsoft);
+			
 
 			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
 			if (Data.Instance.getLivraisonIndicator () < 1) {

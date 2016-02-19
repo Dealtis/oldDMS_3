@@ -172,6 +172,8 @@ namespace DMS_3
 			}
 
 
+			//SET des badges
+			dbr.SETBadges(Data.userAndsoft);
 
 			//maj des badges fonctions
 			//TODO
@@ -293,6 +295,10 @@ namespace DMS_3
 						}
 					}
 				}
+
+				//SET des badges
+				dbr.SETBadges(Data.userAndsoft);
+
 				String datajson = string.Empty;
 				String datagps=string.Empty;
 				String datamsg=string.Empty;

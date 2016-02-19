@@ -523,7 +523,7 @@ namespace DMS_3.BDD
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 
-			var cLIV = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("L")).Where (v => v.StatutLivraison.Equals("0")).Count();
+			var cLIV = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("L")).Where (v => v.StatutLivraison.Equals("0")).Where (v => v.imgpath.Equals("")).Count();
 			var cRam = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("C")).Where (v => v.StatutLivraison.Equals("0")).Count();
 			var cMsg = db.Table<TableMessages>().Where (v => v.statutMessage.Equals(0)).Count();
 
