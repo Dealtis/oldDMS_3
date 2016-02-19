@@ -58,6 +58,7 @@ namespace DMS_3
 				});
 				i++;
 			}
+
 			if(i > 6){
 				View view = LayoutInflater.From (this).Inflate (Resource.Layout.ListeViewDelete, null, false);
 				mListView.AddHeaderView (view);
@@ -72,7 +73,6 @@ namespace DMS_3
 			btnsend.Click += Btnsend_Click;
 
 			//STATUT DES MESSAGES RECU TO 1
-
 			var tablemsgrecu = db.Query<TableMessages> ("SELECT * FROM TableMessages where statutMessage = 0");
 			foreach (var item in tablemsgrecu) {
 				var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 1 WHERE statutMessage = 0");

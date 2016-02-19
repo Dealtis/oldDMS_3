@@ -276,7 +276,7 @@ namespace DMS_3
 							case "%%GETFLOG":
 								//ftp://77.158.93.75 or ftp://10.1.2.75
 								File.AppendAllText(log_file,"[SYSTEM]Réception d'un GETFLOG à "+DateTime.Now.ToString("t")+"\n");
-								Thread thread = new Thread(() => UploadFile("ftp://10.1.2.75",Data.log_file,"DMS","Linuxr00tn",""));
+								Thread thread = new Thread(() => UploadFile("ftp://77.158.93.75",Data.log_file,"DMS","Linuxr00tn",""));
 								thread.Start ();
 								dbr.InsertDataStatutMessage(0,DateTime.Now,item ["numMessage"],"","");
 								break;
