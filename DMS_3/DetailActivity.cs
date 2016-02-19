@@ -279,10 +279,17 @@ namespace DMS_3
 				} 
 				// left to right swipe, dvs gå till vänster
 				if ((e2.GetX () - e1.GetX () > SWIPE_MIN_DISTANCE) && (Math.Abs (velocityX) > SWIPE_THRESHOLD_VELOCITY)) {
-//					var activity2 = new Intent(this, typeof(DetailActivity));
-//					activity2.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
-//					string id = Intent.GetStringExtra("ID");
-//					StartActivity(activity2);
+					if (data.StatutLivraison == "1" || data.StatutLivraison == "2") {
+						Intent intent = new Intent (this, typeof(ListeTraitee));
+						intent.PutExtra("TYPE",type);
+						this.StartActivity (intent);
+						this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+					} else {
+						Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+						intent.PutExtra("TYPE",type);
+						this.StartActivity (intent);
+						this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+					}
 				}
 			} catch (Exception ex) {
 				Console.WriteLine (ex.Message);

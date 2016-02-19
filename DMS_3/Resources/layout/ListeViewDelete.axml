@@ -16,5 +16,5 @@
         android:drawablePadding="5dip"
         android:gravity="center_vertical"
         android:textColor="#ffffffff"
-        android:background="@color/btnbackred" />
+        android:background="@drawable/row_anomalie_background" />
 </LinearLayout>
