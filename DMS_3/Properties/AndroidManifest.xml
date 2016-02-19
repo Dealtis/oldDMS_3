@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dealtis.dms_3" android:versionName="3.0.0" android:versionCode="2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dealtis.dms_3" android:versionName="3.0.1" android:versionCode="2">
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="15" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,7 +16,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<application android:allowBackup="true" android:icon="@mipmap/icon" android:label="@string/app_name"></application>
+	<application android:allowBackup="true" android:icon="@drawable/iconapp" android:label="@string/app_name"></application>
 	<activity android:name="com.instabug.library.InstabugFeedbackActivity" android:windowSoftInputMode="adjustPan" />
 	<service android:name="com.instabug.library.network.UploadCacheService" />
 	<receiver android:name="com.instabug.library.network.InstabugNetworkReceiver">
