@@ -114,7 +114,7 @@ namespace DMS_3
 				dbr.logout();
 				Data.userAndsoft = null;
 				Data.userTransics = null;
-				File.AppendAllText(Data.log_file, "[LOGOUT]Coupure du service le "+DateTime.Now.ToString("G")+"\n");
+				File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[LOGOUT]Coupure du service le "+DateTime.Now.ToString("G")+"\n");
 				StopService (
 					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
 				);
@@ -178,13 +178,13 @@ namespace DMS_3
 		protected override void OnStop()
 		{	
 			indicatorTimer.Stop ();
-			File.AppendAllText(Data.log_file, "OnStop le "+DateTime.Now.ToString("G")+"\n");
+			File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"OnStop le "+DateTime.Now.ToString("G")+"\n");
 			base.OnStop();
 		}
 
 		protected override void OnRestart()
 		{
-			File.AppendAllText(Data.log_file, "OnRestart le "+DateTime.Now.ToString("G")+"\n");
+			File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"OnRestart le "+DateTime.Now.ToString("G")+"\n");
 			base.OnRestart();
 		}
 
