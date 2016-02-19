@@ -2424,82 +2424,85 @@ namespace DMS_3
 			public const int ListeLivraisons = 2130968606;
 			
 			// aapt resource value: 0x7f04001f
-			public const int ListeViewRow = 2130968607;
+			public const int ListeViewDelete = 2130968607;
 			
 			// aapt resource value: 0x7f040020
-			public const int ListeViewRowAnomalie = 2130968608;
+			public const int ListeViewRow = 2130968608;
 			
 			// aapt resource value: 0x7f040021
-			public const int ListeViewRowAnomaliePJ = 2130968609;
+			public const int ListeViewRowAnomalie = 2130968609;
 			
 			// aapt resource value: 0x7f040022
-			public const int ListeViewRowEnlevement = 2130968610;
+			public const int ListeViewRowAnomaliePJ = 2130968610;
 			
 			// aapt resource value: 0x7f040023
-			public const int ListeViewRowStroke = 2130968611;
+			public const int ListeViewRowEnlevement = 2130968611;
 			
 			// aapt resource value: 0x7f040024
-			public const int ListeViewRowValide = 2130968612;
+			public const int ListeViewRowStroke = 2130968612;
 			
 			// aapt resource value: 0x7f040025
-			public const int loading = 2130968613;
+			public const int ListeViewRowValide = 2130968613;
 			
 			// aapt resource value: 0x7f040026
-			public const int loadingimage = 2130968614;
+			public const int loading = 2130968614;
 			
 			// aapt resource value: 0x7f040027
-			public const int loadingprogress = 2130968615;
+			public const int loadingimage = 2130968615;
 			
 			// aapt resource value: 0x7f040028
-			public const int Main = 2130968616;
+			public const int loadingprogress = 2130968616;
 			
 			// aapt resource value: 0x7f040029
-			public const int notification_media_action = 2130968617;
+			public const int Main = 2130968617;
 			
 			// aapt resource value: 0x7f04002a
-			public const int notification_media_cancel_action = 2130968618;
+			public const int notification_media_action = 2130968618;
 			
 			// aapt resource value: 0x7f04002b
-			public const int notification_template_big_media = 2130968619;
+			public const int notification_media_cancel_action = 2130968619;
 			
 			// aapt resource value: 0x7f04002c
-			public const int notification_template_big_media_narrow = 2130968620;
+			public const int notification_template_big_media = 2130968620;
 			
 			// aapt resource value: 0x7f04002d
-			public const int notification_template_lines = 2130968621;
+			public const int notification_template_big_media_narrow = 2130968621;
 			
 			// aapt resource value: 0x7f04002e
-			public const int notification_template_media = 2130968622;
+			public const int notification_template_lines = 2130968622;
 			
 			// aapt resource value: 0x7f04002f
-			public const int notification_template_part_chronometer = 2130968623;
+			public const int notification_template_media = 2130968623;
 			
 			// aapt resource value: 0x7f040030
-			public const int notification_template_part_time = 2130968624;
+			public const int notification_template_part_chronometer = 2130968624;
 			
 			// aapt resource value: 0x7f040031
-			public const int RowLeft = 2130968625;
+			public const int notification_template_part_time = 2130968625;
 			
 			// aapt resource value: 0x7f040032
-			public const int RowRight = 2130968626;
+			public const int RowLeft = 2130968626;
 			
 			// aapt resource value: 0x7f040033
-			public const int select_dialog_item_material = 2130968627;
+			public const int RowRight = 2130968627;
 			
 			// aapt resource value: 0x7f040034
-			public const int select_dialog_multichoice_material = 2130968628;
+			public const int select_dialog_item_material = 2130968628;
 			
 			// aapt resource value: 0x7f040035
-			public const int select_dialog_singlechoice_material = 2130968629;
+			public const int select_dialog_multichoice_material = 2130968629;
 			
 			// aapt resource value: 0x7f040036
-			public const int support_simple_spinner_dropdown_item = 2130968630;
+			public const int select_dialog_singlechoice_material = 2130968630;
 			
 			// aapt resource value: 0x7f040037
-			public const int swipe = 2130968631;
+			public const int support_simple_spinner_dropdown_item = 2130968631;
 			
 			// aapt resource value: 0x7f040038
-			public const int valideDialBox = 2130968632;
+			public const int swipe = 2130968632;
+			
+			// aapt resource value: 0x7f040039
+			public const int valideDialBox = 2130968633;
 			
 			static Layout()
 			{

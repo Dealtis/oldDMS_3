@@ -58,12 +58,11 @@ namespace DMS_3
 				});
 				i++;
 			}
-// 			TODO
-//			if(i > 6){
-//				View view = LayoutInflater.From (this).Inflate (Resource.Layout.ListeViewDelete, null, false);
-//				mListView.AddHeaderView (view);
-//				view.Click += Btndeletemsg_Click;
-//			}
+			if(i > 6){
+				View view = LayoutInflater.From (this).Inflate (Resource.Layout.ListeViewDelete, null, false);
+				mListView.AddHeaderView (view);
+				view.Click += Btndeletemsg_Click;
+			}
 
 			adapter = new ListeViewMessageAdapter (this, mItems);
 			mListView.Adapter = adapter;
@@ -109,7 +108,16 @@ namespace DMS_3
 
 
 		void  Btndeletemsg_Click (object sender, EventArgs e){
-	
+			DBRepository dbr = new DBRepository ();
+			var newmessage = FindViewById<TextView>(Resource.Id.editnewmsg);
+
+			string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
+				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection (dbPath);
+
+			var del = dbr.DropTableMessage();
+
+			StartActivity(typeof(MessageActivity));
 		}
 
 		public override void OnBackPressed ()

@@ -515,6 +515,24 @@ namespace DMS_3.BDD
 			return output;
 		}
 
+		public string DropTableMessage()
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal),"ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				db.DeleteAll<TableMessages>();
+				string result = "delete";
+				return result;
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+
+			}
+		}
+
 		//GET NUMBER LIV RAM ET MSG
 
 		public int SETBadges (string userandsoft)

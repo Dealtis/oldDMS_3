@@ -160,6 +160,7 @@
     <AndroidResource Include="Resources\drawable\send.png" />
     <AndroidResource Include="Resources\layout\ListeViewRowStroke.axml" />
     <AndroidResource Include="Resources\drawable\row_stroke_background.xml" />
+    <AndroidResource Include="Resources\layout\ListeViewDelete.axml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
