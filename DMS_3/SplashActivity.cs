@@ -11,6 +11,7 @@ using Android.Net;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Util;
+using Android.Widget;
 using System.Globalization;
 using AndroidHUD;
 using DMS_3.BDD;
@@ -111,7 +112,8 @@ namespace DMS_3
 							}
 						}else{
 							App_Connec = false;
-							AndHUD.Shared.ShowError(this, "Pas de connexion, réessaie dans 5 secondes", MaskType.Black, TimeSpan.FromSeconds(5));
+							//AndHUD.Shared.ShowError(this, "Pas de connexion, réessaie dans 5 secondes", MaskType.Black, TimeSpan.FromSeconds(5));
+							Toast.MakeText (this, "Pas de connexion", ToastLength.Long).Show ();
 							Thread.Sleep(5000);
 						}
 					}

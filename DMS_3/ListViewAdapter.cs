@@ -45,31 +45,29 @@ namespace DMS_3
 			LayoutInflater inflater = (LayoutInflater) mContext.GetSystemService(Context.LayoutInflaterService);
 			int xml_type = 0;
 
-			if (row == null) {
-				switch (mItems [position].StatutLivraison) {
-				default:
-					break;
-				case "0":
-					if (mItems [position].typeMission == "L") {
-						xml_type = Resource.Layout.ListeViewRow;
-					} else {
-						xml_type = Resource.Layout.ListeViewRowEnlevement;
-					}
-					break;
-				case "1":
-					xml_type = Resource.Layout.ListeViewRowValide;
-					break;
-				case "2":
-					xml_type = Resource.Layout.ListeViewRowAnomalie;
-					break;
+			switch (mItems [position].StatutLivraison) {
+			default:
+				break;
+			case "0":
+				if (mItems [position].typeMission == "L") {
+					xml_type = Resource.Layout.ListeViewRow;
+				} else {
+					xml_type = Resource.Layout.ListeViewRowEnlevement;
 				}
-				if(mItems[position].imgpath == "SUPPLIV"){
-					row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowStroke,null,false);
-					xml_type = Resource.Layout.ListeViewRowStroke;
-
-				}
-				row = inflater.Inflate(xml_type,parent,false);
+				break;
+			case "1":
+				xml_type = Resource.Layout.ListeViewRowValide;
+				break;
+			case "2":
+				xml_type = Resource.Layout.ListeViewRowAnomalie;
+				break;
 			}
+			if(mItems[position].imgpath == "SUPPLIV"){
+				//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowStroke,null,false);
+				xml_type = Resource.Layout.ListeViewRowStroke;
+			}
+			row = inflater.Inflate(xml_type,parent,false);
+
 
 			TextView textLeft = row.FindViewById<TextView> (Resource.Id.textleft);
 			TextView textMid = row.FindViewById<TextView> (Resource.Id.textmid);
