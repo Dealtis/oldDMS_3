@@ -221,10 +221,10 @@ namespace DMS_3
 			EditText editrecherche =  viewAD.FindViewById<EditText> (Resource.Id.editrecherche);
 			dialog.SetView (viewAD);
 			dialog.SetCancelable (true);
-			dialog.SetPositiveButton("Chercher", delegate {
+			dialog.SetNegativeButton("Chercher", delegate {
 				initListView("SELECT * FROM TablePositions WHERE  typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft = '"+Data.userAndsoft+"' AND (numCommande LIKE '%"+editrecherche.Text+"%' OR  villeLivraison LIKE '%"+editrecherche.Text+"%' OR nomPayeur LIKE '%\"+input.Text+\"%'OR CpLivraison LIKE '%"+editrecherche.Text+"%' OR refClient LIKE '%"+editrecherche.Text+"%' OR nomClient LIKE'%"+editrecherche.Text+"%')");
 			});
-			dialog.SetNegativeButton("Non", delegate {
+			dialog.SetPositiveButton("Non", delegate {
 				AndHUD.Shared.ShowError(this, "Annulée!", AndroidHUD.MaskType.Clear, TimeSpan.FromSeconds(1));
 			});
 			dialog.Show ();

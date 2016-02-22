@@ -127,10 +127,8 @@ namespace DMS_3
 		}
 
 		protected override void OnStart()
-		{	
-
+		{
 			base.OnStart();
-
 		}
 
 
@@ -138,9 +136,39 @@ namespace DMS_3
 		{
 			base.OnResume();
 
+			var t = DateTime.Now.ToString ("dd_MM_yy");
+			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory (Android.OS.Environment.DirectoryDownloads)).ToString ();
+			//Shared Preference
+			ISharedPreferences pref = Application.Context.GetSharedPreferences ("AppInfo", FileCreationMode.Private);
+			string log = pref.GetString ("Log", String.Empty);
+			//GetTelId
+			TelephonyManager tel = (TelephonyManager)this.GetSystemService (Context.TelephonyService);
+			var telId = tel.DeviceId;
+			//Si il n'y a pas de shared pref
+			if (log == String.Empty) {
+				Data.log_file = Path.Combine (dir_log, t + "_" + telId + "_log.txt");
+				ISharedPreferencesEditor edit = pref.Edit ();
+				edit.PutString ("Log", Data.log_file);
+				edit.Apply ();
+			} else {
+				//il y a des shared pref
+				Data.log_file = pref.GetString ("Log", String.Empty);
+				if (((File.GetCreationTime (Data.log_file)).CompareTo (DateTime.Now)) > 3) {
+					File.Delete (Data.log_file);
+					Data.log_file = Path.Combine (dir_log, t + "_" + telId + "_log.txt");
+					ISharedPreferencesEditor edit = pref.Edit ();
+					edit.PutString ("Log", Data.log_file);
+					edit.Apply ();
+					Data.log_file = pref.GetString ("Log", String.Empty);
+				}
+			}
+			DBRepository dbr = new DBRepository ();
+			var user = dbr.getUserAndsoft ();
+			dbr.setUserdata (user);
 
 			var version = this.PackageManager.GetPackageInfo(this.PackageName, 0).VersionName;
 			lblTitle.Text = Data.userAndsoft + " " + version;
+
 			indicatorTimer = new System.Timers.Timer();
 			indicatorTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnIndicatorTimerHandler);
 			indicatorTimer.Interval = 1000;

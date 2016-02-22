@@ -35,7 +35,7 @@ namespace DMS_3
 
 			//APPEL DES FONCTIONS
 			btn_Login.LongClick +=  delegate {
-				btn_Login_LongClick();
+				//btn_Login_LongClick();
 			};
 			btn_Login.Click += delegate {
 				btn_Login_Click();
@@ -63,7 +63,6 @@ namespace DMS_3
 		}
 		protected override void OnStop()
 		{
-
 			base.OnStop();
 		}
 		protected override void OnDestroy ()
