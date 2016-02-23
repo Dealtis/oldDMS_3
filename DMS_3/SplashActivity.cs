@@ -28,8 +28,8 @@ namespace DMS_3
 
 		public override void OnCreate (Bundle savedInstanceState, PersistableBundle persistentState)
 		{
-			//Xamarin.Insights.Initialize (global::DMS_3.XamarinInsights.ApiKey, this);
 			base.OnCreate (savedInstanceState, persistentState);
+
 		}
 
 		protected override void OnResume ()

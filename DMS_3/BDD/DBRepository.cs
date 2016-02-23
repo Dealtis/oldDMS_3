@@ -276,7 +276,7 @@ namespace DMS_3.BDD
 			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
-			string output = string.Empty;
+			string output = "false";
 			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
 			foreach (var item in query) {
 				output = item.user_AndsoftUser;

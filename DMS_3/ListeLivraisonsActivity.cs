@@ -17,7 +17,7 @@ using AndroidHUD;
 namespace DMS_3
 {
 	
-	[Activity (Label = "ListeLivraisonsActivity",Theme = "@android:style/Theme.Black.NoTitleBar", NoHistory = true)]			
+	[Activity (Label = "ListeLivraisonsActivity",Theme = "@android:style/Theme.Black.NoTitleBar")]			
 	public class ListeLivraisonsActivity : Activity
 	{	
 

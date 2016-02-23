@@ -45,6 +45,7 @@ namespace DMS_3
 			base.OnCreate (savedInstanceState);
 			SetContentView (Resource.Layout.Home);
 
+
 			//DECLARATION DES ITEMS
 			lblTitle = FindViewById<TextView>(Resource.Id.lblTitle);
 			peekupBadgeText = FindViewById<TextView>(Resource.Id.peekupBadgeText);
@@ -73,7 +74,7 @@ namespace DMS_3
 
 
 			//Xamarin Insight
-			Insights.Initialize("d3afeb59463d5bdc09194186b94fc991016faf1f", this);
+			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
 			//LANCEMENT DU SERVICE
@@ -81,9 +82,7 @@ namespace DMS_3
 				new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
 			);
 
-			//SET des badges
-			DBRepository dbr = new DBRepository();
-			dbr.SETBadges(Data.userAndsoft);
+
 		
 		}
 
@@ -135,7 +134,13 @@ namespace DMS_3
 		protected override void OnResume()
 		{
 			base.OnResume();
-
+			DBRepository dbr = new DBRepository ();
+			dbr.SETBadges(Data.userAndsoft);
+			if (dbr.is_user_Log_In() == "false") {
+				Intent intent = new Intent (this, typeof(MainActivity));
+				this.StartActivity (intent);
+				this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+			}
 			var t = DateTime.Now.ToString ("dd_MM_yy");
 			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory (Android.OS.Environment.DirectoryDownloads)).ToString ();
 			//Shared Preference
@@ -162,7 +167,7 @@ namespace DMS_3
 					Data.log_file = pref.GetString ("Log", String.Empty);
 				}
 			}
-			DBRepository dbr = new DBRepository ();
+
 			var user = dbr.getUserAndsoft ();
 			dbr.setUserdata (user);
 
@@ -177,8 +182,7 @@ namespace DMS_3
 		}
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
-		{
-			
+		{	
 
 			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
 			if (Data.Instance.getLivraisonIndicator () < 1) {

@@ -94,126 +94,128 @@ namespace DMS_3
 
 		void Buttonvalider_Click ()
 		{
-
-			txtRem = EdittxtRem.Text;
-			switch(txtspinner)
-			{
-			case "Livre avec manquant":
-				codeanomalie = "LIVRMQ";
-				break;
-			case "Livre avec reserves pour avaries":
-				codeanomalie = "LIVRCA";
-				break;
-			case "Livre mais recepisse non rendu":
-				codeanomalie = "LIVDOC";
-				break;
-			case "Livre avec manquants + avaries":
-				codeanomalie = "LIVRMA";
-				break;
-			case "Refuse pour avaries":
-				codeanomalie = "RENAVA";
-				break;
-			case "Avise (avis de passage)":
-				codeanomalie = "RENAVI";
-				break;
-			case "Rendu non livre : complement adresse":
-				codeanomalie = "RENCAD";
-				break;
-			case "Refus divers ou sans motifs":
-				codeanomalie = "RENDIV";
-				break;
-			case "Refuse manque BL":
-				codeanomalie = "RENDOC";
-				break;
-			case "Refuse manquant partiel":
-				codeanomalie = "RENMQP";
-				break;
-			case "Refuse non commande":
-				codeanomalie = "RENDIV";
-				break;
-			case "Refuse cause port du":
-				codeanomalie = "RENSPD";
-				break;
-			case "Refuse cause contre remboursement":
-				codeanomalie = "RENDRB";
-				break;
-			case "Refuse livraison trop tardive":
-				codeanomalie = "RENTAR";
-				break;
-			case "Rendu non justifie":
-				codeanomalie = "RENNJU";
-				break;
-			case "Fermeture hebdomadaire":
-				codeanomalie = "RENFHB";
-				break;
-			case "Non charge":
-				codeanomalie = "RENNCG";
-				break;
-			case "Inventaire":
-				codeanomalie = "RENINV";
-				break;
-			case "Ramasse pas faite":
-				codeanomalie = "RAMPFT";
-				break;
-			case "Positions non chargees":
-				codeanomalie = "RENNCG";
-				break;
-			case "Avis de passage":
-				codeanomalie = "RENAVI";
-				break;
-			case "Ramasse diverse":
-				codeanomalie = "RAMDIV";
-				break;
-			case "Restaure en non traite":
-				codeanomalie = "RESTNT";
-				break;
-
-			default:
-				break;
-			}
-
-			DBRepository dbr = new DBRepository ();
-			//mise du statut de la position à 1
-			if (txtspinner == "Restaure en non traite") {
-				dbr.updatePosition(i,"0",txtspinner,txtRem,codeanomalie,null);
-
+			if (txtspinner == "Choisir une anomalie") {
+				
 			} else {
-				dbr.updatePosition(i,"2",txtspinner,txtRem,codeanomalie,null);
-			}
+				txtRem = EdittxtRem.Text;
+				switch (txtspinner) {
+				case "Livre avec manquant":
+					codeanomalie = "LIVRMQ";
+					break;
+				case "Livre avec reserves pour avaries":
+					codeanomalie = "LIVRCA";
+					break;
+				case "Livre mais recepisse non rendu":
+					codeanomalie = "LIVDOC";
+					break;
+				case "Livre avec manquants + avaries":
+					codeanomalie = "LIVRMA";
+					break;
+				case "Refuse pour avaries":
+					codeanomalie = "RENAVA";
+					break;
+				case "Avise (avis de passage)":
+					codeanomalie = "RENAVI";
+					break;
+				case "Rendu non livre : complement adresse":
+					codeanomalie = "RENCAD";
+					break;
+				case "Refus divers ou sans motifs":
+					codeanomalie = "RENDIV";
+					break;
+				case "Refuse manque BL":
+					codeanomalie = "RENDOC";
+					break;
+				case "Refuse manquant partiel":
+					codeanomalie = "RENMQP";
+					break;
+				case "Refuse non commande":
+					codeanomalie = "RENDIV";
+					break;
+				case "Refuse cause port du":
+					codeanomalie = "RENSPD";
+					break;
+				case "Refuse cause contre remboursement":
+					codeanomalie = "RENDRB";
+					break;
+				case "Refuse livraison trop tardive":
+					codeanomalie = "RENTAR";
+					break;
+				case "Rendu non justifie":
+					codeanomalie = "RENNJU";
+					break;
+				case "Fermeture hebdomadaire":
+					codeanomalie = "RENFHB";
+					break;
+				case "Non charge":
+					codeanomalie = "RENNCG";
+					break;
+				case "Inventaire":
+					codeanomalie = "RENINV";
+					break;
+				case "Ramasse pas faite":
+					codeanomalie = "RAMPFT";
+					break;
+				case "Positions non chargees":
+					codeanomalie = "RENNCG";
+					break;
+				case "Avis de passage":
+					codeanomalie = "RENAVI";
+					break;
+				case "Ramasse diverse":
+					codeanomalie = "RAMDIV";
+					break;
+				case "Restaure en non traite":
+					codeanomalie = "RESTNT";
+					break;
+
+				default:
+					break;
+				}
+
+				DBRepository dbr = new DBRepository ();
+				//mise du statut de la position à 1
+				if (txtspinner == "Restaure en non traite") {
+					dbr.updatePosition (i, "0", txtspinner, txtRem, codeanomalie, null);
+
+				} else {
+					dbr.updatePosition (i, "2", txtspinner, txtRem, codeanomalie, null);
+				}
 
 
-			//creation du JSON
-			string JSON ="{\"codesuiviliv\":\""+codeanomalie+"\",\"memosuiviliv\":\""+txtRem+"\",\"libellesuiviliv\":\""+txtspinner+"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
-			//création de la notification webservice // statut de position
-			dbr.insertDataStatutpositions(codeanomalie,"2",txtspinner,data.numCommande,txtRem,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
+				//creation du JSON
+				string JSON = "{\"codesuiviliv\":\"" + codeanomalie + "\",\"memosuiviliv\":\"" + txtRem + "\",\"libellesuiviliv\":\"" + txtspinner + "\",\"commandesuiviliv\":\"" + data.numCommande + "\",\"groupagesuiviliv\":\"" + data.groupage + "\",\"datesuiviliv\":\"" + DateTime.Now.ToString ("dd/MM/yyyy HH:mm") + "\",\"posgps\":\"" + Data.GPS + "\"}";
+				//création de la notification webservice // statut de position
+				dbr.insertDataStatutpositions (codeanomalie, "2", txtspinner, data.numCommande, txtRem, DateTime.Now.ToString ("dd/MM/yyyy HH:mm"), JSON);
 
 
-			string compImg = String.Empty;
+				string compImg = String.Empty;
 		
 
-			Task.Factory.StartNew (
-				() => {
-					try {
-						var imgpath = dbr.GetPositionsData (i);
-						Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
-						Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
-						compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
-						using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
-							rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+				Task.Factory.StartNew (
+					() => {
+						try {
+							var imgpath = dbr.GetPositionsData (i);
+							Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
+							Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
+							compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
+							using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
+								rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+							}
+							//ftp://77.158.93.75 ftp://10.1.2.75
+							Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
+
+						} catch (Exception ex) {
+							Console.WriteLine ("\n" + ex);
 						}
-						//ftp://77.158.93.75 ftp://10.1.2.75
-						Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
+					}					
+				);
 
-					} catch (Exception ex) {
-						Console.WriteLine ("\n" + ex);
-					}
-				}					
-			);
-
-			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
-			intent.PutExtra("TYPE",type);
-			this.StartActivity (intent);
-			this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+				intent.PutExtra ("TYPE", type);
+				this.StartActivity (intent);
+				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
+			}
 		}
 
 		private void CreateDirectoryForPictures ()
