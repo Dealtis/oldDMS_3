@@ -29,8 +29,11 @@ using Android.Telephony;
 namespace DMS_3
 {
 	[Service]
+	[IntentFilter(new String[]{"com.dealtis.dms_3.ProcessDMS"})]
 	public class ProcessDMS : Service, ILocationListener
 	{
+
+		ProcessDMSBinder binder;
 		System.Threading.Timer _timer;
 		String datedujour;
 		LocationManager locMgr;
@@ -38,11 +41,11 @@ namespace DMS_3
 		String userTransics;
 		String GPS;
 
-		string log_file;
-		public override void OnStart (Android.Content.Intent intent, int startId)
-		{
-			base.OnStart (intent, startId);
 
+		string log_file;
+		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
+		{
+			
 			DBRepository dbr = new DBRepository ();
 			userAndsoft = dbr.getUserAndsoft ();
 			userTransics = dbr.getUserTransics ();
@@ -87,6 +90,8 @@ namespace DMS_3
 			} else {
 				File.AppendAllText(log_file,"[GPS] Le GPS est désactiver"+DateTime.Now.ToString("t")+"\n");
 			}
+
+			return StartCommandResult.StickyCompatibility;
 		}
 
 		public override void OnDestroy ()
@@ -124,7 +129,8 @@ namespace DMS_3
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
 		{
-			throw new NotImplementedException ();
+			binder = new ProcessDMSBinder (this);
+			return binder;
 		}
 		void  InsertData ()
 		{	
@@ -162,8 +168,6 @@ namespace DMS_3
 				} else {
 					alert ();
 				}
-
-
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
@@ -282,6 +286,7 @@ namespace DMS_3
 								break;
 							case "%%COMMAND":
 								File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
+								dbr.InsertDataStatutMessage (1,DateTime.Now,item ["numMessage"],"","");
 								InsertData ();									
 								break;
 							default:
@@ -448,6 +453,21 @@ namespace DMS_3
 				UploadFile (FtpUrl, fileName, userName, password, UploadDirectory);
 				return false;
 			}
+		}
+	}
+
+	public class ProcessDMSBinder : Binder
+	{
+		ProcessDMS service;
+
+		public ProcessDMSBinder (ProcessDMS service)
+		{
+			this.service = service;
+		}
+
+		public ProcessDMS GetDemoService ()
+		{
+			return service;
 		}
 	}
 }

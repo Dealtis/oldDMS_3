@@ -34,11 +34,16 @@ namespace DMS_3
 		TextView peekupBadgeText;
 		TextView newMsgBadgeText;
 		TextView deliveryBadgeText;
+		TextView txtLivraison;
+		TextView txtEnlevement;
 		RelativeLayout deliveryBadge;
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
 		System.Timers.Timer indicatorTimer;
-		//bool Is_thread_Running = false;
+
+
+		public ProcessDMSBinder binder;
+		ProcessDMSConnection processDMSConnection;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -50,6 +55,11 @@ namespace DMS_3
 			lblTitle = FindViewById<TextView>(Resource.Id.lblTitle);
 			peekupBadgeText = FindViewById<TextView>(Resource.Id.peekupBadgeText);
 			newMsgBadgeText = FindViewById<TextView>(Resource.Id.newMsgBadgeText);
+
+			txtLivraison = FindViewById<TextView>(Resource.Id.txtLivraison);
+			txtEnlevement = FindViewById<TextView>(Resource.Id.txtEnlevement);
+
+
 			deliveryBadgeText = FindViewById<TextView>(Resource.Id.deliveryBadgeText);
 			deliveryBadge = FindViewById<RelativeLayout>(Resource.Id.deliveryBadge);
 			peekupBadge = FindViewById<RelativeLayout>(Resource.Id.peekupBadge);
@@ -72,18 +82,31 @@ namespace DMS_3
 			btn_Config.LongClick += Btn_Config_LongClick;
 			btn_Message.Click += delegate { btn_Message_Click();};
 
+			//FONTS
+			txtLivraison.SetTypeface (Data.LatoBlack, Android.Graphics.TypefaceStyle.Normal);
+			txtEnlevement.SetTypeface (Data.LatoBlack, Android.Graphics.TypefaceStyle.Normal);
 
 			//Xamarin Insight
 			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
-			//LANCEMENT DU SERVICE
-			StartService (
-				new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
-			);
-
-
 		
+			if (processDMSConnection != null)
+				binder = processDMSConnection.Binder;
+
+			var ProcessServiceIntent = new Intent ("com.dealtis.dms_3.ProcessDMS");
+			processDMSConnection = new ProcessDMSConnection (this);
+			ApplicationContext.BindService (ProcessServiceIntent, processDMSConnection, Bind.AutoCreate);
+
+
+			//LANCEMENT DU SERVICE
+
+			if (!Data.Is_Service_Running) {
+				StartService (
+					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
+				);
+			}
+
 		}
 
 		void Btn_Livraison_LongClick (object sender, View.LongClickEventArgs e)
@@ -246,6 +269,40 @@ namespace DMS_3
 		public override void OnBackPressed ()
 		{
 			
+		}
+	}
+
+	class ProcessDMSConnection : Java.Lang.Object, IServiceConnection
+	{
+		HomeActivity activity;
+		ProcessDMSBinder binder;
+
+		public ProcessDMSBinder Binder {
+			get {
+				return binder;
+			}
+		}
+
+		public ProcessDMSConnection (HomeActivity activity)
+		{
+			this.activity = activity;
+		}
+
+		public void OnServiceConnected (ComponentName name, IBinder service)
+		{
+			var demoServiceBinder = service as ProcessDMSBinder;
+			if (demoServiceBinder != null) {
+				var binder = (ProcessDMSBinder)service;
+				activity.binder = binder;
+				Data.Is_Service_Running = true;
+
+				this.binder = (ProcessDMSBinder)service;
+			}
+		}
+
+		public void OnServiceDisconnected (ComponentName name)
+		{
+			Data.Is_Service_Running = false;
 		}
 	}
 }

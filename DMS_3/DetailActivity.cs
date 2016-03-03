@@ -134,7 +134,7 @@ namespace DMS_3
 			destfinal.Visibility = ViewStates.Gone;
 			destfinal.Text = ""+data.nomClientLivraison+"\n"+data.villeClientLivraison+"";
 
-			if (data.typeMission == "R") {
+			if (data.typeMission == "C") {
 				destfinal.Visibility = ViewStates.Visible;
 			}
 

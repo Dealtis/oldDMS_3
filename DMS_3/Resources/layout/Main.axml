@@ -8,6 +8,28 @@
     android:gravity="center">
     <LinearLayout
         android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2"
+        android:gravity="center">
+        <TextView
+            android:text="@string/tablechargee"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tableload"
+            android:gravity="center"
+            android:textColor="@color/primary"
+            android:drawableLeft="@drawable/val"
+            android:drawablePadding="@dimen/dim20" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dim20"
+            android:id="@+id/space1" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout1"

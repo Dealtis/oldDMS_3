@@ -45,33 +45,43 @@
             <TextView
                 android:text="LEFT"
                 android:id="@+id/textleft"
-                android:gravity="center"
+                android:gravity="left"
                 android:singleLine="true"
-                android:textSize="@dimen/dim14"
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3" />
+                android:layout_weight=".3"
+                android:textSize="@dimen/dim14" />
+            <TextView
+                android:text="MIDBIS"
+                android:id="@+id/textmidbis"
+                android:gravity="left"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:textSize="@dimen/dim14" />
             <TextView
                 android:text="MID"
                 android:id="@+id/textmid"
-                android:gravity="center"
+                android:gravity="left"
                 android:singleLine="true"
-                android:textSize="@dimen/dim14"
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3" />
+                android:layout_weight=".3"
+                android:textSize="@dimen/dim14" />
             <TextView
                 android:text="RIGHT"
                 android:id="@+id/txtright"
-                android:gravity="center"
+                android:gravity="left"
                 android:singleLine="true"
-                android:textSize="@dimen/dim14"
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3" />
+                android:layout_weight=".3"
+                android:textSize="@dimen/dim14" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

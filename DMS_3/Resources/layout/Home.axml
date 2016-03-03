@@ -55,14 +55,22 @@
             d1p1:layout_weight="1.1">
             <ImageView
                 d1p1:layout_width="64dp"
-                d1p1:layout_height="match_parent"
+                d1p1:layout_height="wrap_content"
                 d1p1:src="@drawable/delivery"
                 d1p1:layout_gravity="center_horizontal"
                 d1p1:id="@+id/imageView28" />
+            <TextView
+                d1p1:text="@string/livraison"
+                d1p1:layout_width="match_parent"
+                d1p1:layout_height="match_parent"
+                d1p1:id="@+id/txtLivraison"
+                d1p1:gravity="center"
+                d1p1:textSize="@dimen/dim20"
+                d1p1:textColor="@color/white" />
             <RelativeLayout
                 d1p1:id="@+id/deliveryBadge"
                 d1p1:layout_width="match_parent"
-                d1p1:layout_height="match_parent"
+                d1p1:layout_height="wrap_content"
                 d1p1:layout_marginLeft="40dp"
                 d1p1:layout_marginTop="-80dp">
                 <ImageView
@@ -94,14 +102,22 @@
             d1p1:layout_width="wrap_content">
             <ImageView
                 d1p1:layout_width="64dp"
-                d1p1:layout_height="match_parent"
+                d1p1:layout_height="wrap_content"
                 d1p1:src="@drawable/peekup"
                 d1p1:layout_gravity="center_horizontal"
                 d1p1:id="@+id/imageView27" />
+            <TextView
+                d1p1:text="@string/enlevement"
+                d1p1:layout_width="match_parent"
+                d1p1:layout_height="match_parent"
+                d1p1:id="@+id/txtEnlevement"
+                d1p1:gravity="center"
+                d1p1:textSize="@dimen/dim20"
+                d1p1:textColor="@color/white" />
             <RelativeLayout
                 d1p1:id="@+id/peekupBadge"
                 d1p1:layout_width="match_parent"
-                d1p1:layout_height="match_parent"
+                d1p1:layout_height="wrap_content"
                 d1p1:layout_marginLeft="40dp"
                 d1p1:layout_marginTop="-80dp">
                 <ImageView
@@ -144,19 +160,10 @@
             d1p1:layout_weight="1">
             <ImageView
                 d1p1:layout_width="64dp"
-                d1p1:layout_height="match_parent"
+                d1p1:layout_height="wrap_content"
                 d1p1:src="@drawable/newMsg"
                 d1p1:layout_gravity="center_horizontal"
                 d1p1:id="@+id/imageView3" />
-            <TextView
-                d1p1:id="@+id/lblButton3"
-                d1p1:layout_width="wrap_content"
-                d1p1:layout_height="match_parent"
-                d1p1:layout_gravity="center_horizontal"
-                d1p1:layout_marginLeft="2dp"
-                d1p1:text="New Message"
-                d1p1:textStyle="bold"
-                d1p1:textColor="#ff000000" />
             <RelativeLayout
                 d1p1:id="@+id/newMsgBadge"
                 d1p1:layout_width="match_parent"

@@ -88,7 +88,8 @@
             android:text="@string/trait"
             android:layout_weight=".8"
             android:background="@drawable/button_white_background"
-            android:textColor="@color/primary" />
+            android:textColor="@color/primary"
+            android:textSize="@dimen/dim25" />
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

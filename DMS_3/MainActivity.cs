@@ -22,6 +22,7 @@ namespace DMS_3
 		Button btn_Login;
 		EditText user;
 		EditText password;
+		TextView tableload;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -32,10 +33,15 @@ namespace DMS_3
 			btn_Login = FindViewById<Button> (Resource.Id.btnlogin);
 			user = FindViewById<EditText> (Resource.Id.user);
 			password = FindViewById<EditText> (Resource.Id.password);
+			tableload = FindViewById<TextView> (Resource.Id.tableload);
 
+			if (!Data.tableuserload) {
+				tableload.Text = "Table user non chargée";
+				tableload.SetCompoundDrawablesWithIntrinsicBounds (Resource.Drawable.Anom,0,0,0);
+			}
 			//APPEL DES FONCTIONS
 			btn_Login.LongClick +=  delegate {
-				//btn_Login_LongClick();
+				btn_Login_LongClick();
 			};
 			btn_Login.Click += delegate {
 				btn_Login_Click();
@@ -44,21 +50,17 @@ namespace DMS_3
 		}
 
 		protected override void OnStart()
-		{	
-
+		{
 			base.OnStart();
-
 		}
 
 
 		protected override void OnResume()
 		{
-
 			base.OnResume();
 		}
 		protected override void OnPause()
 		{
-
 			base.OnPause();
 		}
 		protected override void OnStop()
@@ -68,7 +70,6 @@ namespace DMS_3
 		protected override void OnDestroy ()
 		{
 			base.OnDestroy ();
-
 		}
 
 		void btn_Login_Click ()
@@ -92,40 +93,33 @@ namespace DMS_3
 
 		void btn_Login_LongClick ()
 		{
-			var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
-			DBRepository dbr = new DBRepository ();
-
-
-			var activeConnection = connectivityManager.ActiveNetworkInfo;
-			if ((activeConnection != null) && activeConnection.IsConnected) {
-				try {
-					string _url = "http://dms.jeantettransport.com/api/authen?chaufmdp=";
-					var webClient = new WebClient();
-					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
-
-					string userData="";
-					userData = webClient.DownloadString(_url);
-					System.Console.WriteLine ("\n Webclient User Terminé ...");
-
-					//GESTION DU XML
-					JsonArray jsonVal = JsonArray.Parse (userData) as JsonArray;
-					var jsonArr = jsonVal;
-					foreach (var row in jsonArr) {
-						var checkUser = dbr.user_AlreadyExist(row["userandsoft"],row["usertransics"],row["mdpandsoft"],"true");
-						Console.WriteLine ("\n"+checkUser+" "+row["userandsoft"]);
-						if (!checkUser) {
-							var IntegUser = dbr.InsertDataUser(row["userandsoft"],row["usertransics"],row["mdpandsoft"],"true");
-							Console.WriteLine ("\n"+IntegUser);
-						}
+			try {
+				DBRepository dbr = new DBRepository ();
+				string _url = "http://dms.jeantettransport.com/api/authen?chaufmdp=";
+				var webClient = new WebClient ();
+				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+				string userData = "";
+				userData = webClient.DownloadString (_url);
+				System.Console.WriteLine ("\n Webclient User Terminé ...");
+				//GESTION DU XML
+				JsonArray jsonVal = JsonArray.Parse (userData) as JsonArray;
+				var jsonArr = jsonVal;
+				foreach (var row in jsonArr) {
+					var checkUser = dbr.user_AlreadyExist (row ["userandsoft"], row ["usertransics"], row ["mdpandsoft"], "true");
+					Console.WriteLine ("\n" + checkUser + " " + row ["userandsoft"]);
+					if (!checkUser) {
+						var IntegUser = dbr.InsertDataUser (row ["userandsoft"], row ["usertransics"], row ["mdpandsoft"], "true");
+						Console.WriteLine ("\n" + IntegUser);
 					}
-				} catch (System.Exception ex) {
-					System.Console.WriteLine (ex);
-					Insights.Report(ex);
-					AndHUD.Shared.ShowError(this, "Une erreur c'est produite", MaskType.Black, TimeSpan.FromSeconds(5));
 				}
-			}else{
-				//AndHUD.Shared.ShowError(this, "Pas de connexion", MaskType.Black, TimeSpan.FromSeconds(5));
-				Toast.MakeText (this, "Pas de connexion", ToastLength.Long).Show ();
+				AndHUD.Shared.ShowSuccess(this, "Table mise à jour", MaskType.Black, TimeSpan.FromSeconds(2));
+				Data.tableuserload = true;	
+				tableload.Text = "Table chargée";
+				tableload.SetCompoundDrawablesWithIntrinsicBounds (Resource.Drawable.Val,0,0,0);
+			} catch (System.Exception ex) {
+				System.Console.WriteLine (ex);
+				Insights.Report (ex);
+				AndHUD.Shared.ShowError (this, "Une erreur c'est produite lors du lancement, réessaie dans 5 secondes", MaskType.Black, TimeSpan.FromSeconds (5));
 			}
 		}
 	}

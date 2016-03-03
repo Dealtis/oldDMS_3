@@ -90,15 +90,17 @@ namespace DMS_3
 								Console.WriteLine ("\n" + checkUser + " " + row ["userandsoft"]);
 								if (!checkUser) {
 									var IntegUser = dbr.InsertDataUser (row ["userandsoft"], row ["usertransics"], row ["mdpandsoft"], "true");
-									Console.WriteLine ("\n" + IntegUser);
+								Console.WriteLine ("\n" + IntegUser);
 								}
 							}
+							Data.tableuserload = true;
 							App_Connec = true;
 						} catch (System.Exception ex) {
 							System.Console.WriteLine (ex);
 							Insights.Report (ex);
 							App_Connec = false;
-							AndHUD.Shared.ShowError (this, "Une erreur c'est produite lors du lancement, réessaie dans 5 secondes", MaskType.Black, TimeSpan.FromSeconds (5));
+							//AndHUD.Shared.ShowError (this, "Une erreur c'est produite lors du lancement, réessaie dans 5 secondes", MaskType.Black, TimeSpan.FromSeconds (5));
+							Toast.MakeText (this, "Une erreur c'est produite lors du lancement, réessaie dans 5 secondes", ToastLength.Long).Show ();
 						}
 					} else {
 						App_Connec = false;

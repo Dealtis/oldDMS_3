@@ -24,6 +24,9 @@ namespace DMS_3
 		public static string userAndsoft;
 		public static string userTransics;
 
+		//Table user
+		public static bool tableuserload = false;
+
 		//Log DATA
 		public static string log_file;
 
@@ -49,6 +52,8 @@ namespace DMS_3
 		public static Typeface LatoMedium = Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Medium.ttf");
 		public static Typeface LatoRegular = Typeface.CreateFromAsset (Application.Context.Assets, "fonts/Lato-Regular.ttf");
 
+
+		public static bool Is_Service_Running = false;
 		public static Data Instance
 		{
 			get

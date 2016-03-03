@@ -13,6 +13,7 @@
 	<string name="client">Client</string>
 	<string name="anomalie">Anomalie</string>
 	<string name="Recherche">Recherche</string>
+	<string name="tablechargee">Table chargée avec succès</string>
 
 
 	<string-array name="anomalielivraisonlist">
@@ -53,6 +54,7 @@
 	<dimen name="dim10">10dp</dimen>
 	<dimen name="dim14">14dp</dimen>
 	<dimen name="dim20">20dp</dimen>
+	<dimen name="dim25">25dp</dimen>
 	<dimen name="dim35">35dp</dimen>
 	<dimen name="dim50">50dp</dimen>
 	<dimen name="dim75">75dp</dimen>
