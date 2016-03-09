@@ -193,8 +193,8 @@ namespace DMS_3.BDD
 				return "Erreur : " + ex.Message;
 
 			}
-
 		}
+
 		public string insertDataStatutpositions (string codesuiviliv, string statut, string libellesuiviliv,string commandesuiviliv, string memosuiviliv, string datesuiviliv, string datajson)
 		{
 			try
@@ -351,13 +351,13 @@ namespace DMS_3.BDD
 
 	
 		//VERIF SI POS DEJA INTEGRER
-		public bool pos_AlreadyExist(string numCommande, string groupage)
+		public bool pos_AlreadyExist(string numCommande, string groupage, string typeMission, string typeSegment)
 		{
 			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
 			bool output = false;
-			var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage));
+			var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage)).Where (v => v.typeMission.Equals(typeMission)).Where (v => v.typeSegment.Equals(typeSegment));
 			foreach (var item in table)
 			{
 				output = true;

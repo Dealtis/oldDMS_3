@@ -61,9 +61,7 @@ namespace DMS_3
 				}
 				txtdatestatut.Text="Le "+mItems[position].dateImportMessage.Day+" à "+mItems[position].dateImportMessage.Hour+":"+mItems[position].dateImportMessage.Minute+" "+txtstatut+" par "+mItems[position].utilisateurEmetteur;
 			}else{
-
-
-
+				
 				row = LayoutInflater.From (mContext).Inflate (Resource.Layout.RowLeft, null, false);
 
 

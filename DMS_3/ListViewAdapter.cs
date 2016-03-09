@@ -81,7 +81,7 @@ namespace DMS_3
 			textRight.SetTypeface (Data.LatoBold, Android.Graphics.TypefaceStyle.Normal);
 			textMidBis.SetTypeface (Data.LatoBold, Android.Graphics.TypefaceStyle.Normal);
 
-			textLeft.Text = "OT: "+mItems[position].numCommande+" "+mItems[position].planDeTransport;
+			textLeft.Text = "OT: "+mItems[position].Ordremission+mItems[position].numCommande+" "+mItems[position].planDeTransport;
 			textMid.Text = mItems[position].CpLivraison+" "+mItems[position].villeLivraison+"\tCol: "+mItems[position].nbrColis+" Pal:"+mItems[position].nbrPallette;
 			textRight.Text = mItems [position].instrucLivraison;
 			textMidBis.Text = mItems [position].nomPayeur;

@@ -164,7 +164,7 @@ namespace DMS_3
 			adapter = new ListViewAdapterMenu (this, bodyItems);
 			bodyListView.Adapter = adapter;
 
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"' ORDER BY Ordremission");
 		}
 
 		void MListView_ItemClick (object sender, AdapterView.ItemClickEventArgs e)
@@ -188,27 +188,27 @@ namespace DMS_3
 
 		void btngrpAll_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"' ORDER BY Ordremission");
 		}
 
 		void btngrp1_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[1]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[1]+"' ORDER BY Ordremission");
 		}
 
 		void btngrp2_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[2]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[2]+"' ORDER BY Ordremission");
 		}
 
 		void btngrp3_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[3]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[3]+"' ORDER BY Ordremission");
 		}
 
 		void btngrp4_Click ()
 		{
-			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[4]+"'");
+			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '0' AND typeMission= '"+tyM+"' AND typeSegment= '"+tyS+"'  AND Userandsoft = '"+Data.userAndsoft+"'AND groupage='"+Arraygrp[4]+"' ORDER BY Ordremission");
 		}
 
 		void btnsearch_Click ()

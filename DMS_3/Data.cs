@@ -131,7 +131,7 @@ namespace DMS_3
 			//récupération de donnée via le webservice
 			string content_integdata = String.Empty;
 			try {
-				string _url = "http://dms.jeantettransport.com/api/commande?codechauffeur=" + userTransics + "&datecommande=" + datedujour + "";
+				string _url = "http://dmsv3.jeantettransport.com/api/commande?codechauffeur=" + userTransics + "&datecommande=" + datedujour + "";
 				var webClient = new WebClient ();
 				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 				content_integdata = webClient.DownloadString (_url);
@@ -141,7 +141,7 @@ namespace DMS_3
 				var jsonArr = jsonVal;
 				if (content_integdata != "[]") {
 					foreach (var row in jsonArr) {
-						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"]);
+						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
 							var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
 							Console.WriteLine ("\n"+IntegUser);
@@ -164,7 +164,7 @@ namespace DMS_3
 			{
 				string numGroupage = row.groupage;
 				try {
-					string _urlb = "http://dms.jeantettransport.com/api/groupage?voybdx="+ numGroupage+"";
+					string _urlb = "http://dmsv3.jeantettransport.com/api/groupage?voybdx="+ numGroupage+"";
 					var webClient = new WebClient ();
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					content_grpcloture = webClient.DownloadString (_urlb);

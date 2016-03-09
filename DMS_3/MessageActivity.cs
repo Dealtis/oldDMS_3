@@ -44,7 +44,7 @@ namespace DMS_3
 			var db = new SQLiteConnection (dbPath);
 			DBRepository dbr = new DBRepository ();
 
-			var table = db.Query<TableMessages> ("SELECT * FROM TableMessages where codeChauffeur=?",Data.userAndsoft);
+			var table = db.Query<TableMessages> ("SELECT * FROM TableMessages where codeChauffeur=? and typeMessage != ?",Data.userAndsoft,5);
 			var i = 0;
 
 			foreach (var item in table) {

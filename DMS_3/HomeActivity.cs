@@ -98,15 +98,16 @@ namespace DMS_3
 			processDMSConnection = new ProcessDMSConnection (this);
 			ApplicationContext.BindService (ProcessServiceIntent, processDMSConnection, Bind.AutoCreate);
 
-
 			//LANCEMENT DU SERVICE
-
-			if (!Data.Is_Service_Running) {
-				StartService (
-					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
-				);
+			if (Data.userAndsoft == null || Data.userAndsoft == "") {
+				
+			} else {
+				if (!Data.Is_Service_Running) {
+					StartService (
+						new Intent (this, typeof(ProcessDMS)).PutExtra ("userAndsoft", Data.userAndsoft).PutExtra ("userTransics", Data.userTransics)		
+					);
+				}
 			}
-
 		}
 
 		void Btn_Livraison_LongClick (object sender, View.LongClickEventArgs e)
@@ -294,8 +295,11 @@ namespace DMS_3
 			if (demoServiceBinder != null) {
 				var binder = (ProcessDMSBinder)service;
 				activity.binder = binder;
-				Data.Is_Service_Running = true;
+				if (Data.userAndsoft == null || Data.userAndsoft == "") {
 
+				} else {
+					Data.Is_Service_Running = true;
+				}
 				this.binder = (ProcessDMSBinder)service;
 			}
 		}
