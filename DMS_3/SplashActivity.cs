@@ -76,7 +76,7 @@ namespace DMS_3
 					var activeConnection = connectivityManager.ActiveNetworkInfo;
 					if ((activeConnection != null) && activeConnection.IsConnected) {
 						try {
-							string _url = "http://dms.jeantettransport.com/api/authen?chaufmdp=";
+							string _url = "http://dmsv3.jeantettransport.com/api/authen?chaufmdp=";
 							var webClient = new WebClient ();
 							webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 							string userData = "";

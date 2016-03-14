@@ -40,8 +40,6 @@ namespace DMS_3
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
 		System.Timers.Timer indicatorTimer;
-
-
 		public ProcessDMSBinder binder;
 		ProcessDMSConnection processDMSConnection;
 
@@ -141,6 +139,7 @@ namespace DMS_3
 				StopService (
 					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
 				);
+				Data.Is_Service_Running = false;
 				Intent intent = new Intent (this, typeof(MainActivity));
 				this.StartActivity (intent);
 				this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
@@ -301,7 +300,10 @@ namespace DMS_3
 					Data.Is_Service_Running = true;
 				}
 				this.binder = (ProcessDMSBinder)service;
+			} else {
+				File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] binder none : service non lancé "+DateTime.Now.ToString("G")+"\n");
 			}
+
 		}
 
 		public void OnServiceDisconnected (ComponentName name)
