@@ -8,8 +8,8 @@
 	<string name="all">#</string>
 	<string name="trait">Traités</string>
 	<string name="commande">Commande</string>
-	<string name="livraison">Livraison</string>
-	<string name="enlevement">Enlevement</string>
+	<string name="livraison">Livraisons</string>
+	<string name="enlevement">Ramasses</string>
 	<string name="client">Client</string>
 	<string name="anomalie">Anomalie</string>
 	<string name="Recherche">Recherche</string>

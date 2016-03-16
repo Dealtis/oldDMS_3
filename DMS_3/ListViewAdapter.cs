@@ -66,6 +66,7 @@ namespace DMS_3
 				//row = LayoutInflater.From (mContext).Inflate (Resource.Layout.ListeViewRowStroke,null,false);
 				xml_type = Resource.Layout.ListeViewRowStroke;
 			}
+
 			row = inflater.Inflate(xml_type,parent,false);
 
 
@@ -238,7 +239,6 @@ namespace DMS_3
 				EdittxtRem.Visibility = Android.Views.ViewStates.Visible;
 			}
 		}
-
 
 
 	}

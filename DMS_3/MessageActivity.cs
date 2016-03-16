@@ -88,12 +88,10 @@ namespace DMS_3
 			if (newmessage.Text == "") {
 
 			} else {
-				var resinteg = dbr.InsertDataMessage (Data.userAndsoft,"", newmessage.Text,2, DateTime.Now, 2,0);
+				string formatmsg = newmessage.Text.Replace ("\"", " ").Replace ("'", " ");
+				var resinteg = dbr.InsertDataMessage (Data.userAndsoft,"", formatmsg,2, DateTime.Now, 2,0);
 
 			}
-
-
-
 			string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
@@ -101,7 +99,7 @@ namespace DMS_3
 
 			Intent intent = new Intent (this, typeof(MessageActivity));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
 
 
 		}
@@ -124,7 +122,7 @@ namespace DMS_3
 		{
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
 		}   
 	}
 }

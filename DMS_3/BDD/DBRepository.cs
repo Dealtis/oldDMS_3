@@ -40,7 +40,6 @@ namespace DMS_3.BDD
 				Console.Out.WriteLine("\nTable User Crée");
 				string result = "Table crée !";
 				return result;
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{	
@@ -63,7 +62,6 @@ namespace DMS_3.BDD
 				output = true;
 			}
 			return output;
-			db.Close ();
 		}
 
 		//Insertion des DATS USER
@@ -82,7 +80,6 @@ namespace DMS_3.BDD
 				item.user_UsePartic = user_UsePartic;
 				db.Insert(item);
 				return "Insertion" +user_AndsoftUser+" réussite";
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -137,7 +134,6 @@ namespace DMS_3.BDD
 				item.imgpath = imgpath;
 				db.Insert(item);
 				return "Insertion good";
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -165,7 +161,6 @@ namespace DMS_3.BDD
 				item.numMessage = numMessage;
 				db.Insert(item);
 				return "Insertion good";
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -190,7 +185,6 @@ namespace DMS_3.BDD
 				item.groupage = groupage;
 				db.Insert(item);
 				return "\n"+statutNotificationMessage+" "+numCommande;
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -216,7 +210,6 @@ namespace DMS_3.BDD
 				item.datajson = datajson;
 				db.Insert(item);
 				return "Insertion good";
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -240,7 +233,6 @@ namespace DMS_3.BDD
 				row.user_IsLogin = true;
 				db.Update(row);
 				Console.WriteLine ("UPDATE GOOD" + row.user_IsLogin);
-				db.Close ();
 			}
 			return output;
 		}
@@ -256,7 +248,6 @@ namespace DMS_3.BDD
 			db.Update(row);
 			output = "UPDATE POSITIONS " + row.Id;
 			return output;
-			db.Close ();
 		}
 
 		public string updatePositionSuppliv (string numCommande)
@@ -274,7 +265,6 @@ namespace DMS_3.BDD
 				Console.WriteLine ("UPDATE SUPPLIV" + row.numCommande);
 			}
 			return output;
-			db.Close ();
 		}
 		//USER CHECK LOGIN
 		public string is_user_Log_In()
@@ -289,7 +279,6 @@ namespace DMS_3.BDD
 				Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
 			}
 			return output;
-			db.Close ();
 
 		}
 		//setUserdata
@@ -308,7 +297,6 @@ namespace DMS_3.BDD
 				Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
 			}
 			return output;
-			db.Close ();
 		}
 
 		public string getUserAndsoft()
@@ -322,7 +310,6 @@ namespace DMS_3.BDD
 				output = item.user_AndsoftUser;
 			}
 			return output;
-			db.Close ();
 
 		}
 
@@ -337,7 +324,6 @@ namespace DMS_3.BDD
 				output = item.user_TransicsUser;
 			}
 			return output;
-			db.Close ();
 
 		}
 
@@ -355,7 +341,6 @@ namespace DMS_3.BDD
 				output = "UPDATE USER LOGOUT " + row.user_AndsoftUser;
 			}
 			return output;
-			db.Close ();
 		}
 
 	
@@ -374,7 +359,6 @@ namespace DMS_3.BDD
 
 			}
 			return output;
-			db.Close ();
 		}
 
 		//suppresion d'un GRP
@@ -393,7 +377,6 @@ namespace DMS_3.BDD
 				Console.WriteLine ("\nDELETE GOOD" + numGroupage);
 			}
 			return output;
-			db.Close ();
 		}
 
 		//supp notification
@@ -407,7 +390,6 @@ namespace DMS_3.BDD
 				db.Delete<TableNotifications>(id);
 				string result = "delete";
 				return result;
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -466,7 +448,6 @@ namespace DMS_3.BDD
 				data.poids = item.poids + "tonnes";
 			}
 			return data;
-			db.Close ();
 		}			
 
 		public int GetidPrev (int id)
@@ -488,7 +469,6 @@ namespace DMS_3.BDD
 				idprev = 0;
 			}
 			return 	idprev;
-			db.Close ();
 		}
 
 		public int GetidNext (int id)
@@ -511,7 +491,6 @@ namespace DMS_3.BDD
 				idnext = 0;
 			}
 			return 	idnext;
-			db.Close ();
 		}
 
 		public string updateposimgpath (int i, string path)
@@ -525,7 +504,6 @@ namespace DMS_3.BDD
 			db.Update(row);
 			output = "UPDATE POSITIONS " + row.Id;
 			return output;
-			db.Close ();
 		}
 
 		public string DropTableMessage()
@@ -538,7 +516,6 @@ namespace DMS_3.BDD
 				db.DeleteAll<TableMessages>();
 				string result = "delete";
 				return result;
-				db.Close ();
 			}
 			catch (SQLiteException ex)
 			{
@@ -565,7 +542,6 @@ namespace DMS_3.BDD
 			Data.Instance.setEnlevementIndicator (cRam);
 			Data.Instance.setMessageIndicator (cMsg);
 			return 	0;
-			db.Close ();
 		}
 	}
 }

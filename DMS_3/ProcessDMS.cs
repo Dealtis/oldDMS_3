@@ -34,13 +34,15 @@ namespace DMS_3
 	{
 
 		ProcessDMSBinder binder;
-		System.Threading.Timer _timer;
 		String datedujour;
 		LocationManager locMgr;
 		String userAndsoft;
 		String userTransics;
 		String GPS;
-
+		System.Timers.Timer timer;
+		Thread ThreadService;
+		Location previousLocation;
+		string _locationProvider;
 
 		string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
@@ -74,17 +76,26 @@ namespace DMS_3
 
 			}
 			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
+			StartServiceInForeground ();
 			DoStuff ();
-
 			// initialize location manager
-			locMgr = GetSystemService (Context.LocationService) as LocationManager;
+			InitializeLocationManager ();
+			//locMgr = GetSystemService (Context.LocationService) as LocationManager;
 
-			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
-				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
-				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider,2000, 1, this);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Start");
-			} else {
+//			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
+//				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
+//				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider,0, 0, this);
+//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Start");
+//			} else {
+//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Le GPS est désactiver");
+//			}
+
+			if (_locationProvider == "") {
 				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Le GPS est désactiver");
+			} else {
+				locMgr.RequestLocationUpdates (_locationProvider, 0, 0, this);
+				Console.Out.Write ("Listening for location updates using " + _locationProvider + ".");
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Start");
 			}
 
 			return StartCommandResult.Sticky;
@@ -93,36 +104,92 @@ namespace DMS_3
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-
-			_timer.Dispose ();
 			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
+			StopForeground (true);
+			StopSelf ();
 		}
 
+		void InitializeLocationManager()
+		{
+			locMgr = (LocationManager)GetSystemService(LocationService);
+
+			Criteria criteriaForLocationService = new Criteria
+			{
+				Accuracy = Accuracy.Fine
+			};
+			IList<string> acceptableLocationProviders = locMgr.GetProviders(criteriaForLocationService, true);
+
+			if (acceptableLocationProviders.Any())
+			{
+				_locationProvider = acceptableLocationProviders.First();
+			}
+			else
+			{
+				_locationProvider = String.Empty;
+			}
+			Console.Out.Write("Using " + _locationProvider + ".");
+
+		}
+
+		void StartServiceInForeground ()
+		{
+			var ongoing = new Notification (Resource.Drawable.iconapp , "DMS in foreground");
+			var pendingIntent = PendingIntent.GetActivity (this, 0, new Intent (this, typeof(HomeActivity)), 0);
+			ongoing.SetLatestEventInfo (this, "DMS", "DMS en cours d'exécution", pendingIntent);
+			StartForeground ((int)NotificationFlags.ForegroundService,ongoing);
+		}
 		public void DoStuff ()
 		{
-			_timer = new System.Threading.Timer ((o) => {
+			ThreadService = new Thread(new ThreadStart(this.Routine));
+			ThreadService.Start();
+			Console.WriteLine ("\nThreadService Lancé, for the first time");
+			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
+
+			timer = new System.Timers.Timer();
+			timer.Interval = 900000; 
+			timer.Elapsed += OnTimedEvent;
+			timer.AutoReset = true;
+			timer.Enabled = true;
+		}
+
+		void Routine ()
+		{
+			while (true) {
 				DBRepository dbr = new DBRepository ();
 				userAndsoft = dbr.getUserAndsoft ();
 				userTransics = dbr.getUserTransics ();
-				//Verification de la connexion
 				var connectivityManager = (ConnectivityManager)GetSystemService (ConnectivityService);
 				var activeConnection = connectivityManager.ActiveNetworkInfo;
-				if ((activeConnection != null) && activeConnection.IsConnected) {
-					//execution des fonctions dans une boucle
-					Task.Factory.StartNew (
-						() => {
-							Console.WriteLine ("\nHello from ComPosNotifMsg.");
-							ComPosNotifMsg ();//TOUTES LES 2 MINS
-						}					
-					).ContinueWith (
-						t => {
-							Console.WriteLine ("\nHello from ComWebService.");
-							ComWebService ();//TOUTES LES 2MIN
-						}						
-					);
+				if (userAndsoft != string.Empty) {
+					if ((activeConnection != null) && activeConnection.IsConnected) {			
+						Task.Factory.StartNew (
+							() => {
+								Console.WriteLine ("\nHello from ComPosNotifMsg.");
+								ComPosNotifMsg ();
+							}					
+						).ContinueWith (
+							t => {
+								Console.WriteLine ("\nHello from ComWebService.");
+								ComWebService ();
+							}						
+						);
+					}
 				}
-			}, null, 0, 30000);
-				
+				Thread.Sleep (TimeSpan.FromMinutes (2));
+			}
+		}
+
+		void OnTimedEvent (object sender, System.Timers.ElapsedEventArgs e)
+		{
+			if (ThreadService.IsAlive) {				
+				Console.WriteLine ("\nThreadService Already Running");
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Already Running\n");
+			} else {
+				ThreadService = new Thread(new ThreadStart(this.Routine));
+				ThreadService.Start();
+				Console.WriteLine ("\nThreadService Lancé, thread was not running");
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, thread was not running\n");
+			}
 		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
@@ -215,12 +282,6 @@ namespace DMS_3
 
 		void  ComPosNotifMsg ()
 		{
-			//recupération des messages webservice
-			//insertion en base
-			//recupation des messages / notifications / POS GPS
-			//Post sur le webservice
-			//maj du badge
-
 				//API GPS OK
 				string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
 					(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
@@ -400,8 +461,19 @@ namespace DMS_3
 
 		public void OnLocationChanged (Android.Locations.Location location)
 		{
-			GPS = location.Latitude.ToString() +";"+ location.Longitude.ToString();
-			Data.GPS = GPS = location.Latitude.ToString() +";"+ location.Longitude.ToString();
+			if (previousLocation == null) {
+				GPS = location.Latitude + ";" + location.Longitude;
+				Data.GPS = location.Latitude+ ";" + location.Longitude;
+				previousLocation = location;
+			} else {
+				//distance (location.Latitude, location.Longitude, previousLocation.Latitude, previousLocation.Longitude < 150
+				if (true){
+					//GPS = location.Latitude.ToString() +";"+ location.Longitude.ToString();
+					GPS = location.Latitude+ ";" + location.Longitude;
+					Data.GPS = location.Latitude+ ";" + location.Longitude;
+					previousLocation = location;
+				}
+			}
 		}
 		public void OnProviderDisabled (string provider)
 		{
@@ -415,6 +487,26 @@ namespace DMS_3
 		{
 
 		}
+
+		public double distance(double lat1, double lng1, double lat2, double lng2)
+		{
+			double earthRadius = 6371 * 1000;
+			double dLat = toRadians(lat2 - lat1);
+			double dLng = toRadians(lng2 - lng1);
+			double sindLat = Math.Sin(dLat / 2);
+			double sindLng = Math.Sin(dLng / 2);
+			double a = Math.Pow(sindLat, 2) + Math.Pow(sindLng, 2) * Math.Cos(toRadians(lat1)) * Math.Cos(toRadians(lat2));
+			double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+			double dist = earthRadius * c;
+			// Return the computed distance
+			return dist;
+		}
+
+		private double toRadians(double ang)
+		{
+			return ang * Math.PI / 180;
+		}
+
 
 		void traitMessages (string codeChauffeur, string texteMessage, string utilisateurEmetteur, int numMessage){
 			string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
@@ -522,7 +614,7 @@ namespace DMS_3
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
 							var execreq = db.Execute (texteMessageInputSplit [3]);
 							var rEXEC = dbr.InsertDataMessage (Data.userAndsoft, "", execreq+ "lignes traitées", 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + execreq + "\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + execreq +" pour "+texteMessageInputSplit [3]+"\n");
 							break;
 						}
 						break;
@@ -601,6 +693,11 @@ namespace DMS_3
 		}
 
 		public ProcessDMS GetDemoService ()
+		{
+			return service;
+		}
+
+		public ProcessDMS StopService ()
 		{
 			return service;
 		}

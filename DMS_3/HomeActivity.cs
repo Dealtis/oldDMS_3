@@ -87,7 +87,6 @@ namespace DMS_3
 			//Xamarin Insight
 			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
-
 		
 			if (processDMSConnection != null)
 				binder = processDMSConnection.Binder;
@@ -106,6 +105,9 @@ namespace DMS_3
 					);
 				}
 			}
+
+			var currentprocessID = ProcessDMSBinder.CallingPid;
+
 		}
 
 		void Btn_Livraison_LongClick (object sender, View.LongClickEventArgs e)
@@ -136,13 +138,11 @@ namespace DMS_3
 				Data.userAndsoft = null;
 				Data.userTransics = null;
 				File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[LOGOUT]Coupure du service le "+DateTime.Now.ToString("G")+"\n");
-				StopService (
-					new Intent (this, typeof(ProcessDMS)).PutExtra("userAndsoft",Data.userAndsoft).PutExtra("userTransics",Data.userTransics)		
-				);
+				StopService (new Intent (this, typeof(ProcessDMS)));
 				Data.Is_Service_Running = false;
 				Intent intent = new Intent (this, typeof(MainActivity));
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+				//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 
 			});
 			builder.Show();
@@ -162,7 +162,7 @@ namespace DMS_3
 			if (dbr.is_user_Log_In() == "false") {
 				Intent intent = new Intent (this, typeof(MainActivity));
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+				//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 			}
 			var t = DateTime.Now.ToString ("dd_MM_yy");
 			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory (Android.OS.Environment.DirectoryDownloads)).ToString ();
@@ -196,7 +196,6 @@ namespace DMS_3
 
 			var version = this.PackageManager.GetPackageInfo(this.PackageName, 0).VersionName;
 			lblTitle.Text = Data.userAndsoft + " " + version;
-
 			indicatorTimer = new System.Timers.Timer();
 			indicatorTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnIndicatorTimerHandler);
 			indicatorTimer.Interval = 1000;
@@ -248,7 +247,7 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE","LIV");
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
 		void btn_Enlevement_Click ()
@@ -256,59 +255,59 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE","RAM");
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
 		void btn_Message_Click ()
 		{
 			Intent intent = new Intent (this, typeof(MessageActivity));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
 		public override void OnBackPressed ()
 		{
 			
 		}
-	}
 
-	class ProcessDMSConnection : Java.Lang.Object, IServiceConnection
-	{
-		HomeActivity activity;
-		ProcessDMSBinder binder;
-
-		public ProcessDMSBinder Binder {
-			get {
-				return binder;
-			}
-		}
-
-		public ProcessDMSConnection (HomeActivity activity)
+		class ProcessDMSConnection : Java.Lang.Object, IServiceConnection
 		{
-			this.activity = activity;
-		}
+			HomeActivity activity;
+			ProcessDMSBinder binder;
 
-		public void OnServiceConnected (ComponentName name, IBinder service)
-		{
-			var demoServiceBinder = service as ProcessDMSBinder;
-			if (demoServiceBinder != null) {
-				var binder = (ProcessDMSBinder)service;
-				activity.binder = binder;
-				if (Data.userAndsoft == null || Data.userAndsoft == "") {
-
-				} else {
-					Data.Is_Service_Running = true;
+			public ProcessDMSBinder Binder {
+				get {
+					return binder;
 				}
-				this.binder = (ProcessDMSBinder)service;
-			} else {
-				File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] binder none : service non lancé "+DateTime.Now.ToString("G")+"\n");
 			}
 
-		}
+			public ProcessDMSConnection (HomeActivity activity)
+			{
+				this.activity = activity;
+			}
 
-		public void OnServiceDisconnected (ComponentName name)
-		{
-			Data.Is_Service_Running = false;
+			public void OnServiceConnected (ComponentName name, IBinder service)
+			{
+				var demoServiceBinder = service as ProcessDMSBinder;
+				if (demoServiceBinder != null) {
+					var binder = (ProcessDMSBinder)service;
+					activity.binder = binder;
+					if (Data.userAndsoft == null || Data.userAndsoft == "") {
+
+					} else {
+						Data.Is_Service_Running = true;
+					}
+					this.binder = (ProcessDMSBinder)service;
+				} else {
+					File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] binder none : service non lancé "+DateTime.Now.ToString("G")+"\n");
+				}
+
+			}
+
+			public void OnServiceDisconnected (ComponentName name)
+			{
+				Data.Is_Service_Running = false;
+			}
 		}
 	}
 }

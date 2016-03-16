@@ -177,7 +177,7 @@ namespace DMS_3
 				intent.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Resource.Animation.slideIn_right,Resource.Animation.abc_fade_out);
+				//this.OverridePendingTransition (Resource.Animation.slideIn_right,Resource.Animation.abc_fade_out);
 			}
 		}
 
@@ -236,7 +236,7 @@ namespace DMS_3
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);		
+				//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);		
 		}
 
 		public void initListView (string requete)
@@ -282,7 +282,7 @@ namespace DMS_3
 		{		
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_fade_in,Resource.Animation.abc_fade_out);
+			//this.OverridePendingTransition (Resource.Animation.abc_fade_in,Resource.Animation.abc_fade_out);
 		}
 	}
 }

@@ -1,10 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -177,7 +174,7 @@ namespace DMS_3
 				intent.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Resource.Animation.slideIn_right,Resource.Animation.abc_fade_out);
+				//this.OverridePendingTransition (Resource.Animation.slideIn_right,Resource.Animation.abc_fade_out);
 			}
 		}
 
@@ -236,7 +233,7 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeTraitee));
 			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
 		public void initListView (string requete)
@@ -283,7 +280,7 @@ namespace DMS_3
 		{		
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
 		}
 	}
 }

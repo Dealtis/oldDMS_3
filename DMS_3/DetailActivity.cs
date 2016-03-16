@@ -210,31 +210,32 @@ namespace DMS_3
 			dialog.SetView(viewAD);
 			dialog.SetCancelable (true);
 			dialog.SetPositiveButton("Oui", delegate {
-				
+				//format mémo
+				string formatmémo = mémo.Text.Replace ("\"", " ").Replace ("'", " ");
 				//case btn check
 				string typecr;
 				if (check2.Checked) {
 					typecr="CHEQUE";
 					string JSONCHEQUE ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"cheque\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
-					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONCHEQUE);
+					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,formatmémo,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONCHEQUE);
 				}
 				if (check1.Checked) {
 					typecr="ESPECE";
 					string JSONESPECE ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"espece\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
-					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONESPECE);
+					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,formatmémo,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONESPECE);
 				}
 				if (checkP.Checked) {
 					typecr="PARTIC";
 					string JSONPARTIC ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"espece\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
-					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONPARTIC);
+					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,formatmémo,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONPARTIC);
 				}
 
 				//mise du statut de la position à 1
-				dbr.updatePosition(i,"1","Validée",mémo.Text,tyValide,null);
+				dbr.updatePosition(i,"1","Validée",formatmémo,tyValide,null);
 				//creation du JSON
-				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+(mémo.Text).Replace("\""," ").Replace("\'"," ")+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+				string JSON ="{\"codesuiviliv\":\""+tyValide+"\",\"memosuiviliv\":\""+(formatmémo).Replace("\""," ").Replace("\'"," ")+"\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,mémo.Text,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
+				dbr.insertDataStatutpositions(tyValide,"1","Validée",data.numCommande,formatmémo,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSON);
 
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra("TYPE",type);
@@ -254,7 +255,7 @@ namespace DMS_3
 			intent.PutExtra("ID",Convert.ToString(i));
 			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
-			this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+			//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 		}
 		public override bool OnTouchEvent(MotionEvent e)
 		{
@@ -283,12 +284,12 @@ namespace DMS_3
 						Intent intent = new Intent (this, typeof(ListeTraitee));
 						intent.PutExtra("TYPE",type);
 						this.StartActivity (intent);
-						this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+						//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 					} else {
 						Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 						intent.PutExtra("TYPE",type);
 						this.StartActivity (intent);
-						this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+						//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 					}
 				}
 			} catch (Exception ex) {
@@ -318,12 +319,12 @@ namespace DMS_3
 				Intent intent = new Intent (this, typeof(ListeTraitee));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 			} else {
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 			}
 		}
 	}

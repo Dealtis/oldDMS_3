@@ -1797,8 +1797,8 @@ namespace DMS_3
 			// aapt resource value: 0x7f080071
 			public const int anomalie = 2131230833;
 			
-			// aapt resource value: 0x7f08006d
-			public const int anomaliet = 2131230829;
+			// aapt resource value: 0x7f08006c
+			public const int anomaliet = 2131230828;
 			
 			// aapt resource value: 0x7f080097
 			public const int back = 2131230871;
@@ -1863,8 +1863,8 @@ namespace DMS_3
 			// aapt resource value: 0x7f0800ad
 			public const int chronometer = 2131230893;
 			
-			// aapt resource value: 0x7f08006b
-			public const int client = 2131230827;
+			// aapt resource value: 0x7f08006a
+			public const int client = 2131230826;
 			
 			// aapt resource value: 0x7f080066
 			public const int codelivraison = 2131230822;
@@ -1983,17 +1983,17 @@ namespace DMS_3
 			// aapt resource value: 0x7f0800b1
 			public const int info = 2131230897;
 			
-			// aapt resource value: 0x7f080069
-			public const int infoanomalie = 2131230825;
+			// aapt resource value: 0x7f08006d
+			public const int infoanomalie = 2131230829;
 			
-			// aapt resource value: 0x7f08006c
-			public const int infoclient = 2131230828;
+			// aapt resource value: 0x7f08006b
+			public const int infoclient = 2131230827;
 			
 			// aapt resource value: 0x7f080068
 			public const int infolivraison = 2131230824;
 			
-			// aapt resource value: 0x7f08006a
-			public const int infosupp = 2131230826;
+			// aapt resource value: 0x7f080069
+			public const int infosupp = 2131230825;
 			
 			// aapt resource value: 0x7f080000
 			public const int item_touch_helper_previous_elevation = 2131230720;

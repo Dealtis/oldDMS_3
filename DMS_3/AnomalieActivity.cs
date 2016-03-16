@@ -22,8 +22,7 @@ namespace DMS_3
 {
 	[Activity (Label = "AnomalieActivity",Theme = "@android:style/Theme.Black.NoTitleBar",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]			
 	public class AnomalieActivity : Activity
-	{	
-
+	{
 		string id;
 		int i;
 		string txtspinner;
@@ -174,19 +173,21 @@ namespace DMS_3
 				}
 
 				DBRepository dbr = new DBRepository ();
+
+				//format mémo
+				string formatrem = txtRem.Replace ("\"", " ").Replace ("'", " ");
+
 				//mise du statut de la position à 1
 				if (txtspinner == "Restaure en non traite") {
-					dbr.updatePosition (i, "0", txtspinner, txtRem, codeanomalie, null);
-
+					dbr.updatePosition (i, "0", txtspinner, formatrem, codeanomalie, null);
 				} else {
-					dbr.updatePosition (i, "2", txtspinner, txtRem, codeanomalie, null);
+					dbr.updatePosition (i, "2", txtspinner, formatrem, codeanomalie, null);
 				}
 
-
 				//creation du JSON
-				string JSON = "{\"codesuiviliv\":\"" + codeanomalie + "\",\"memosuiviliv\":\"" + txtRem + "\",\"libellesuiviliv\":\"" + txtspinner + "\",\"commandesuiviliv\":\"" + data.numCommande + "\",\"groupagesuiviliv\":\"" + data.groupage + "\",\"datesuiviliv\":\"" + DateTime.Now.ToString ("dd/MM/yyyy HH:mm") + "\",\"posgps\":\"" + Data.GPS + "\"}";
+				string JSON = "{\"codesuiviliv\":\"" + codeanomalie + "\",\"memosuiviliv\":\"" + formatrem + "\",\"libellesuiviliv\":\"" + txtspinner + "\",\"commandesuiviliv\":\"" + data.numCommande + "\",\"groupagesuiviliv\":\"" + data.groupage + "\",\"datesuiviliv\":\"" + DateTime.Now.ToString ("dd/MM/yyyy HH:mm") + "\",\"posgps\":\"" + Data.GPS + "\"}";
 				//création de la notification webservice // statut de position
-				dbr.insertDataStatutpositions (codeanomalie, "2", txtspinner, data.numCommande, txtRem, DateTime.Now.ToString ("dd/MM/yyyy HH:mm"), JSON);
+				dbr.insertDataStatutpositions (codeanomalie, "2", txtspinner, data.numCommande, formatrem, DateTime.Now.ToString ("dd/MM/yyyy HH:mm"), JSON);
 
 
 				string compImg = String.Empty;
