@@ -80,15 +80,6 @@ namespace DMS_3
 			DoStuff ();
 			// initialize location manager
 			InitializeLocationManager ();
-			//locMgr = GetSystemService (Context.LocationService) as LocationManager;
-
-//			if (locMgr.AllProviders.Contains (LocationManager.NetworkProvider)
-//				&& locMgr.IsProviderEnabled (LocationManager.NetworkProvider)) {
-//				locMgr.RequestLocationUpdates (LocationManager.NetworkProvider,0, 0, this);
-//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Start");
-//			} else {
-//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Le GPS est désactiver");
-//			}
 
 			if (_locationProvider == "") {
 				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Le GPS est désactiver");
@@ -358,9 +349,7 @@ namespace DMS_3
 				try{
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					webClient.Encoding = System.Text.Encoding.UTF8;
-
 					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
-
 					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
 					webClient.UploadStringAsync (uri, datajson);
 				}
@@ -440,10 +429,8 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
-
 			string resultjson = "[" + e.Result + "]";
 			if (e.Result == "{\"Id\":0,\"codeChauffeur\":null,\"texteMessage\":null,\"utilisateurEmetteur\":null,\"statutMessage\":0,\"dateImportMessage\":\"0001-01-01T00:00:00\",\"typeMessage\":0,\"numMessage\":null}") {
-				
 			} else {
 				JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
 				var jsonarr = jsonVal;
@@ -551,7 +538,7 @@ namespace DMS_3
 						string[] texteMessageInputSplit = Android.Text.TextUtils.Split (texteMessage,"%%");
 						switch (texteMessageInputSplit [2]) {
 						case"TableMessages":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableMessages\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableMessages\n");
 							var selMesg = db.Query<TableMessages> (texteMessageInputSplit [3]);
 							string rowMsg = "";
 							rowMsg += "[";
@@ -560,10 +547,10 @@ namespace DMS_3
 							}
 							rowMsg += "]";
 							var rMsg = dbr.InsertDataMessage (Data.userAndsoft, "", rowMsg, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + rowMsg + "\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowMsg + "\n");
 							break;
 						case"TableNotifications":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableNotifications\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableNotifications\n");
 							var selNotif = db.Query<TablePositions> (texteMessageInputSplit [3]);
 							string rowNotif = "";
 							rowNotif += "[";
@@ -572,10 +559,10 @@ namespace DMS_3
 							}
 							rowNotif += "]";
 							var rNotif = dbr.InsertDataMessage (Data.userAndsoft, "", rowNotif, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + rowNotif + "\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowNotif + "\n");
 							break;
 						case"TablePositions":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE sur TablePositions\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TablePositions\n");
 							var selPos = db.Query<TablePositions> (texteMessageInputSplit [3]);
 							string rowPos = "";
 							rowPos += "[";
@@ -584,10 +571,10 @@ namespace DMS_3
 							}
 							rowPos += "]";
 							var rPOS = dbr.InsertDataMessage (Data.userAndsoft, "", rowPos, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + rowPos + "\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowPos + "\n");
 							break;
 						case"TableStatutPositions":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
 							var selStat = db.Query<TableStatutPositions>(texteMessageInputSplit [3]);
 							string rowStatut = "";
 							rowStatut += "[";
@@ -596,10 +583,10 @@ namespace DMS_3
 							}
 							rowStatut += "]";
 							var rSTATLIV = dbr.InsertDataMessage (Data.userAndsoft, "", rowStatut, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + rowStatut + "\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowStatut + "\n");
 							break;
 						case"TableUser":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
 							var selUser = db.Query<TableUser> (texteMessageInputSplit [3]);
 							string rowUser = "";
 							rowUser += "[";
@@ -608,13 +595,13 @@ namespace DMS_3
 							}
 							rowUser += "]";
 							var rMUSER = dbr.InsertDataMessage (Data.userAndsoft, "", rowUser, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
 							break;
 						default:
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
 							var execreq = db.Execute (texteMessageInputSplit [3]);
 							var rEXEC = dbr.InsertDataMessage (Data.userAndsoft, "", execreq+ "lignes traitées", 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("t") + "]" + "[SYSTEM]REQUETE Execute " + execreq +" pour "+texteMessageInputSplit [3]+"\n");
+							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + execreq +" pour "+texteMessageInputSplit [3]+"\n");
 							break;
 						}
 						break;

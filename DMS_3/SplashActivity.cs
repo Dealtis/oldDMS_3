@@ -117,7 +117,7 @@ namespace DMS_3
 				if (!(user_Login == string.Empty)) {
 					//Data.userAndsoft = user_Login;
 					dbr.setUserdata (user_Login);
-					File.AppendAllText (Data.log_file, "Connexion de " + Data.userAndsoft + " à " + DateTime.Now.ToString ("t") + "\n");
+					File.AppendAllText (Data.log_file, "Connexion de " + Data.userAndsoft + " à " + DateTime.Now.ToString ("G") + "\n");
 					StartActivity (new Intent (Application.Context, typeof(HomeActivity)));
 				} else {
 					StartActivity (new Intent (Application.Context, typeof(MainActivity)));

@@ -240,8 +240,7 @@ namespace DMS_3
 		private void TakeAPicture (object sender, EventArgs eventArgs)
 		{
 			Intent intent = new Intent (MediaStore.ActionImageCapture);
-
-			Data._file = new Java.IO.File (Data._dir, String.Format(""+DateTime.Now.ToString("dd_MM")+"_"+data.numCommande+".jpg", Guid.NewGuid()));
+			Data._file = new Java.IO.File (Data._dir, String.Format(""+DateTime.Now.ToString("ddMM")+"_"+data.numCommande+".jpg", Guid.NewGuid()));
 			intent.PutExtra (MediaStore.ExtraOutput, Uri.FromFile (Data._file));
 			StartActivityForResult (intent, 0);
 		}

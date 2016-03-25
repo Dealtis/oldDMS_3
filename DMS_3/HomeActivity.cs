@@ -105,7 +105,6 @@ namespace DMS_3
 					);
 				}
 			}
-
 			var currentprocessID = ProcessDMSBinder.CallingPid;
 
 		}
@@ -143,7 +142,6 @@ namespace DMS_3
 				Intent intent = new Intent (this, typeof(MainActivity));
 				this.StartActivity (intent);
 				//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
-
 			});
 			builder.Show();
 		}
@@ -204,8 +202,7 @@ namespace DMS_3
 		}
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
-		{	
-
+		{
 			//cacher les badges si inférieur à 1 else afficher et mettre le nombre
 			if (Data.Instance.getLivraisonIndicator () < 1) {
 				RunOnUiThread (() =>deliveryBadge.Visibility = ViewStates.Gone);
@@ -266,8 +263,7 @@ namespace DMS_3
 		}
 
 		public override void OnBackPressed ()
-		{
-			
+		{			
 		}
 
 		class ProcessDMSConnection : Java.Lang.Object, IServiceConnection
@@ -280,12 +276,10 @@ namespace DMS_3
 					return binder;
 				}
 			}
-
 			public ProcessDMSConnection (HomeActivity activity)
 			{
 				this.activity = activity;
 			}
-
 			public void OnServiceConnected (ComponentName name, IBinder service)
 			{
 				var demoServiceBinder = service as ProcessDMSBinder;
@@ -301,9 +295,7 @@ namespace DMS_3
 				} else {
 					File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] binder none : service non lancé "+DateTime.Now.ToString("G")+"\n");
 				}
-
 			}
-
 			public void OnServiceDisconnected (ComponentName name)
 			{
 				Data.Is_Service_Running = false;
