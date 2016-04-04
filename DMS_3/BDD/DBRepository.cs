@@ -356,7 +356,6 @@ namespace DMS_3.BDD
 			{
 				output = true;
 
-
 			}
 			return output;
 		}

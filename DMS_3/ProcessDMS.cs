@@ -43,6 +43,7 @@ namespace DMS_3
 		Thread ThreadService;
 		Location previousLocation;
 		string _locationProvider;
+		string stringValues;
 
 		string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
@@ -209,15 +210,20 @@ namespace DMS_3
 				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
 				var jsonArr = jsonVal;
 				if (content_integdata != "[]") {
+					stringValues ="";
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
-							var IntegUser = dbr.InsertDataPosition(row["codeLivraison"],row["numCommande"],row["refClient"],row["nomPayeur"],row["nomExpediteur"],row["adresseExpediteur"],row["villeExpediteur"],row["CpExpediteur"],row["dateExpe"],row["nomClient"],row["adresseLivraison"],row["villeLivraison"],row["CpLivraison"],row["dateHeure"],row["poids"],row["nbrPallette"],row["nbrColis"],row["instrucLivraison"],row["typeMission"],row["typeSegment"],row["groupage"],row["ADRCom"],row["ADRGrp"],"0",row["CR"],DateTime.Now.Day,row["Datemission"],row["Ordremission"],row["planDeTransport"],userAndsoft,row["nomClientLivraison"],row["villeClientLivraison"],null);
-							Console.WriteLine ("\n"+IntegUser);
+							stringValues += "("+row["codeLivraison"]+","+row["numCommande"]+","+row["refClient"]+","+row["nomPayeur"]+","+row["nomExpediteur"]+","+row["adresseExpediteur"]+","+row["villeExpediteur"]+","+row["CpExpediteur"]+","+row["dateExpe"]+","+row["nomClient"]+","+row["adresseLivraison"]+","+row["villeLivraison"]+","+row["CpLivraison"]+","+row["dateHeure"]+","+row["poids"]+","+row["nbrPallette"]+","+row["nbrColis"]+","+row["instrucLivraison"]+","+row["typeMission"]+","+row["typeSegment"]+","+row["groupage"]+","+row["ADRCom"]+","+row["ADRGrp"]+",0,"+row["CR"]+","+DateTime.Now.Day+","+row["Datemission"]+","+row["Ordremission"]+","+row["planDeTransport"]+","+userAndsoft+","+row["nomClientLivraison"]+","+row["villeClientLivraison"]+","+null+"),";
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
+							var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
 						}
-						var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
 					}
+					var execreq = db.Execute(
+						"INSERT INTO " +
+						"TablePositions ( codeLivraison, numCommande, nomClient, refClient, nomPayeur, adresseLivraison, CpLivraison, villeLivraison, dateHeure, nbrColis, nbrPallette, poids, adresseExpediteur, CpExpediteur, dateExpe, villeExpediteur, nomExpediteur, instrucLivraison, GROUPAGE, AdrLiv, AdrGrp, typeMission, typeSegment, statutLivraison, CR, dateBDD, Datemission, Ordremission,planDeTransport, Userandsoft, nomClientLivraison, villeClientLivraison, imgpath )" +
+						"VALUES" +
+						""+stringValues.Remove(stringValues.Length - 1)+"");
 				}
 
 				//SON
