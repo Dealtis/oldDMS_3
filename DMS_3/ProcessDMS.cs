@@ -44,6 +44,7 @@ namespace DMS_3
 		Location previousLocation;
 		string _locationProvider;
 		string stringValues;
+		string stringNotif;
 
 		string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
@@ -130,6 +131,7 @@ namespace DMS_3
 			ongoing.SetLatestEventInfo (this, "DMS", "DMS en cours d'exécution", pendingIntent);
 			StartForeground ((int)NotificationFlags.ForegroundService,ongoing);
 		}
+
 		public void DoStuff ()
 		{
 			ThreadService = new Thread(new ThreadStart(this.Routine));
@@ -167,6 +169,14 @@ namespace DMS_3
 						);
 					}
 				}
+				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+				//string servicedate = pref.GetString("Service", String.Empty);
+
+				ISharedPreferencesEditor edit = pref.Edit();
+				edit.PutInt("Service",DateTime.Now.Second+DateTime.Now.Minute*60+DateTime.Now.Hour*3600);
+				edit.Apply();
+				Console.Out.WriteLine ("Service timer :"+pref.GetInt("Service", 0));
 				Thread.Sleep (TimeSpan.FromMinutes (2));
 			}
 		}
@@ -211,19 +221,35 @@ namespace DMS_3
 				var jsonArr = jsonVal;
 				if (content_integdata != "[]") {
 					stringValues ="";
+					stringNotif  ="";
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
-							stringValues += "("+row["codeLivraison"]+","+row["numCommande"]+","+row["refClient"]+","+row["nomPayeur"]+","+row["nomExpediteur"]+","+row["adresseExpediteur"]+","+row["villeExpediteur"]+","+row["CpExpediteur"]+","+row["dateExpe"]+","+row["nomClient"]+","+row["adresseLivraison"]+","+row["villeLivraison"]+","+row["CpLivraison"]+","+row["dateHeure"]+","+row["poids"]+","+row["nbrPallette"]+","+row["nbrColis"]+","+row["instrucLivraison"]+","+row["typeMission"]+","+row["typeSegment"]+","+row["groupage"]+","+row["ADRCom"]+","+row["ADRGrp"]+",0,"+row["CR"]+","+DateTime.Now.Day+","+row["Datemission"]+","+row["Ordremission"]+","+row["planDeTransport"]+","+userAndsoft+","+row["nomClientLivraison"]+","+row["villeClientLivraison"]+","+null+"),";
+							//stringValues += "("+row["codeLivraison"]+","+row["numCommande"]+","+row["refClient"]+","+row["nomPayeur"]+","+row["nomExpediteur"]+","+row["adresseExpediteur"]+","+row["villeExpediteur"]+","+row["CpExpediteur"]+","+row["dateExpe"]+","+row["nomClient"]+","+row["adresseLivraison"]+","+row["villeLivraison"]+","+row["CpLivraison"]+","+row["dateHeure"]+","+row["poids"]+","+row["nbrPallette"]+","+row["nbrColis"]+","+row["instrucLivraison"]+","+row["typeMission"]+","+row["typeSegment"]+","+row["groupage"]+","+row["ADRCom"]+","+row["ADRGrp"]+",0,"+row["CR"]+","+DateTime.Now.Day+","+row["Datemission"]+","+row["Ordremission"]+","+row["planDeTransport"]+","+userAndsoft+","+row["nomClientLivraison"]+","+row["villeClientLivraison"]+",null)";
+
+							//stringValues += " SELECT '"+row["codeLivraison"]+"','"+row["numCommande"]+"','"+row["nomPayeur"]+"','"+row["refClient"]+"','"+row["nomExpediteur"]+"','"+row["adresseExpediteur"]+"','"+row["CpExpediteur"]+"','"+row["villeExpediteur"]+"','"+row["dateExpe"]+"','"+row["nomClient"]+"','"+row["adresseLivraison"]+"','"+row["villeLivraison"]+"','"+row["CpLivraison"]+"','"+row["dateHeure"]+"','"+row["poids"]+"','"+row["nbrPallette"]+"','"+row["nbrColis"]+"','"+row["instrucLivraison"]+"','"+row["typeMission"]+"','"+row["typeSegment"]+"','"+row["groupage"]+"','"+row["ADRCom"]+"','"+row["ADRGrp"]+"',0,'"+row["CR"]+"','"+DateTime.Now.Day+"','"+row["Datemission"]+"','"+row["Ordremission"]+"','"+row["planDeTransport"]+"','"+userAndsoft+"','"+row["nomClientLivraison"]+"','"+row["villeClientLivraison"]+"',null UNION ALL";
+							stringValues +=" SELECT '"+row["codeLivraison"].ToString().Replace("'","''")+"','"+row["numCommande"]+"','"+row["nomPayeur"].ToString().Replace("'","''")+"','"+row["refClient"]+"','"+row["nomExpediteur"].ToString().Replace("'","''")+"','"+row["adresseLivraison"].ToString().Replace("'","''")+"','"+row["CpLivraison"]+"','"+row["villeLivraison"].ToString().Replace("'","''")+"','"+row["dateExpe"]+"','"+row["nbrColis"]+"','"+row["nbrPallette"]+"','"+row["poids"]+"','"+row["adresseExpediteur"].ToString().Replace("'","''")+"','"+row["CpExpediteur"]+"','"+row["dateExpe"]+"','"+row["villeExpediteur"].ToString().Replace("'","''")+"','"+row["nomExpediteur"].ToString().Replace("'","''")+"','"+row["instrucLivraison"].ToString().Replace("'","''")+"','"+row["groupage"]+"','"+row["ADRCom"]+"','"+row["ADRGrp"]+"','"+row["typeMission"]+"','"+row["typeSegment"]+"',0,'"+row["CR"]+"','"+DateTime.Now.Day+"','"+row["Datemission"]+"','"+row["Ordremission"]+"','"+row["planDeTransport"]+"','"+userAndsoft+"','"+row["nomClientLivraison"].ToString().Replace("'","''")+"','"+row["villeClientLivraison"]+"',null UNION ALL";
+								
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
-							var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
+							//var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
+							stringNotif += "'"+row["numCommande"]+"',";
 						}
 					}
-					var execreq = db.Execute(
-						"INSERT INTO " +
-						"TablePositions ( codeLivraison, numCommande, nomClient, refClient, nomPayeur, adresseLivraison, CpLivraison, villeLivraison, dateHeure, nbrColis, nbrPallette, poids, adresseExpediteur, CpExpediteur, dateExpe, villeExpediteur, nomExpediteur, instrucLivraison, GROUPAGE, AdrLiv, AdrGrp, typeMission, typeSegment, statutLivraison, CR, dateBDD, Datemission, Ordremission,planDeTransport, Userandsoft, nomClientLivraison, villeClientLivraison, imgpath )" +
-						"VALUES" +
-						""+stringValues.Remove(stringValues.Length - 1)+"");
+
+					string stringinsertpos="INSERT INTO ";
+					stringinsertpos +="TablePositions ( codeLivraison, numCommande, nomClient, refClient, nomPayeur, adresseLivraison, CpLivraison, villeLivraison, dateHeure, nbrColis, nbrPallette, poids, adresseExpediteur, CpExpediteur, dateExpe, villeExpediteur, nomExpediteur, instrucLivraison, GROUPAGE, AdrLiv, AdrGrp, typeMission, typeSegment, statutLivraison, CR, dateBDD, Datemission, Ordremission,planDeTransport, Userandsoft, nomClientLivraison, villeClientLivraison, imgpath )";
+					stringinsertpos +=	" " ;
+					stringinsertpos +=	stringValues.Remove(stringValues.Length-9);
+
+					string stringinsertnotif="INSERT INTO TableNotifications ( statutNotificationMessage, dateNotificationMessage, numMessage, numCommande ) VALUES ('10','"+DateTime.Now+"','1','"+(stringNotif.Remove(stringNotif.Length-1)).Replace("'","\"")+"')";
+
+
+					var execreq = db.Execute(stringinsertpos);
+					var execreqnotif = db.Execute(stringinsertnotif);
+
+					Console.Out.WriteLine(stringinsertpos);
+					Console.Out.WriteLine(stringinsertnotif);
+
 				}
 
 				//SON
@@ -231,6 +257,7 @@ namespace DMS_3
 				} else {
 					alert ();
 				}
+
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
@@ -243,7 +270,6 @@ namespace DMS_3
 			dbr.SETBadges(Data.userAndsoft);
 
 			//verification des groupages et suppression des cloturer
-
 			//select des grp's
 			string content_grpcloture = String.Empty;
 			var tablegroupage = db.Query<TablePositions> ("SELECT groupage FROM TablePositions group by groupage");
@@ -278,98 +304,98 @@ namespace DMS_3
 		}
 
 		void  ComPosNotifMsg ()
-		{
-				//API GPS OK
-				string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
-					(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection (dbPath);
+	{
+			//API GPS OK
+			string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
+				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection (dbPath);
 
-				DBRepository dbr = new DBRepository ();
-				var webClient = new WebClient ();
+			DBRepository dbr = new DBRepository ();
+			var webClient = new WebClient ();
 
-				try {
+			try {
 
-				string content_msg = String.Empty;
-					//ROUTINE INTEG MESSAGE
-					try {					
-						//API LIVRER OK
-					string _urlb = "http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"";
-
-
-					var webClientb = new WebClient ();
-					webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
-					webClientb.Encoding = System.Text.Encoding.UTF8;
-
-					content_msg = webClientb.DownloadString (_urlb);
-
-					} catch (Exception ex) {
-						content_msg = "[]";
-						Insights.Report (ex,Xamarin.Insights.Severity.Error);
-
-					}
-				if (content_msg != "[]") {
-					JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
-					var jsonarr = jsonVal;
-					foreach (var item in jsonarr) {
-						traitMessages(item["codeChauffeur"],item ["texteMessage"],item ["utilisateurEmetteur"],item["numMessage"]);
-					}
-				}
-
-				//SET des badges
-				dbr.SETBadges(Data.userAndsoft);
-
-				String datajson = string.Empty;
-				String datagps=string.Empty;
-				String datamsg=string.Empty;
-				String datanotif=string.Empty;
+			string content_msg = String.Empty;
+				//ROUTINE INTEG MESSAGE
+				try {					
+					//API LIVRER OK
+				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"";
 
 
-				datagps = "{\"posgps\":\"" + GPS + "\",\"userandsoft\":\"" + userAndsoft + "\"}";
+				var webClientb = new WebClient ();
+				webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
+				webClientb.Encoding = System.Text.Encoding.UTF8;
 
-				var tablestatutmessage = db.Query<TableNotifications> ("SELECT * FROM TableNotifications");
+				content_msg = webClientb.DownloadString (_urlb);
 
-				//SEND NOTIF
-				foreach (var item in tablestatutmessage) {
-					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.numMessage+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
-				}
-
-				//SEND MESSAGE
-				var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2 or statutMessage = 5");
-				foreach (var item in tablemessage) {
-					datamsg += "{\"codeChauffeur\":\"" + item.codeChauffeur + "\",\"texteMessage\":\"" + item.texteMessage + "\",\"utilisateurEmetteur\":\""+item.utilisateurEmetteur+"\",\"dateImportMessage\":\""+item.dateImportMessage+"\",\"typeMessage\":\""+item.typeMessage+"\"},";
-				}
-				if(datanotif == ""){
-					datanotif ="{}";
-				}else{
-					datanotif = datanotif.Remove(datanotif.Length - 1);
-				}
-				if(datamsg == ""){
-					datamsg ="{}";
-				}else{
-					datamsg = datamsg.Remove(datamsg.Length - 1);
-				}
-
-				datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
-
-				//API MSG/NOTIF/GPS
-				try{
-					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
-					webClient.Encoding = System.Text.Encoding.UTF8;
-					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
-					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
-					webClient.UploadStringAsync (uri, datajson);
-				}
-				catch (Exception e)
-				{
-					Insights.Report (e,Xamarin.Insights.Severity.Error);
-					File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
-				}
 				} catch (Exception ex) {
+					content_msg = "[]";
 					Insights.Report (ex,Xamarin.Insights.Severity.Error);
-					Console.Out.Write(ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+
 				}
-			Console.WriteLine ("\nTask ComPosGps done");
+			if (content_msg != "[]") {
+				JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
+				var jsonarr = jsonVal;
+				foreach (var item in jsonarr) {
+					traitMessages(item["codeChauffeur"],item ["texteMessage"],item ["utilisateurEmetteur"],item["numMessage"]);
+				}
+			}
+
+			//SET des badges
+			dbr.SETBadges(Data.userAndsoft);
+
+			String datajson = string.Empty;
+			String datagps=string.Empty;
+			String datamsg=string.Empty;
+			String datanotif=string.Empty;
+
+
+			datagps = "{\"posgps\":\"" + GPS + "\",\"userandsoft\":\"" + userAndsoft + "\"}";
+
+			var tablestatutmessage = db.Query<TableNotifications> ("SELECT * FROM TableNotifications");
+
+			//SEND NOTIF
+			foreach (var item in tablestatutmessage) {
+				datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.numMessage+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
+			}
+
+			//SEND MESSAGE
+			var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2 or statutMessage = 5");
+			foreach (var item in tablemessage) {
+				datamsg += "{\"codeChauffeur\":\"" + item.codeChauffeur + "\",\"texteMessage\":\"" + item.texteMessage + "\",\"utilisateurEmetteur\":\""+item.utilisateurEmetteur+"\",\"dateImportMessage\":\""+item.dateImportMessage+"\",\"typeMessage\":\""+item.typeMessage+"\"},";
+			}
+			if(datanotif == ""){
+				datanotif ="{}";
+			}else{
+				datanotif = datanotif.Remove(datanotif.Length - 1);
+			}
+			if(datamsg == ""){
+				datamsg ="{}";
+			}else{
+				datamsg = datamsg.Remove(datamsg.Length - 1);
+			}
+
+			datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+
+			//API MSG/NOTIF/GPS
+			try{
+				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+				webClient.Encoding = System.Text.Encoding.UTF8;
+				System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
+				webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
+				webClient.UploadStringAsync (uri, datajson);
+			}
+			catch (Exception e)
+			{
+				Insights.Report (e,Xamarin.Insights.Severity.Error);
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
+			}
+			} catch (Exception ex) {
+				Insights.Report (ex,Xamarin.Insights.Severity.Error);
+				Console.Out.Write(ex);
+			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+			}
+		Console.WriteLine ("\nTask ComPosGps done");
 		}
 		
 

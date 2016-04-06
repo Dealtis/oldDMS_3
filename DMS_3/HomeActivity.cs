@@ -40,6 +40,7 @@ namespace DMS_3
 		RelativeLayout peekupBadge;
 		RelativeLayout newMsgBadge;
 		System.Timers.Timer indicatorTimer;
+		System.Timers.Timer serviceTimer;
 		public ProcessDMSBinder binder;
 		ProcessDMSConnection processDMSConnection;
 
@@ -100,12 +101,10 @@ namespace DMS_3
 				
 			} else {
 				if (!Data.Is_Service_Running) {
-					StartService (
-						new Intent (this, typeof(ProcessDMS)).PutExtra ("userAndsoft", Data.userAndsoft).PutExtra ("userTransics", Data.userTransics)		
-					);
+					StartService (new Intent (this, typeof(ProcessDMS)));
 				}
 			}
-			var currentprocessID = ProcessDMSBinder.CallingPid;
+			//var currentprocessID = ProcessDMSBinder.CallingPid;
 
 		}
 
@@ -149,8 +148,35 @@ namespace DMS_3
 		protected override void OnStart()
 		{
 			base.OnStart();
+			serviceTimer = new System.Timers.Timer();
+			serviceTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnServiceTimerHandler);
+			serviceTimer.Interval = 30000;
+			serviceTimer.Enabled = true;
+			serviceTimer.Start ();
 		}
 
+		void OnServiceTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
+		{
+			//verification de la date de la pre Service
+			//si la diff est > 10 min relancer le service
+			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+			ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+			int servicedate = pref.GetInt("Service", 0);
+
+			try {				
+				if (((DateTime.Now.Second+DateTime.Now.Minute*60+DateTime.Now.Hour*3600)-servicedate)>6000) {
+//					LANCEMENT DU SERVICE
+					if (Data.userAndsoft == null || Data.userAndsoft == "") {
+					} else {
+						StartService (new Intent (this, typeof(ProcessDMS)));
+					}
+				}
+
+			} catch (Exception ex) {
+				Console.Out.Write (ex);
+			}
+
+		}
 
 		protected override void OnResume()
 		{
@@ -199,6 +225,8 @@ namespace DMS_3
 			indicatorTimer.Interval = 1000;
 			indicatorTimer.Enabled = true;
 			indicatorTimer.Start();
+
+
 		}
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
@@ -229,7 +257,7 @@ namespace DMS_3
 		protected override void OnStop()
 		{	
 			indicatorTimer.Stop ();
-			File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"OnStop le "+DateTime.Now.ToString("G")+"\n");
+			//File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"OnStop le "+DateTime.Now.ToString("G")+"\n");
 			base.OnStop();
 		}
 
