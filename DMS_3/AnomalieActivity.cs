@@ -99,7 +99,7 @@ namespace DMS_3
 				txtRem = EdittxtRem.Text;
 				switch (txtspinner) {
 				case "Livre avec manquant":
-					codeanomalie = "LIVRMQ";
+					codeanomalie = "LIVMQPL";
 					break;
 				case "Livre avec reserves pour avaries":
 					codeanomalie = "LIVRCA";
@@ -135,7 +135,7 @@ namespace DMS_3
 					codeanomalie = "RENSPD";
 					break;
 				case "Refuse cause contre remboursement":
-					codeanomalie = "RENDRB";
+					codeanomalie = "RENSRB";
 					break;
 				case "Refuse livraison trop tardive":
 					codeanomalie = "RENTAR";
@@ -150,7 +150,7 @@ namespace DMS_3
 					codeanomalie = "RENNCG";
 					break;
 				case "Inventaire":
-					codeanomalie = "RENINV";
+					codeanomalie = "RENFCO";
 					break;
 				case "Ramasse pas faite":
 					codeanomalie = "RAMPFT";
