@@ -67,7 +67,7 @@ namespace DMS_3
 			}else{
 				//il y a des shared pref
 				log_file = pref.GetString("Log", String.Empty);
-				if (((File.GetCreationTime(log_file)).CompareTo(DateTime.Now)) > 3) {
+				if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
 					File.Delete(log_file);
 					log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
 					ISharedPreferencesEditor edit = pref.Edit();
@@ -223,42 +223,35 @@ namespace DMS_3
 				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
 				var jsonArr = jsonVal;
 				if (content_integdata != "[]") {
-					stringValues ="";
-					stringNotif  ="";
+					stringValues = string.Empty;
+					stringNotif  =string.Empty;
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
-							//stringValues += "("+row["codeLivraison"]+","+row["numCommande"]+","+row["refClient"]+","+row["nomPayeur"]+","+row["nomExpediteur"]+","+row["adresseExpediteur"]+","+row["villeExpediteur"]+","+row["CpExpediteur"]+","+row["dateExpe"]+","+row["nomClient"]+","+row["adresseLivraison"]+","+row["villeLivraison"]+","+row["CpLivraison"]+","+row["dateHeure"]+","+row["poids"]+","+row["nbrPallette"]+","+row["nbrColis"]+","+row["instrucLivraison"]+","+row["typeMission"]+","+row["typeSegment"]+","+row["groupage"]+","+row["ADRCom"]+","+row["ADRGrp"]+",0,"+row["CR"]+","+DateTime.Now.Day+","+row["Datemission"]+","+row["Ordremission"]+","+row["planDeTransport"]+","+userAndsoft+","+row["nomClientLivraison"]+","+row["villeClientLivraison"]+",null)";
-
-							//stringValues += " SELECT '"+row["codeLivraison"]+"','"+row["numCommande"]+"','"+row["nomPayeur"]+"','"+row["refClient"]+"','"+row["nomExpediteur"]+"','"+row["adresseExpediteur"]+"','"+row["CpExpediteur"]+"','"+row["villeExpediteur"]+"','"+row["dateExpe"]+"','"+row["nomClient"]+"','"+row["adresseLivraison"]+"','"+row["villeLivraison"]+"','"+row["CpLivraison"]+"','"+row["dateHeure"]+"','"+row["poids"]+"','"+row["nbrPallette"]+"','"+row["nbrColis"]+"','"+row["instrucLivraison"]+"','"+row["typeMission"]+"','"+row["typeSegment"]+"','"+row["groupage"]+"','"+row["ADRCom"]+"','"+row["ADRGrp"]+"',0,'"+row["CR"]+"','"+DateTime.Now.Day+"','"+row["Datemission"]+"','"+row["Ordremission"]+"','"+row["planDeTransport"]+"','"+userAndsoft+"','"+row["nomClientLivraison"]+"','"+row["villeClientLivraison"]+"',null UNION ALL";
 							stringValues +=" SELECT '"+row["codeLivraison"].ToString().Replace("'","''")+"','"+row["numCommande"]+"','"+row["nomPayeur"].ToString().Replace("'","''")+"','"+row["refClient"]+"','"+row["nomExpediteur"].ToString().Replace("'","''")+"','"+row["adresseLivraison"].ToString().Replace("'","''")+"','"+row["CpLivraison"]+"','"+row["villeLivraison"].ToString().Replace("'","''")+"','"+row["dateExpe"]+"','"+row["nbrColis"]+"','"+row["nbrPallette"]+"','"+row["poids"]+"','"+row["adresseExpediteur"].ToString().Replace("'","''")+"','"+row["CpExpediteur"]+"','"+row["dateExpe"]+"','"+row["villeExpediteur"].ToString().Replace("'","''")+"','"+row["nomExpediteur"].ToString().Replace("'","''")+"','"+row["instrucLivraison"].ToString().Replace("'","''")+"','"+row["groupage"]+"','"+row["ADRCom"]+"','"+row["ADRGrp"]+"','"+row["typeMission"]+"','"+row["typeSegment"]+"',0,'"+row["CR"]+"','"+DateTime.Now.Day+"','"+row["Datemission"]+"','"+row["Ordremission"]+"','"+row["planDeTransport"]+"','"+userAndsoft+"','"+row["nomClientLivraison"].ToString().Replace("'","''")+"','"+row["villeClientLivraison"]+"',null UNION ALL";
-								
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
-							//var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
+							//NOTIF
 							stringNotif += ""+row["numCommande"]+"|";
 						}
 					}
-
-					string stringinsertpos="INSERT INTO ";
-					stringinsertpos +="TablePositions ( codeLivraison, numCommande, nomClient, refClient, nomPayeur, adresseLivraison, CpLivraison, villeLivraison, dateHeure, nbrColis, nbrPallette, poids, adresseExpediteur, CpExpediteur, dateExpe, villeExpediteur, nomExpediteur, instrucLivraison, GROUPAGE, AdrLiv, AdrGrp, typeMission, typeSegment, statutLivraison, CR, dateBDD, Datemission, Ordremission,planDeTransport, Userandsoft, nomClientLivraison, villeClientLivraison, imgpath )";
-					stringinsertpos +=	" " ;
-					stringinsertpos +=	stringValues.Remove(stringValues.Length-9);
-
-					string stringinsertnotif="INSERT INTO TableNotifications ( statutNotificationMessage, dateNotificationMessage, numMessage, numCommande ) VALUES ('10','"+DateTime.Now+"','1','"+(stringNotif.Remove(stringNotif.Length-1))+"')";
-
-
-					var execreq = db.Execute(stringinsertpos);
-					var execreqnotif = db.Execute(stringinsertnotif);
-
-					Console.Out.WriteLine(stringinsertpos);
-					Console.Out.WriteLine(stringinsertnotif);
-
-				}
-
-				//SON
-				if (content_integdata == "[]") {
-				} else {
-					alert ();
+					if (stringValues != string.Empty) {
+						string stringinsertpos="INSERT INTO ";
+						stringinsertpos +="TablePositions ( codeLivraison, numCommande, nomClient, refClient, nomPayeur, adresseLivraison, CpLivraison, villeLivraison, dateHeure, nbrColis, nbrPallette, poids, adresseExpediteur, CpExpediteur, dateExpe, villeExpediteur, nomExpediteur, instrucLivraison, GROUPAGE, AdrLiv, AdrGrp, typeMission, typeSegment, statutLivraison, CR, dateBDD, Datemission, Ordremission,planDeTransport, Userandsoft, nomClientLivraison, villeClientLivraison, imgpath )";
+						stringinsertpos +=	" " ;
+						stringinsertpos +=	stringValues.Remove(stringValues.Length-9);
+						var execreq = db.Execute(stringinsertpos);
+						Console.Out.WriteLine(execreq);
+						//SON
+						if (content_integdata == "[]") {
+						} else {
+							alert ();
+						}
+					}
+					if (stringNotif != string.Empty) {
+						string stringinsertnotif="INSERT INTO TableNotifications ( statutNotificationMessage, dateNotificationMessage, numMessage, numCommande ) VALUES ('10','"+DateTime.Now+"','1','"+(stringNotif.Remove(stringNotif.Length-1))+"')";
+						var execreqnotif = db.Execute(stringinsertnotif);
+						Console.Out.WriteLine(execreqnotif);
+					}	
 				}
 
 			} catch (Exception ex) {

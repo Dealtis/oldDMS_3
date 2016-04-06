@@ -61,7 +61,7 @@ namespace DMS_3
 				} else {
 					//il y a des shared pref
 					Data.log_file = pref.GetString ("Log", String.Empty);
-					if (((File.GetCreationTime(Data.log_file)).CompareTo(DateTime.Now)) > 3) {
+					if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
 						File.Delete (Data.log_file);
 						Data.log_file = Path.Combine (dir_log, t + "_" + telId + "_log.txt");
 						ISharedPreferencesEditor edit = pref.Edit ();
