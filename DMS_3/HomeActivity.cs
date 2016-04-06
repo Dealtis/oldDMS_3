@@ -161,10 +161,10 @@ namespace DMS_3
 			//si la diff est > 10 min relancer le service
 			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
 			ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-			int servicedate = pref.GetInt("Service", 0);
+			long servicedate = pref.GetLong("Service",0L);
 
 			try {				
-				if (((DateTime.Now.Second+DateTime.Now.Minute*60+DateTime.Now.Hour*3600)-servicedate)>6000) {
+				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>10){
 //					LANCEMENT DU SERVICE
 					if (Data.userAndsoft == null || Data.userAndsoft == "") {
 					} else {

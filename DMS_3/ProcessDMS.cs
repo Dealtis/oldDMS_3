@@ -169,14 +169,17 @@ namespace DMS_3
 						);
 					}
 				}
+
 				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
 				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
 				//string servicedate = pref.GetString("Service", String.Empty);
 
 				ISharedPreferencesEditor edit = pref.Edit();
-				edit.PutInt("Service",DateTime.Now.Second+DateTime.Now.Minute*60+DateTime.Now.Hour*3600);
+				edit.PutLong("Service",DateTime.Now.Ticks);
 				edit.Apply();
-				Console.Out.WriteLine ("Service timer :"+pref.GetInt("Service", 0));
+
+
+				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
 				Thread.Sleep (TimeSpan.FromMinutes (2));
 			}
 		}
@@ -232,7 +235,7 @@ namespace DMS_3
 								
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
 							//var resintegstatut = dbr.InsertDataStatutMessage (10,DateTime.Now,1,row["numCommande"],row["groupage"]);
-							stringNotif += "'"+row["numCommande"]+"',";
+							stringNotif += ""+row["numCommande"]+"|";
 						}
 					}
 
@@ -241,7 +244,7 @@ namespace DMS_3
 					stringinsertpos +=	" " ;
 					stringinsertpos +=	stringValues.Remove(stringValues.Length-9);
 
-					string stringinsertnotif="INSERT INTO TableNotifications ( statutNotificationMessage, dateNotificationMessage, numMessage, numCommande ) VALUES ('10','"+DateTime.Now+"','1','"+(stringNotif.Remove(stringNotif.Length-1)).Replace("'","\"")+"')";
+					string stringinsertnotif="INSERT INTO TableNotifications ( statutNotificationMessage, dateNotificationMessage, numMessage, numCommande ) VALUES ('10','"+DateTime.Now+"','1','"+(stringNotif.Remove(stringNotif.Length-1))+"')";
 
 
 					var execreq = db.Execute(stringinsertpos);
