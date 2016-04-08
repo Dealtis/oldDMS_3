@@ -29,7 +29,6 @@ namespace DMS_3
 		public override void OnCreate (Bundle savedInstanceState, PersistableBundle persistentState)
 		{
 			base.OnCreate (savedInstanceState, persistentState);
-
 		}
 
 		protected override void OnResume ()
@@ -90,9 +89,10 @@ namespace DMS_3
 								Console.WriteLine ("\n" + checkUser + " " + row ["userandsoft"]);
 								if (!checkUser) {
 									var IntegUser = dbr.InsertDataUser (row ["userandsoft"], row ["usertransics"], row ["mdpandsoft"], "true");
-								Console.WriteLine ("\n" + IntegUser);
+									Console.WriteLine ("\n" + IntegUser);
 								}
 							}
+							//execute de la requete
 							Data.tableuserload = true;
 							App_Connec = true;
 						} catch (System.Exception ex) {

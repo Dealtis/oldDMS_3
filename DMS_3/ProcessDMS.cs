@@ -126,7 +126,7 @@ namespace DMS_3
 
 		void StartServiceInForeground ()
 		{
-			var ongoing = new Notification (Resource.Drawable.iconapp , "DMS in foreground");
+			var ongoing = new Notification (Resource.Drawable.iconapp , "DMS en cours d'exécution");
 			var pendingIntent = PendingIntent.GetActivity (this, 0, new Intent (this, typeof(HomeActivity)), 0);
 			ongoing.SetLatestEventInfo (this, "DMS", "DMS en cours d'exécution", pendingIntent);
 			StartForeground ((int)NotificationFlags.ForegroundService,ongoing);
@@ -228,7 +228,7 @@ namespace DMS_3
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
-							stringValues +=" SELECT '"+row["codeLivraison"].ToString().Replace("'","''")+"','"+row["numCommande"]+"','"+row["nomPayeur"].ToString().Replace("'","''")+"','"+row["refClient"]+"','"+row["nomExpediteur"].ToString().Replace("'","''")+"','"+row["adresseLivraison"].ToString().Replace("'","''")+"','"+row["CpLivraison"]+"','"+row["villeLivraison"].ToString().Replace("'","''")+"','"+row["dateExpe"]+"','"+row["nbrColis"]+"','"+row["nbrPallette"]+"','"+row["poids"]+"','"+row["adresseExpediteur"].ToString().Replace("'","''")+"','"+row["CpExpediteur"]+"','"+row["dateExpe"]+"','"+row["villeExpediteur"].ToString().Replace("'","''")+"','"+row["nomExpediteur"].ToString().Replace("'","''")+"','"+row["instrucLivraison"].ToString().Replace("'","''")+"','"+row["groupage"]+"','"+row["ADRCom"]+"','"+row["ADRGrp"]+"','"+row["typeMission"]+"','"+row["typeSegment"]+"',0,'"+row["CR"]+"','"+DateTime.Now.Day+"','"+row["Datemission"]+"','"+row["Ordremission"]+"','"+row["planDeTransport"]+"','"+userAndsoft+"','"+row["nomClientLivraison"].ToString().Replace("'","''")+"','"+row["villeClientLivraison"]+"',null UNION ALL";
+							stringValues +=" SELECT "+row["codeLivraison"].ToString().Replace("'","\"")+","+row["numCommande"].ToString().Replace("'","\"")+","+row["nomPayeur"].ToString().Replace("'","\"")+","+row["refClient"].ToString().Replace("'","\"")+","+row["nomExpediteur"].ToString().Replace("'","\"")+","+row["adresseLivraison"].ToString().Replace("'","\"")+","+row["CpLivraison"].ToString().Replace("'","\"")+","+row["villeLivraison"].ToString().Replace("'","\"")+","+row["dateExpe"].ToString().Replace("'","\"")+","+row["nbrColis"].ToString().Replace("'","\"")+","+row["nbrPallette"].ToString().Replace("'","\"")+","+row["poids"].ToString().Replace("'","\"")+","+row["adresseExpediteur"].ToString().Replace("'","\"")+","+row["CpExpediteur"].ToString().Replace("'","\"")+","+row["dateExpe"].ToString().Replace("'","\"")+","+row["villeExpediteur"].ToString().Replace("'","\"")+","+row["nomExpediteur"].ToString().Replace("'","\"")+","+row["instrucLivraison"].ToString().Replace("'","\"")+","+row["groupage"].ToString().Replace("'","\"")+","+row["ADRCom"].ToString().Replace("'","\"")+","+row["ADRGrp"].ToString().Replace("'","\"")+","+row["typeMission"].ToString().Replace("'","\"")+","+row["typeSegment"].ToString().Replace("'","\"")+",0,"+row["CR"].ToString().Replace("'","\"")+","+DateTime.Now.Day+","+row["Datemission"].ToString().Replace("'","\"")+","+row["Ordremission"].ToString().Replace("'","\"")+","+row["planDeTransport"].ToString().Replace("'","\"")+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString().Replace("'","\"")+","+row["villeClientLivraison"].ToString().Replace("'","\"")+",\"null\" UNION ALL";
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
 							//NOTIF
 							stringNotif += ""+row["numCommande"]+"|";
@@ -352,7 +352,7 @@ namespace DMS_3
 
 			//SEND NOTIF
 			foreach (var item in tablestatutmessage) {
-				datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.numMessage+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
+					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.Id+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
 			}
 
 			//SEND MESSAGE
@@ -380,7 +380,8 @@ namespace DMS_3
 				System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
 				webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
 				webClient.UploadStringAsync (uri, datajson);
-			}
+
+				}
 			catch (Exception e)
 			{
 				Insights.Report (e,Xamarin.Insights.Severity.Error);

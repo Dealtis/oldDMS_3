@@ -54,11 +54,8 @@ namespace DMS_3
 			lblTitle = FindViewById<TextView>(Resource.Id.lblTitle);
 			peekupBadgeText = FindViewById<TextView>(Resource.Id.peekupBadgeText);
 			newMsgBadgeText = FindViewById<TextView>(Resource.Id.newMsgBadgeText);
-
 			txtLivraison = FindViewById<TextView>(Resource.Id.txtLivraison);
 			txtEnlevement = FindViewById<TextView>(Resource.Id.txtEnlevement);
-
-
 			deliveryBadgeText = FindViewById<TextView>(Resource.Id.deliveryBadgeText);
 			deliveryBadge = FindViewById<RelativeLayout>(Resource.Id.deliveryBadge);
 			peekupBadge = FindViewById<RelativeLayout>(Resource.Id.peekupBadge);
@@ -77,7 +74,7 @@ namespace DMS_3
 
 			btn_Livraison.Click += delegate { btn_Livraison_Click();};
 			btn_Enlevement.Click += delegate { btn_Enlevement_Click ();};
-			btn_Livraison.LongClick += Btn_Livraison_LongClick;
+			//btn_Livraison.LongClick += Btn_Livraison_LongClick;
 			btn_Config.LongClick += Btn_Config_LongClick;
 			btn_Message.Click += delegate { btn_Message_Click();};
 
@@ -104,8 +101,6 @@ namespace DMS_3
 					StartService (new Intent (this, typeof(ProcessDMS)));
 				}
 			}
-			//var currentprocessID = ProcessDMSBinder.CallingPid;
-
 		}
 
 		void Btn_Livraison_LongClick (object sender, View.LongClickEventArgs e)
@@ -164,11 +159,12 @@ namespace DMS_3
 			long servicedate = pref.GetLong("Service",0L);
 
 			try {				
-				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>10){
+				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>2){
 //					LANCEMENT DU SERVICE
 					if (Data.userAndsoft == null || Data.userAndsoft == "") {
 					} else {
 						StartService (new Intent (this, typeof(ProcessDMS)));
+						File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
 					}
 				}
 
