@@ -159,7 +159,7 @@ namespace DMS_3
 			long servicedate = pref.GetLong("Service",0L);
 
 			try {				
-				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>2){
+				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
 //					LANCEMENT DU SERVICE
 					if (Data.userAndsoft == null || Data.userAndsoft == "") {
 					} else {
@@ -200,15 +200,16 @@ namespace DMS_3
 				edit.Apply ();
 			} else {
 				//il y a des shared pref
-				Data.log_file = pref.GetString ("Log", String.Empty);
-				if (((File.GetCreationTime (Data.log_file)).CompareTo (DateTime.Now)) > 3) {
-					File.Delete (Data.log_file);
-					Data.log_file = Path.Combine (dir_log, t + "_" + telId + "_log.txt");
-					ISharedPreferencesEditor edit = pref.Edit ();
-					edit.PutString ("Log", Data.log_file);
-					edit.Apply ();
-					Data.log_file = pref.GetString ("Log", String.Empty);
+				Data.log_file = pref.GetString("Log", String.Empty);
+				if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
+					File.Delete(Data.log_file);
+					Data.log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
+					ISharedPreferencesEditor edit = pref.Edit();
+					edit.PutString("Log",Data.log_file);
+					edit.Apply();
+					Data.log_file = pref.GetString("Log", String.Empty);
 				}
+
 			}
 
 			var user = dbr.getUserAndsoft ();

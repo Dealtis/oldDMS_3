@@ -38,13 +38,13 @@ namespace DMS_3
 		String userAndsoft;
 		String userTransics;
 		String GPS;
-		String GPSTemp;
-		System.Timers.Timer timer;
+		String GPSTemp = string.Empty;
 		Thread ThreadService;
 		Location previousLocation;
 		string _locationProvider;
 		string stringValues;
 		string stringNotif;
+		System.Threading.Timer _timer;
 
 		string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
@@ -79,7 +79,7 @@ namespace DMS_3
 			}
 			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
 			StartServiceInForeground ();
-			DoStuff ();
+			Routine ();
 			// initialize location manager
 			InitializeLocationManager ();
 
@@ -98,8 +98,9 @@ namespace DMS_3
 		{
 			base.OnDestroy ();
 			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
+			ThreadService.Abort ();
 			StopForeground (true);
-			StopSelf ();
+			StopSelf();
 		}
 
 		void InitializeLocationManager()
@@ -139,16 +140,17 @@ namespace DMS_3
 			Console.WriteLine ("\nThreadService Lancé, for the first time");
 			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
 
-			timer = new System.Timers.Timer();
-			timer.Interval = 900000; 
-			timer.Elapsed += OnTimedEvent;
-			timer.AutoReset = true;
-			timer.Enabled = true;
+//			timer = new System.Timers.Timer();
+//			timer.Interval = 900000; 
+//			timer.Elapsed += OnTimedEvent;
+//			timer.AutoReset = true;
+//			timer.Enabled = true;
 		}
 
 		void Routine ()
 		{
-			while (true) {
+			
+			_timer = new System.Threading.Timer ((o) => {
 				DBRepository dbr = new DBRepository ();
 				userAndsoft = dbr.getUserAndsoft ();
 				userTransics = dbr.getUserTransics ();
@@ -172,30 +174,25 @@ namespace DMS_3
 
 				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
 				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-				//string servicedate = pref.GetString("Service", String.Empty);
-
 				ISharedPreferencesEditor edit = pref.Edit();
 				edit.PutLong("Service",DateTime.Now.Ticks);
 				edit.Apply();
-
-
 				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
-				Thread.Sleep (TimeSpan.FromMinutes (2));
-			}
+			}, null, 0, 30000);
 		}
 
-		void OnTimedEvent (object sender, System.Timers.ElapsedEventArgs e)
-		{
-			if (ThreadService.IsAlive) {				
-				Console.WriteLine ("\nThreadService Already Running");
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Already Running\n");
-			} else {
-				ThreadService = new Thread(new ThreadStart(this.Routine));
-				ThreadService.Start();
-				Console.WriteLine ("\nThreadService Lancé, thread was not running");
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, thread was not running\n");
-			}
-		}
+//		void OnTimedEvent (object sender, System.Timers.ElapsedEventArgs e)
+//		{
+//			if (ThreadService.IsAlive) {				
+//				Console.WriteLine ("\nThreadService Already Running");
+//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Already Running\n");
+//			} else {
+//				ThreadService = new Thread(new ThreadStart(this.Routine));
+//				ThreadService.Start();
+//				Console.WriteLine ("\nThreadService Lancé, thread was not running");
+//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, thread was not running\n");
+//			}
+//		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
 		{
@@ -461,7 +458,7 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
-			string resultjson = "[" + e.Result + "]";
+		string resultjson = "[" + e.Result + "]";
 			if (e.Result == "{\"Id\":0,\"codeChauffeur\":null,\"texteMessage\":null,\"utilisateurEmetteur\":null,\"statutMessage\":0,\"dateImportMessage\":\"0001-01-01T00:00:00\",\"typeMessage\":0,\"numMessage\":null}") {
 			} else {
 				JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
@@ -561,24 +558,36 @@ namespace DMS_3
 						Thread thread = new Thread(() => UploadFile("ftp://77.158.93.75",Data.log_file,"DMS","Linuxr00tn",""));
 						thread.Start ();
 						dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
+						dbr.InsertDataMessage (Data.userAndsoft, "", "%%GETFLOG Done", 5, DateTime.Now, 5, 0);
 						break;
 					case "%%COMMAND":
 						File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
 						InsertData ();									
 						break;
 					case "%%GETAIMG":
-						string compImg;
-						string imgpath = dbr.getAnomalieImgPath((texteMessage.ToString()).Remove((texteMessage.ToString()).Length - 2).Substring(10));
-						if (imgpath!=string.Empty) {
-							Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath);
-							Android.Graphics.Bitmap rbmp = Android.Graphics.Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
-							compImg = imgpath.Replace (".jpg", "-1_1.jpg");
-							using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
-								rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+						try {
+							string compImg;
+							string imgpath = dbr.getAnomalieImgPath((texteMessage.ToString()).Remove((texteMessage.ToString()).Length - 2).Substring(10));
+							if (imgpath!=string.Empty) {
+								Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath);
+								Android.Graphics.Bitmap rbmp = Android.Graphics.Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
+								compImg = imgpath.Replace (".jpg", "-1_1.jpg");
+								using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
+									rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+								}
+								Thread threadimgpath = new Thread(() => UploadFile("ftp://77.158.93.75",compImg,"DMS","Linuxr00tn",""));
+								threadimgpath.Start ();	
 							}
-							Thread threadimgpath = new Thread(() => UploadFile("ftp://77.158.93.75",compImg,"DMS","Linuxr00tn",""));
-							threadimgpath.Start ();	
-						}								
+							dbr.InsertDataMessage (Data.userAndsoft, "", "%%GETAIMG Done", 5, DateTime.Now, 5, 0);
+						} catch (Exception ex) {
+							Insights.Report(ex);
+							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"%%GETAIMG Upload file error :"+ex+"\n");
+							Console.Out.Write("%%GETAIMG Upload file error\n");
+						}
+						break;
+					case "%%STOPSER":
+						StopForeground (true);
+						StopSelf();
 						break;
 					case "%%REQUETE":
 						string[] texteMessageInputSplit = Android.Text.TextUtils.Split (texteMessage,"%%");
@@ -589,8 +598,9 @@ namespace DMS_3
 							string rowMsg = "";
 							rowMsg += "[";
 							foreach (var item in selMesg) {
-								rowMsg += "{"+item.codeChauffeur+","+item.numMessage+","+item.texteMessage+","+item.utilisateurEmetteur+"\n";
+								rowMsg += "{"+item.codeChauffeur+","+item.numMessage+","+item.texteMessage+","+item.utilisateurEmetteur+"},";
 							}
+							rowMsg.Remove(rowMsg.Length -1);
 							rowMsg += "]";
 							var rMsg = dbr.InsertDataMessage (Data.userAndsoft, "", rowMsg, 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowMsg + "\n");
@@ -601,8 +611,9 @@ namespace DMS_3
 							string rowNotif = "";
 							rowNotif += "[";
 							foreach (var item in selNotif) {
-								rowNotif += "{"+item.numCommande+","+item.groupage+","+item.typeMission+","+item.typeSegment+","+item.refClient+"\n";
+								rowNotif += "{"+item.numCommande+","+item.groupage+","+item.typeMission+","+item.typeSegment+","+item.refClient+"},";
 							}
+							rowNotif.Remove(rowNotif.Length -1);
 							rowNotif += "]";
 							var rNotif = dbr.InsertDataMessage (Data.userAndsoft, "", rowNotif, 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowNotif + "\n");
@@ -613,8 +624,9 @@ namespace DMS_3
 							string rowPos = "";
 							rowPos += "[";
 							foreach (var item in selPos) {
-								rowPos += "{"+item.numCommande+","+item.groupage+","+item.typeMission+","+item.typeSegment+","+item.refClient+"\n";
+								rowPos += "{"+item.numCommande+","+item.groupage+","+item.typeMission+","+item.typeSegment+","+item.refClient+"},";
 							}
+							rowPos.Remove(rowPos.Length -1);
 							rowPos += "]";
 							var rPOS = dbr.InsertDataMessage (Data.userAndsoft, "", rowPos, 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowPos + "\n");
@@ -627,6 +639,7 @@ namespace DMS_3
 							foreach (var item in selStat) {
 								rowStatut += "{"+item.codesuiviliv+","+item.commandesuiviliv+","+item.datajson+","+item.datesuiviliv+","+item.libellesuiviliv+","+item.memosuiviliv+","+item.statut+"},";
 							}
+							rowStatut.Remove(rowStatut.Length -1);
 							rowStatut += "]";
 							var rSTATLIV = dbr.InsertDataMessage (Data.userAndsoft, "", rowStatut, 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowStatut + "\n");
@@ -639,6 +652,7 @@ namespace DMS_3
 							foreach (var item in selUser) {
 								rowUser += "{"+item.user_AndsoftUser+","+item.user_TransicsUser+","+item.user_Password+","+item.user_UsePartic+"},";
 							}
+							rowUser.Remove(rowUser.Length -1);
 							rowUser += "]";
 							var rMUSER = dbr.InsertDataMessage (Data.userAndsoft, "", rowUser, 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
@@ -646,7 +660,7 @@ namespace DMS_3
 						default:
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
 							var execreq = db.Execute (texteMessageInputSplit [3]);
-							var rEXEC = dbr.InsertDataMessage (Data.userAndsoft, "", execreq+ "lignes traitées", 5, DateTime.Now, 5, 0);
+							var rEXEC = dbr.InsertDataMessage (Data.userAndsoft, "", execreq+" lignes traitées : "+texteMessageInputSplit [3], 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + execreq +" pour "+texteMessageInputSplit [3]+"\n");
 							break;
 						}
