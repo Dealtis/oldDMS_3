@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +30,7 @@ namespace DMS_3
 		string txtRem;
 		ImageView _imageView;
 		TablePositions data;
+		Thread threadUpload;
 
 		string type;
 		protected override void OnCreate (Bundle savedInstanceState)
@@ -63,7 +63,6 @@ namespace DMS_3
 			buttonvalider.Click += delegate {
 				Buttonvalider_Click();
 			};
-			;
 
 			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
 			ArrayAdapter adapter;
@@ -167,7 +166,6 @@ namespace DMS_3
 				case "Restaure en non traite":
 					codeanomalie = "RESTNT";
 					break;
-
 				default:
 					break;
 				}
@@ -192,26 +190,31 @@ namespace DMS_3
 
 				string compImg = String.Empty;
 		
-
-				Task.Factory.StartNew (
-					() => {
+				threadUpload = new Thread(() => {
 						try {
 							var imgpath = dbr.GetPositionsData (i);
 							Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
 							Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
 							compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
+							File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"Compress start"+DateTime.Now.ToString("G")+"\n");
 							using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
 								rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
 							}
+							File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"Compress done"+DateTime.Now.ToString("G")+"\n");
+						bool statutuploadfile = false;
+						while(!statutuploadfile){
 							//ftp://77.158.93.75 ftp://10.1.2.75
-							Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
-
+							statutuploadfile = Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
+						}
 						} catch (Exception ex) {
 							Console.WriteLine ("\n" + ex);
+							File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+ex+DateTime.Now.ToString("G")+"\n");
+							Thread.Sleep(2000);
+							threadUpload.Start ();
 						}
 					}					
 				);
-
+				threadUpload.Start ();
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra ("TYPE", type);
 				this.StartActivity (intent);
@@ -268,14 +271,10 @@ namespace DMS_3
 				dbr.updateposimgpath (i,Data._file.Path);
 				Data.bitmap = null;
 			}
-
-			// Dispose of the Java side bitmap.
-			//GC.Collect();
 		}
 
 		public override void OnBackPressed ()
-		{	
-
+		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.SetTitle("Validation");
 			builder.SetMessage("Voulez-vous annulée l'anomalie ?");

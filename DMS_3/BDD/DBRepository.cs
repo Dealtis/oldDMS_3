@@ -327,6 +327,20 @@ namespace DMS_3.BDD
 
 		}
 
+		public string getAnomalieImgPath(string numCommande)
+		{		
+			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+				(Environment.SpecialFolder.Personal), "ormDMS.db3");
+			var db = new SQLiteConnection(dbPath);
+			string output = string.Empty;
+			var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.StatutLivraison.Equals("2"));
+			foreach (var item in query) {			
+				output = item.imgpath;
+			}
+			return output;
+
+		}
+
 		public string logout()
 		{		
 			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath

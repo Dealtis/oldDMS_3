@@ -32,13 +32,13 @@ namespace DMS_3
 	[IntentFilter(new String[]{"com.dealtis.dms_3.ProcessDMS"})]
 	public class ProcessDMS : Service, ILocationListener
 	{
-
 		ProcessDMSBinder binder;
 		String datedujour;
 		LocationManager locMgr;
 		String userAndsoft;
 		String userTransics;
 		String GPS;
+		String GPSTemp;
 		System.Timers.Timer timer;
 		Thread ThreadService;
 		Location previousLocation;
@@ -300,7 +300,7 @@ namespace DMS_3
 		}
 
 		void  ComPosNotifMsg ()
-	{
+		{
 			//API GPS OK
 			string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
@@ -370,27 +370,31 @@ namespace DMS_3
 			}else{
 				datamsg = datamsg.Remove(datamsg.Length - 1);
 			}
-
-			datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+				if (GPSTemp==String.Empty) {
+					datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+				}else{
+					datajson = "{\"suivgps\":"+GPSTemp.Remove(GPSTemp.Length - 1)+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+				}		
 
 			//API MSG/NOTIF/GPS
 			try{
-				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
-				webClient.Encoding = System.Text.Encoding.UTF8;
-				System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
-				webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
-				webClient.UploadStringAsync (uri, datajson);
-
+					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
+					webClient.Encoding = System.Text.Encoding.UTF8;
+					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
+					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
+					webClient.UploadStringAsync (uri, datajson);
+					GPSTemp = string.Empty;
 				}
 			catch (Exception e)
 			{
 				Insights.Report (e,Xamarin.Insights.Severity.Error);
 				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
+					GPSTemp += datagps+",";
 			}
 			} catch (Exception ex) {
 				Insights.Report (ex,Xamarin.Insights.Severity.Error);
 				Console.Out.Write(ex);
-			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		Console.WriteLine ("\nTask ComPosGps done");
 		}
@@ -420,7 +424,6 @@ namespace DMS_3
 				System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/livraisongroupagev3");
 
 				try {
-
 					webClient.UploadStringCompleted += WebClient_UploadStringCompleted;
 					webClient.UploadStringAsync (uri, datajsonArray);
 
@@ -562,6 +565,20 @@ namespace DMS_3
 					case "%%COMMAND":
 						File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
 						InsertData ();									
+						break;
+					case "%%GETAIMG":
+						string compImg;
+						string imgpath = dbr.getAnomalieImgPath((texteMessage.ToString()).Remove((texteMessage.ToString()).Length - 2).Substring(10));
+						if (imgpath!=string.Empty) {
+							Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath);
+							Android.Graphics.Bitmap rbmp = Android.Graphics.Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
+							compImg = imgpath.Replace (".jpg", "-1_1.jpg");
+							using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
+								rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+							}
+							Thread threadimgpath = new Thread(() => UploadFile("ftp://77.158.93.75",compImg,"DMS","Linuxr00tn",""));
+							threadimgpath.Start ();	
+						}								
 						break;
 					case "%%REQUETE":
 						string[] texteMessageInputSplit = Android.Text.TextUtils.Split (texteMessage,"%%");

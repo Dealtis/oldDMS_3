@@ -114,8 +114,6 @@ namespace DMS_3
 				Insights.Report(ex);
 				File.AppendAllText(Data.log_file,"Upload file"+fileName+" error :"+ex+"\n");
 				Console.Out.Write("Upload file"+fileName+" error\n");
-				Thread.Sleep(TimeSpan.FromMinutes(2));
-				UploadFile (FtpUrl, fileName, userName, password, UploadDirectory);
 				return false;
 			}
 		}
