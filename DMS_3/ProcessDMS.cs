@@ -38,7 +38,7 @@ namespace DMS_3
 		String userAndsoft;
 		String userTransics;
 		String GPS;
-		String GPSTemp;
+		String GPSTemp = string.Empty;
 		System.Timers.Timer timer;
 		Thread ThreadService;
 		Location previousLocation;
@@ -98,8 +98,9 @@ namespace DMS_3
 		{
 			base.OnDestroy ();
 			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
+			ThreadService.Abort ();
 			StopForeground (true);
-			StopSelf ();
+			StopSelf();
 		}
 
 		void InitializeLocationManager()
@@ -158,7 +159,7 @@ namespace DMS_3
 					if ((activeConnection != null) && activeConnection.IsConnected) {			
 						Task.Factory.StartNew (
 							() => {
-								Console.WriteLine ("\nHello from ComPosNotifMsg.");
++								Console.WriteLine ("\nHello from ComPosNotifMsg.");
 								ComPosNotifMsg ();
 							}					
 						).ContinueWith (
@@ -561,6 +562,7 @@ namespace DMS_3
 						Thread thread = new Thread(() => UploadFile("ftp://77.158.93.75",Data.log_file,"DMS","Linuxr00tn",""));
 						thread.Start ();
 						dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
+						dbr.InsertDataMessage (Data.userAndsoft, "", "%%GETFLOG Done", 5, DateTime.Now, 5, 0);
 						break;
 					case "%%COMMAND":
 						File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
@@ -578,7 +580,13 @@ namespace DMS_3
 							}
 							Thread threadimgpath = new Thread(() => UploadFile("ftp://77.158.93.75",compImg,"DMS","Linuxr00tn",""));
 							threadimgpath.Start ();	
-						}								
+						}
+						dbr.InsertDataMessage (Data.userAndsoft, "", "%%GETAIMG Done", 5, DateTime.Now, 5, 0);
+						break;
+					case "%%STOPSER":
+						ThreadService.Abort ();
+						StopForeground (true);
+						StopSelf();
 						break;
 					case "%%REQUETE":
 						string[] texteMessageInputSplit = Android.Text.TextUtils.Split (texteMessage,"%%");

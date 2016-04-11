@@ -159,7 +159,7 @@ namespace DMS_3
 			long servicedate = pref.GetLong("Service",0L);
 
 			try {				
-				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>2){
+				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
 //					LANCEMENT DU SERVICE
 					if (Data.userAndsoft == null || Data.userAndsoft == "") {
 					} else {
