@@ -139,17 +139,10 @@ namespace DMS_3
 			ThreadService.Start();
 			Console.WriteLine ("\nThreadService Lancé, for the first time");
 			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
-
-//			timer = new System.Timers.Timer();
-//			timer.Interval = 900000; 
-//			timer.Elapsed += OnTimedEvent;
-//			timer.AutoReset = true;
-//			timer.Enabled = true;
 		}
 
 		void Routine ()
-		{
-			
+		{			
 			_timer = new System.Threading.Timer ((o) => {
 				DBRepository dbr = new DBRepository ();
 				userAndsoft = dbr.getUserAndsoft ();
@@ -227,9 +220,9 @@ namespace DMS_3
 						if (!checkpos) {
 							stringValues +=" SELECT "+row["codeLivraison"].ToString().Replace("'","\"")+","+row["numCommande"].ToString().Replace("'","\"")+","+row["nomPayeur"].ToString().Replace("'","\"")+","+row["refClient"].ToString().Replace("'","\"")+","+row["nomExpediteur"].ToString().Replace("'","\"")+","+row["adresseLivraison"].ToString().Replace("'","\"")+","+row["CpLivraison"].ToString().Replace("'","\"")+","+row["villeLivraison"].ToString().Replace("'","\"")+","+row["dateExpe"].ToString().Replace("'","\"")+","+row["nbrColis"].ToString().Replace("'","\"")+","+row["nbrPallette"].ToString().Replace("'","\"")+","+row["poids"].ToString().Replace("'","\"")+","+row["adresseExpediteur"].ToString().Replace("'","\"")+","+row["CpExpediteur"].ToString().Replace("'","\"")+","+row["dateExpe"].ToString().Replace("'","\"")+","+row["villeExpediteur"].ToString().Replace("'","\"")+","+row["nomExpediteur"].ToString().Replace("'","\"")+","+row["instrucLivraison"].ToString().Replace("'","\"")+","+row["groupage"].ToString().Replace("'","\"")+","+row["ADRCom"].ToString().Replace("'","\"")+","+row["ADRGrp"].ToString().Replace("'","\"")+","+row["typeMission"].ToString().Replace("'","\"")+","+row["typeSegment"].ToString().Replace("'","\"")+",0,"+row["CR"].ToString().Replace("'","\"")+","+DateTime.Now.Day+","+row["Datemission"].ToString().Replace("'","\"")+","+row["Ordremission"].ToString().Replace("'","\"")+","+row["planDeTransport"].ToString().Replace("'","\"")+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString().Replace("'","\"")+","+row["villeClientLivraison"].ToString().Replace("'","\"")+",\"null\" UNION ALL";
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
-							//NOTIF
-							stringNotif += ""+row["numCommande"]+"|";
 						}
+						//NOTIF
+						stringNotif += ""+row["numCommande"]+"|";
 					}
 					if (stringValues != string.Empty) {
 						string stringinsertpos="INSERT INTO ";
@@ -247,7 +240,7 @@ namespace DMS_3
 					if (stringNotif != string.Empty) {
 						string stringinsertnotif="INSERT INTO TableNotifications ( statutNotificationMessage, dateNotificationMessage, numMessage, numCommande ) VALUES ('10','"+DateTime.Now+"','1','"+(stringNotif.Remove(stringNotif.Length-1))+"')";
 						var execreqnotif = db.Execute(stringinsertnotif);
-						Console.Out.WriteLine(execreqnotif);
+						Console.Out.WriteLine("Execnotif"+execreqnotif);
 					}	
 				}
 
@@ -312,7 +305,7 @@ namespace DMS_3
 				//ROUTINE INTEG MESSAGE
 				try {					
 					//API LIVRER OK
-				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"";
+				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"";
 
 
 				var webClientb = new WebClient ();
@@ -377,7 +370,7 @@ namespace DMS_3
 			try{
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					webClient.Encoding = System.Text.Encoding.UTF8;
-					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV3?codechauffeur=" + userAndsoft +"");
+					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"");
 					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
 					webClient.UploadStringAsync (uri, datajson);
 					GPSTemp = string.Empty;
@@ -423,7 +416,6 @@ namespace DMS_3
 				try {
 					webClient.UploadStringCompleted += WebClient_UploadStringCompleted;
 					webClient.UploadStringAsync (uri, datajsonArray);
-
 				} catch (Exception e) {
 					Console.WriteLine (e);
 					Insights.Report(e);
@@ -458,7 +450,7 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
-		string resultjson = "[" + e.Result + "]";
+			string resultjson = "[" + e.Result + "]";
 			if (e.Result == "{\"Id\":0,\"codeChauffeur\":null,\"texteMessage\":null,\"utilisateurEmetteur\":null,\"statutMessage\":0,\"dateImportMessage\":\"0001-01-01T00:00:00\",\"typeMessage\":0,\"numMessage\":null}") {
 			} else {
 				JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
@@ -657,6 +649,8 @@ namespace DMS_3
 							var rMUSER = dbr.InsertDataMessage (Data.userAndsoft, "", rowUser, 5, DateTime.Now, 5, 0);
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
 							break;
+						case"NOTHING":
+							break;
 						default:
 							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
 							var execreq = db.Execute (texteMessageInputSplit [3]);
@@ -665,7 +659,6 @@ namespace DMS_3
 							break;
 						}
 						break;
-
 					default:
 						var resinteg = dbr.InsertDataMessage (codeChauffeur, utilisateurEmetteur, texteMessage,0,DateTime.Now,1,numMessage);
 						dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
