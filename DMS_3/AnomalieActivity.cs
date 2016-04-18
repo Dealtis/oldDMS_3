@@ -31,8 +31,10 @@ namespace DMS_3
 		ImageView _imageView;
 		TablePositions data;
 		Thread threadUpload;
-
 		string type;
+
+		bool uploadone;
+
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
@@ -188,33 +190,36 @@ namespace DMS_3
 				dbr.insertDataStatutpositions (codeanomalie, "2", txtspinner, data.numCommande, formatrem, DateTime.Now.ToString ("dd/MM/yyyy HH:mm"), JSON);
 
 
+				var imgpath = dbr.GetPositionsData (i);
+
 				string compImg = String.Empty;
-		
-				threadUpload = new Thread(() => {
-						try {
-							var imgpath = dbr.GetPositionsData (i);
-							Android.Graphics.Bitmap bmp = Android.Graphics.BitmapFactory.DecodeFile (imgpath.imgpath);
-							Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
-							compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
-							File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"Compress start"+DateTime.Now.ToString("G")+"\n");
-							using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
-								rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+				uploadone = false;
+
+				if (imgpath.imgpath != "null") {					
+						threadUpload = new Thread (() => {
+							try {
+								//Android.Graphics.Bitmap bmp = DecodeSmallFile (imgpath.imgpath,1000,1000);
+								Android.Graphics.Bitmap rbmp = DecodeSmallFile (imgpath.imgpath,1000,1000);
+								//Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 5, bmp.Height / 5, true);
+								compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
+								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress start" + DateTime.Now.ToString ("G") + "\n");
+								using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
+									rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+								}
+								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress done" + DateTime.Now.ToString ("G") + "\n");
+								bool statutuploadfile = false;
+									//ftp://77.158.93.75 ftp://10.1.2.75
+								statutuploadfile = Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
+								uploadone= true;
+							} catch (Exception ex) {
+								Console.WriteLine ("\n" + ex);
+								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + ex + DateTime.Now.ToString ("G") + "\n");
+								dbr.InsertDataStatutMessage(11,DateTime.Now,1,imgpath.numCommande,"");
 							}
-							File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"Compress done"+DateTime.Now.ToString("G")+"\n");
-						bool statutuploadfile = false;
-						while(!statutuploadfile){
-							//ftp://77.158.93.75 ftp://10.1.2.75
-							statutuploadfile = Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
-						}
-						} catch (Exception ex) {
-							Console.WriteLine ("\n" + ex);
-							File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+ex+DateTime.Now.ToString("G")+"\n");
-							Thread.Sleep(2000);
-							threadUpload.Start ();
-						}
-					}					
-				);
-				threadUpload.Start ();
+						});
+						threadUpload.Start ();
+				};
+
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra ("TYPE", type);
 				this.StartActivity (intent);
@@ -271,6 +276,29 @@ namespace DMS_3
 				dbr.updateposimgpath (i,Data._file.Path);
 				Data.bitmap = null;
 			}
+		}
+		private Bitmap DecodeSmallFile(String filename, int width, int height)
+		{
+			var options = new BitmapFactory.Options { InJustDecodeBounds = true };
+			BitmapFactory.DecodeFile(filename, options);
+			options.InSampleSize = CalculateInSampleSize(options, width, height);
+			options.InJustDecodeBounds = false;
+			return BitmapFactory.DecodeFile(filename, options);
+		}
+
+		public static int CalculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
+		{
+			int height = options.OutHeight;
+			int width = options.OutWidth;
+			int inSampleSize = 1;
+
+			if (height > reqHeight || width > reqWidth)
+			{
+				var heightRatio = (int)Math.Round(height / (double)reqHeight);
+				var widthRatio = (int)Math.Round(width / (double)reqWidth);
+				inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+			}
+			return inSampleSize;
 		}
 
 		public override void OnBackPressed ()

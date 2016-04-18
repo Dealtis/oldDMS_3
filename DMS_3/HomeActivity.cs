@@ -160,7 +160,7 @@ namespace DMS_3
 
 			try {				
 				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
-//					LANCEMENT DU SERVICE
+					//LANCEMENT DU SERVICE
 					if (Data.userAndsoft == null || Data.userAndsoft == "") {
 					} else {
 						StartService (new Intent (this, typeof(ProcessDMS)));

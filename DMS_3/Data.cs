@@ -108,7 +108,7 @@ namespace DMS_3
 				FtpWebResponse res = (FtpWebResponse)req.GetResponse();
 				File.AppendAllText(Data.log_file,"Upload file"+fileName+" good\n");
 				Console.Out.Write("Upload file"+fileName+" good\n");
-				return true;
+				return true;                                                                                                                                                                                                                				return true;
 
 			} catch (Exception ex) {
 				Insights.Report(ex);

@@ -218,7 +218,7 @@ namespace DMS_3
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
-							stringValues +=" SELECT "+row["codeLivraison"].ToString().Replace("'","\"")+","+row["numCommande"].ToString().Replace("'","\"")+","+row["nomPayeur"].ToString().Replace("'","\"")+","+row["refClient"].ToString().Replace("'","\"")+","+row["nomExpediteur"].ToString().Replace("'","\"")+","+row["adresseLivraison"].ToString().Replace("'","\"")+","+row["CpLivraison"].ToString().Replace("'","\"")+","+row["villeLivraison"].ToString().Replace("'","\"")+","+row["dateExpe"].ToString().Replace("'","\"")+","+row["nbrColis"].ToString().Replace("'","\"")+","+row["nbrPallette"].ToString().Replace("'","\"")+","+row["poids"].ToString().Replace("'","\"")+","+row["adresseExpediteur"].ToString().Replace("'","\"")+","+row["CpExpediteur"].ToString().Replace("'","\"")+","+row["dateExpe"].ToString().Replace("'","\"")+","+row["villeExpediteur"].ToString().Replace("'","\"")+","+row["nomExpediteur"].ToString().Replace("'","\"")+","+row["instrucLivraison"].ToString().Replace("'","\"")+","+row["groupage"].ToString().Replace("'","\"")+","+row["ADRCom"].ToString().Replace("'","\"")+","+row["ADRGrp"].ToString().Replace("'","\"")+","+row["typeMission"].ToString().Replace("'","\"")+","+row["typeSegment"].ToString().Replace("'","\"")+",0,"+row["CR"].ToString().Replace("'","\"")+","+DateTime.Now.Day+","+row["Datemission"].ToString().Replace("'","\"")+","+row["Ordremission"].ToString().Replace("'","\"")+","+row["planDeTransport"].ToString().Replace("'","\"")+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString().Replace("'","\"")+","+row["villeClientLivraison"].ToString().Replace("'","\"")+",\"null\" UNION ALL";
+							stringValues +=" SELECT "+row["codeLivraison"].ToString()+","+row["numCommande"].ToString()+","+row["nomPayeur"].ToString()+","+row["refClient"].ToString()+","+row["nomExpediteur"].ToString()+","+row["adresseLivraison"].ToString()+","+row["CpLivraison"].ToString()+","+row["villeLivraison"].ToString()+","+row["dateExpe"].ToString()+","+row["nbrColis"].ToString()+","+row["nbrPallette"].ToString()+","+row["poids"].ToString()+","+row["adresseExpediteur"].ToString()+","+row["CpExpediteur"].ToString()+","+row["dateExpe"].ToString()+","+row["villeExpediteur"].ToString()+","+row["nomExpediteur"].ToString()+","+row["instrucLivraison"].ToString()+","+row["groupage"].ToString()+","+row["ADRCom"].ToString()+","+row["ADRGrp"].ToString()+","+row["typeMission"].ToString()+","+row["typeSegment"].ToString()+",0,"+row["CR"].ToString()+","+DateTime.Now.Day+","+row["Datemission"].ToString()+","+row["Ordremission"].ToString()+","+row["planDeTransport"].ToString()+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString()+","+row["villeClientLivraison"].ToString()+",\"null\" UNION ALL";
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
 						}
 						//NOTIF
@@ -360,11 +360,11 @@ namespace DMS_3
 			}else{
 				datamsg = datamsg.Remove(datamsg.Length - 1);
 			}
-				if (GPSTemp==String.Empty) {
-					datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
-				}else{
-					datajson = "{\"suivgps\":"+GPSTemp.Remove(GPSTemp.Length - 1)+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
-				}		
+//				if (GPSTemp==String.Empty) {
+			datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+//				}else{
+//					datajson = "{\"suivgps\":"+GPSTemp.Remove(GPSTemp.Length - 1)+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
+//				}		
 
 			//API MSG/NOTIF/GPS
 			try{
@@ -373,13 +373,13 @@ namespace DMS_3
 					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"");
 					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
 					webClient.UploadStringAsync (uri, datajson);
-					GPSTemp = string.Empty;
+					//GPSTemp = string.Empty;
 				}
 			catch (Exception e)
 			{
 				Insights.Report (e,Xamarin.Insights.Severity.Error);
 				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
-					GPSTemp += datagps+",";
+				//GPSTemp += datagps+"tps"+DateTime.Now.ToString("t")+"|";
 			}
 			} catch (Exception ex) {
 				Insights.Report (ex,Xamarin.Insights.Severity.Error);
