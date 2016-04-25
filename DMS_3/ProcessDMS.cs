@@ -48,8 +48,7 @@ namespace DMS_3
 
 		string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
-		{
-			
+		{			
 			var t = DateTime.Now.ToString("dd_MM_yy");
 			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
 			ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
@@ -171,21 +170,8 @@ namespace DMS_3
 				edit.PutLong("Service",DateTime.Now.Ticks);
 				edit.Apply();
 				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
-			}, null, 0, 30000);
+			}, null, 0, 120000);
 		}
-
-//		void OnTimedEvent (object sender, System.Timers.ElapsedEventArgs e)
-//		{
-//			if (ThreadService.IsAlive) {				
-//				Console.WriteLine ("\nThreadService Already Running");
-//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Already Running\n");
-//			} else {
-//				ThreadService = new Thread(new ThreadStart(this.Routine));
-//				ThreadService.Start();
-//				Console.WriteLine ("\nThreadService Lancé, thread was not running");
-//				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, thread was not running\n");
-//			}
-//		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
 		{
@@ -218,7 +204,7 @@ namespace DMS_3
 					foreach (var row in jsonArr) {
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
-							stringValues +=" SELECT "+row["codeLivraison"].ToString()+","+row["numCommande"].ToString()+","+row["nomPayeur"].ToString()+","+row["refClient"].ToString()+","+row["nomExpediteur"].ToString()+","+row["adresseLivraison"].ToString()+","+row["CpLivraison"].ToString()+","+row["villeLivraison"].ToString()+","+row["dateExpe"].ToString()+","+row["nbrColis"].ToString()+","+row["nbrPallette"].ToString()+","+row["poids"].ToString()+","+row["adresseExpediteur"].ToString()+","+row["CpExpediteur"].ToString()+","+row["dateExpe"].ToString()+","+row["villeExpediteur"].ToString()+","+row["nomExpediteur"].ToString()+","+row["instrucLivraison"].ToString()+","+row["groupage"].ToString()+","+row["ADRCom"].ToString()+","+row["ADRGrp"].ToString()+","+row["typeMission"].ToString()+","+row["typeSegment"].ToString()+",0,"+row["CR"].ToString()+","+DateTime.Now.Day+","+row["Datemission"].ToString()+","+row["Ordremission"].ToString()+","+row["planDeTransport"].ToString()+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString()+","+row["villeClientLivraison"].ToString()+",\"null\" UNION ALL";
+							stringValues +=" SELECT "+row["codeLivraison"].ToString()+","+row["numCommande"].ToString()+","+row["nomClient"].ToString()+","+row["refClient"].ToString()+","+row["nomPayeur"].ToString()+","+row["adresseLivraison"].ToString()+","+row["CpLivraison"].ToString()+","+row["villeLivraison"].ToString()+","+row["dateExpe"].ToString()+","+row["nbrColis"].ToString()+","+row["nbrPallette"].ToString()+","+row["poids"].ToString()+","+row["adresseExpediteur"].ToString()+","+row["CpExpediteur"].ToString()+","+row["dateExpe"].ToString()+","+row["villeExpediteur"].ToString()+","+row["nomExpediteur"].ToString()+","+row["instrucLivraison"].ToString()+","+row["groupage"].ToString()+","+row["ADRCom"].ToString()+","+row["ADRGrp"].ToString()+","+row["typeMission"].ToString()+","+row["typeSegment"].ToString()+",0,"+row["CR"].ToString()+","+DateTime.Now.Day+","+row["Datemission"].ToString()+","+row["Ordremission"].ToString()+","+row["planDeTransport"].ToString()+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString()+","+row["villeClientLivraison"].ToString()+",\"null\" UNION ALL";
 							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
 						}
 						//NOTIF
@@ -429,42 +415,56 @@ namespace DMS_3
 
 		void WebClient_UploadStringCompleted (object sender, UploadStringCompletedEventArgs e)
 		{
-			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection (dbPath);
-			string resultjson = "[" + e.Result + "]";
-			if (e.Result == "\"YOLO\"") {
+			try {
 
-			} else {
-				JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
-				var jsonarr = jsonVal;
-				foreach (var item in jsonarr) {
-					traitMessages (item ["codeChauffeur"], item ["texteMessage"], item ["utilisateurEmetteur"], item ["numMessage"]);
+				string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection (dbPath);
+				string resultjson = "[" + e.Result + "]";
+				if (e.Result == "\"YOLO\"") {
+
+				} else {
+					JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
+					var jsonarr = jsonVal;
+					foreach (var item in jsonarr) {
+						traitMessages (item ["codeChauffeur"], item ["texteMessage"], item ["utilisateurEmetteur"], item ["numMessage"]);
+					}
 				}
+				db.Close ();
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				Insights.Report(ex);
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
-			db.Close ();
 		}
 
 		void WebClient_UploadStringStatutCompleted (object sender, UploadStringCompletedEventArgs e)
 		{
-			string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection (dbPath);
-			string resultjson = "[" + e.Result + "]";
-			if (e.Result == "{\"Id\":0,\"codeChauffeur\":null,\"texteMessage\":null,\"utilisateurEmetteur\":null,\"statutMessage\":0,\"dateImportMessage\":\"0001-01-01T00:00:00\",\"typeMessage\":0,\"numMessage\":null}") {
-			} else {
-				JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
-				var jsonarr = jsonVal;
-				foreach (var item in jsonarr) {
-					traitMessages (item ["codeChauffeur"], item ["texteMessage"], item ["utilisateurEmetteur"], item ["numMessage"]);
+			try {
+				string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection (dbPath);
+				string resultjson = "[" + e.Result + "]";
+				if (e.Result == "{\"Id\":0,\"codeChauffeur\":null,\"texteMessage\":null,\"utilisateurEmetteur\":null,\"statutMessage\":0,\"dateImportMessage\":\"0001-01-01T00:00:00\",\"typeMessage\":0,\"numMessage\":null}") {
+				} else {
+					JsonArray jsonVal = JsonArray.Parse (resultjson) as JsonArray;
+					var jsonarr = jsonVal;
+					foreach (var item in jsonarr) {
+						traitMessages (item ["codeChauffeur"], item ["texteMessage"], item ["utilisateurEmetteur"], item ["numMessage"]);
+					}
 				}
+
+				var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2 or statutMessage = 5");
+				foreach (var item in tablemessage) {
+					var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
+				}
+				db.Close ();
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				Insights.Report(ex);
+				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringStatutCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 
-			var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2 or statutMessage = 5");
-			foreach (var item in tablemessage) {
-				var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
-			}
-			db.Close ();
 		}
 
 		public void OnLocationChanged (Android.Locations.Location location)

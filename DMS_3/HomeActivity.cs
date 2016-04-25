@@ -85,6 +85,9 @@ namespace DMS_3
 			//Xamarin Insight
 			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
+
+			//HockeyApp
+
 		
 			if (processDMSConnection != null)
 				binder = processDMSConnection.Binder;
