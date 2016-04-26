@@ -118,7 +118,6 @@ namespace DMS_3
 				}
 			});
 		}
-
 		void Btn_Config_LongClick (object sender, View.LongClickEventArgs e)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

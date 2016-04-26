@@ -159,6 +159,7 @@ namespace DMS_3
 							t => {
 								Console.WriteLine ("\nHello from ComWebService.");
 								ComWebService ();
+
 							}						
 						);
 					}
@@ -292,8 +293,6 @@ namespace DMS_3
 				try {					
 					//API LIVRER OK
 				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"";
-
-
 				var webClientb = new WebClient ();
 				webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
 				webClientb.Encoding = System.Text.Encoding.UTF8;
@@ -303,7 +302,6 @@ namespace DMS_3
 				} catch (Exception ex) {
 					content_msg = "[]";
 					Insights.Report (ex,Xamarin.Insights.Severity.Error);
-
 				}
 			if (content_msg != "[]") {
 				JsonArray jsonVal = JsonArray.Parse (content_msg) as JsonArray;
@@ -329,18 +327,20 @@ namespace DMS_3
 			//SEND NOTIF
 			foreach (var item in tablestatutmessage) {
 					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.Id+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
-			}
+				}
 
 			//SEND MESSAGE
 			var tablemessage = db.Query<TableMessages> ("SELECT * FROM TableMessages WHERE statutMessage = 2 or statutMessage = 5");
 			foreach (var item in tablemessage) {
 				datamsg += "{\"codeChauffeur\":\"" + item.codeChauffeur + "\",\"texteMessage\":\"" + item.texteMessage + "\",\"utilisateurEmetteur\":\""+item.utilisateurEmetteur+"\",\"dateImportMessage\":\""+item.dateImportMessage+"\",\"typeMessage\":\""+item.typeMessage+"\"},";
 			}
+
 			if(datanotif == ""){
 				datanotif ="{}";
 			}else{
 				datanotif = datanotif.Remove(datanotif.Length - 1);
 			}
+
 			if(datamsg == ""){
 				datamsg ="{}";
 			}else{
