@@ -171,6 +171,7 @@ namespace DMS_3
 				edit.PutLong("Service",DateTime.Now.Ticks);
 				edit.Apply();
 				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
+
 			}, null, 0, 120000);
 		}
 
@@ -292,7 +293,7 @@ namespace DMS_3
 				//ROUTINE INTEG MESSAGE
 				try {					
 					//API LIVRER OK
-				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"";
+				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV32?codechauffeur=" + userAndsoft +"";
 				var webClientb = new WebClient ();
 				webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
 				webClientb.Encoding = System.Text.Encoding.UTF8;
@@ -326,7 +327,7 @@ namespace DMS_3
 
 			//SEND NOTIF
 			foreach (var item in tablestatutmessage) {
-					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.Id+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
+					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.numMessage+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\",\"id\":\""+item.Id+"\"},";
 				}
 
 			//SEND MESSAGE
@@ -356,7 +357,7 @@ namespace DMS_3
 			try{
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					webClient.Encoding = System.Text.Encoding.UTF8;
-					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"");
+					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV32?codechauffeur=" + userAndsoft +"");
 					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
 					webClient.UploadStringAsync (uri, datajson);
 					//GPSTemp = string.Empty;
