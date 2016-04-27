@@ -46,7 +46,7 @@ namespace DMS_3
 		string stringNotif;
 		System.Threading.Timer _timer;
 
-		string log_file;
+		//string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
 		{			
 			var t = DateTime.Now.ToString("dd_MM_yy");
@@ -58,36 +58,38 @@ namespace DMS_3
 			var telId = tel.DeviceId;
 
 			//Si il n'y a pas de shared pref
-			if (log == String.Empty){
-				log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
-				ISharedPreferencesEditor edit = pref.Edit();
-				edit.PutString("Log",log_file);
-				edit.Apply();
-			}else{
-				//il y a des shared pref
-				log_file = pref.GetString("Log", String.Empty);
-				if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
-					File.Delete(log_file);
-					log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
-					ISharedPreferencesEditor edit = pref.Edit();
-					edit.PutString("Log",log_file);
-					edit.Apply();
-					log_file = pref.GetString("Log", String.Empty);
-				}
+//			if (log == String.Empty){
+//				log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
+//				ISharedPreferencesEditor edit = pref.Edit();
+//				edit.PutString("Log",log_file);
+//				edit.Apply();
+//			}else{
+//				//il y a des shared pref
+//				log_file = pref.GetString("Log", String.Empty);
+//				if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
+//					File.Delete(log_file);
+//					log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
+//					ISharedPreferencesEditor edit = pref.Edit();
+//					edit.PutString("Log",log_file);
+//					edit.Apply();
+//					log_file = pref.GetString("Log", String.Empty);
+//				}
+//
+//			}
+//			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
 
-			}
-			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
+
 			StartServiceInForeground ();
 			Routine ();
 			// initialize location manager
 			InitializeLocationManager ();
 
 			if (_locationProvider == "") {
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Le GPS est désactiver");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Le GPS est désactiver");
 			} else {
 				locMgr.RequestLocationUpdates (_locationProvider, 0, 0, this);
 				Console.Out.Write ("Listening for location updates using " + _locationProvider + ".");
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Start");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][GPS] Start");
 			}
 
 			return StartCommandResult.Sticky;
@@ -96,7 +98,7 @@ namespace DMS_3
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
+			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
 			ThreadService.Abort ();
 			StopForeground (true);
 			StopSelf();
@@ -137,7 +139,7 @@ namespace DMS_3
 			ThreadService = new Thread(new ThreadStart(this.Routine));
 			ThreadService.Start();
 			Console.WriteLine ("\nThreadService Lancé, for the first time");
-			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
+			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
 		}
 
 		void Routine ()
@@ -159,7 +161,6 @@ namespace DMS_3
 							t => {
 								Console.WriteLine ("\nHello from ComWebService.");
 								ComWebService ();
-
 							}						
 						);
 					}
@@ -171,6 +172,7 @@ namespace DMS_3
 				edit.PutLong("Service",DateTime.Now.Ticks);
 				edit.Apply();
 				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
+
 			}, null, 0, 120000);
 		}
 
@@ -206,7 +208,7 @@ namespace DMS_3
 						bool checkpos = dbr.pos_AlreadyExist(row["numCommande"],row["groupage"],row["typeMission"],row["typeSegment"]);
 						if (!checkpos) {
 							stringValues +=" SELECT "+row["codeLivraison"].ToString()+","+row["numCommande"].ToString()+","+row["nomClient"].ToString()+","+row["refClient"].ToString()+","+row["nomPayeur"].ToString()+","+row["adresseLivraison"].ToString()+","+row["CpLivraison"].ToString()+","+row["villeLivraison"].ToString()+","+row["dateExpe"].ToString()+","+row["nbrColis"].ToString()+","+row["nbrPallette"].ToString()+","+row["poids"].ToString()+","+row["adresseExpediteur"].ToString()+","+row["CpExpediteur"].ToString()+","+row["dateExpe"].ToString()+","+row["villeExpediteur"].ToString()+","+row["nomExpediteur"].ToString()+","+row["instrucLivraison"].ToString()+","+row["groupage"].ToString()+","+row["ADRCom"].ToString()+","+row["ADRGrp"].ToString()+","+row["typeMission"].ToString()+","+row["typeSegment"].ToString()+",0,"+row["CR"].ToString()+","+DateTime.Now.Day+","+row["Datemission"].ToString()+","+row["Ordremission"].ToString()+","+row["planDeTransport"].ToString()+",\""+userAndsoft+"\","+row["nomClientLivraison"].ToString()+","+row["villeClientLivraison"].ToString()+",\"null\" UNION ALL";
-							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
+							//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK]Intégration d'une position "+row["numCommande"]+" "+row["groupage"]+"\n");
 						}
 						//NOTIF
 						stringNotif += ""+row["numCommande"]+"|";
@@ -234,7 +236,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][ERROR] InserData : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][ERROR] InserData : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				Insights.Report(ex);
 			}
 
@@ -266,14 +268,14 @@ namespace DMS_3
 					content_grpcloture = "[]";
 					Console.WriteLine ("\n"+ex);
 					Insights.Report(ex);
-					File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] Cloture : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+					//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] Cloture : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 
 			}
 
 			Console.WriteLine ("\nTask InsertData done");
 			//File.AppendAllText(Data.log_file, "Task InsertData done"+DateTime.Now.ToString("t")+"\n");
-			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK] InserData done:\n");
+			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][TASK] InserData done:\n");
 		}
 
 		void  ComPosNotifMsg ()
@@ -292,7 +294,7 @@ namespace DMS_3
 				//ROUTINE INTEG MESSAGE
 				try {					
 					//API LIVRER OK
-				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"";
+				string _urlb = "http://dmsv3.jeantettransport.com/api/WSV32?codechauffeur=" + userAndsoft +"";
 				var webClientb = new WebClient ();
 				webClientb.Headers [HttpRequestHeader.ContentType] = "application/json";
 				webClientb.Encoding = System.Text.Encoding.UTF8;
@@ -326,7 +328,7 @@ namespace DMS_3
 
 			//SEND NOTIF
 			foreach (var item in tablestatutmessage) {
-					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.Id+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\"},";
+					datanotif += "{\"statutNotificationMessage\":\"" + item.statutNotificationMessage + "\",\"dateNotificationMessage\":\"" + item.dateNotificationMessage + "\",\"numMessage\":\""+item.numMessage+"\",\"numCommande\":\""+item.numCommande+"\",\"groupage\":\""+item.groupage+"\",\"id\":\""+item.Id+"\"},";
 				}
 
 			//SEND MESSAGE
@@ -356,7 +358,7 @@ namespace DMS_3
 			try{
 					webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 					webClient.Encoding = System.Text.Encoding.UTF8;
-					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV31?codechauffeur=" + userAndsoft +"");
+					System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/WSV32?codechauffeur=" + userAndsoft +"");
 					webClient.UploadStringCompleted += WebClient_UploadStringStatutCompleted;
 					webClient.UploadStringAsync (uri, datajson);
 					//GPSTemp = string.Empty;
@@ -364,13 +366,13 @@ namespace DMS_3
 			catch (Exception e)
 			{
 				Insights.Report (e,Xamarin.Insights.Severity.Error);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
 				//GPSTemp += datagps+"tps"+DateTime.Now.ToString("t")+"|";
 			}
 			} catch (Exception ex) {
 				Insights.Report (ex,Xamarin.Insights.Severity.Error);
 				Console.Out.Write(ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		Console.WriteLine ("\nTask ComPosGps done");
 		}
@@ -405,12 +407,11 @@ namespace DMS_3
 				} catch (Exception e) {
 					Console.WriteLine (e);
 					Insights.Report(e);
-					File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComWebService : "+e+" à "+DateTime.Now.ToString("t")+"\n");
+					//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComWebService : "+e+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 			}
 			Console.WriteLine ("\nTask ComWebService done");
-			File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[TASK] ComWebService Done \n");
-			db.Close ();
+			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[TASK] ComWebService Done \n");
 		}
 
 		void WebClient_UploadStringCompleted (object sender, UploadStringCompletedEventArgs e)
@@ -434,7 +435,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				Insights.Report(ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		}
 
@@ -462,7 +463,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				Insights.Report(ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringStatutCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringStatutCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 
 		}
@@ -534,7 +535,7 @@ namespace DMS_3
 						var updatestat = dbr.updatePositionSuppliv((texteMessage.ToString()).Remove((texteMessage.ToString()).Length - 2).Substring(10));
 						dbr.InsertDataStatutMessage (1,DateTime.Now,numMessage,"","");
 						dbr.InsertDataMessage (codeChauffeur, utilisateurEmetteur,"La position "+(texteMessage.ToString()).Remove((texteMessage.ToString()).Length - 2).Substring(10)+" a été supprimée de votre tournée",0,DateTime.Now,1, numMessage);
-						File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un SUPPLIV à "+DateTime.Now.ToString("t")+"\n");
+						//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un SUPPLIV à "+DateTime.Now.ToString("t")+"\n");
 						break;
 					case "%%RETOLIV":
 						var updatestattretour = db.Query<TablePositions>("UPDATE TablePositions SET imgpath = null WHERE numCommande = ?",(texteMessage.ToString()).Remove((texteMessage.ToString()).Length - 2).Substring(10));
@@ -546,14 +547,14 @@ namespace DMS_3
 						break;
 					case "%%GETFLOG":
 						//ftp://77.158.93.75 or ftp://10.1.2.75
-						File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un GETFLOG à "+DateTime.Now.ToString("t")+"\n");
+						//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un GETFLOG à "+DateTime.Now.ToString("t")+"\n");
 						Thread thread = new Thread(() => UploadFile("ftp://77.158.93.75",Data.log_file,"DMS","Linuxr00tn",""));
 						thread.Start ();
 						dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
 						dbr.InsertDataMessage (Data.userAndsoft, "", "%%GETFLOG Done", 5, DateTime.Now, 5, 0);
 						break;
 					case "%%COMMAND":
-						File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
+						//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[SYSTEM]Réception d'un COMMAND à "+DateTime.Now.ToString("t")+"\n");
 						InsertData ();									
 						break;
 					case "%%GETAIMG":
@@ -573,7 +574,7 @@ namespace DMS_3
 							dbr.InsertDataMessage (Data.userAndsoft, "", "%%GETAIMG Done", 5, DateTime.Now, 5, 0);
 						} catch (Exception ex) {
 							Insights.Report(ex);
-							File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"%%GETAIMG Upload file error :"+ex+"\n");
+							//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"%%GETAIMG Upload file error :"+ex+"\n");
 							Console.Out.Write("%%GETAIMG Upload file error\n");
 						}
 						break;
@@ -585,7 +586,7 @@ namespace DMS_3
 						string[] texteMessageInputSplit = Android.Text.TextUtils.Split (texteMessage,"%%");
 						switch (texteMessageInputSplit [2]) {
 						case"TableMessages":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableMessages\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableMessages\n");
 							var selMesg = db.Query<TableMessages> (texteMessageInputSplit [3]);
 							string rowMsg = "";
 							rowMsg += "[";
@@ -595,10 +596,10 @@ namespace DMS_3
 							rowMsg.Remove(rowMsg.Length -1);
 							rowMsg += "]";
 							var rMsg = dbr.InsertDataMessage (Data.userAndsoft, "", rowMsg, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowMsg + "\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowMsg + "\n");
 							break;
 						case"TableNotifications":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableNotifications\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableNotifications\n");
 							var selNotif = db.Query<TablePositions> (texteMessageInputSplit [3]);
 							string rowNotif = "";
 							rowNotif += "[";
@@ -608,10 +609,10 @@ namespace DMS_3
 							rowNotif.Remove(rowNotif.Length -1);
 							rowNotif += "]";
 							var rNotif = dbr.InsertDataMessage (Data.userAndsoft, "", rowNotif, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowNotif + "\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowNotif + "\n");
 							break;
 						case"TablePositions":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TablePositions\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TablePositions\n");
 							var selPos = db.Query<TablePositions> (texteMessageInputSplit [3]);
 							string rowPos = "";
 							rowPos += "[";
@@ -621,10 +622,10 @@ namespace DMS_3
 							rowPos.Remove(rowPos.Length -1);
 							rowPos += "]";
 							var rPOS = dbr.InsertDataMessage (Data.userAndsoft, "", rowPos, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowPos + "\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowPos + "\n");
 							break;
 						case"TableStatutPositions":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
 							var selStat = db.Query<TableStatutPositions>(texteMessageInputSplit [3]);
 							string rowStatut = "";
 							rowStatut += "[";
@@ -634,10 +635,10 @@ namespace DMS_3
 							rowStatut.Remove(rowStatut.Length -1);
 							rowStatut += "]";
 							var rSTATLIV = dbr.InsertDataMessage (Data.userAndsoft, "", rowStatut, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowStatut + "\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowStatut + "\n");
 							break;
 						case"TableUser":
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE sur TableUser\n");
 							var selUser = db.Query<TableUser> (texteMessageInputSplit [3]);
 							string rowUser = "";
 							rowUser += "[";
@@ -647,15 +648,15 @@ namespace DMS_3
 							rowUser.Remove(rowUser.Length -1);
 							rowUser += "]";
 							var rMUSER = dbr.InsertDataMessage (Data.userAndsoft, "", rowUser, 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
 							break;
 						case"NOTHING":
 							break;
 						default:
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]Réception d'un REQUETE\n");
 							var execreq = db.Execute (texteMessageInputSplit [3]);
 							var rEXEC = dbr.InsertDataMessage (Data.userAndsoft, "", execreq+" lignes traitées : "+texteMessageInputSplit [3], 5, DateTime.Now, 5, 0);
-							File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + execreq +" pour "+texteMessageInputSplit [3]+"\n");
+							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + execreq +" pour "+texteMessageInputSplit [3]+"\n");
 							break;
 						}
 						break;
@@ -671,7 +672,7 @@ namespace DMS_3
 				db.Close ();
 			} catch (Exception ex) {
 				Console.WriteLine ("\n"+ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR METHOD MESSAGE]"+ex+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR METHOD MESSAGE]"+ex+"\n");
 			}
 						
 		}
@@ -709,12 +710,12 @@ namespace DMS_3
 				stream.Write(data, 0, data.Length);
 				stream.Close();
 				FtpWebResponse res = (FtpWebResponse)req.GetResponse();
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"Upload file"+fileName+" good\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"Upload file"+fileName+" good\n");
 				Console.Out.Write("Upload file"+fileName+" good\n");
 				return true;
 			} catch (Exception ex) {
 				Insights.Report(ex);
-				File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"Upload file"+fileName+" error :"+ex+"\n");
+				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"Upload file"+fileName+" error :"+ex+"\n");
 				Console.Out.Write("Upload file"+fileName+" error\n");
 				Thread.Sleep(TimeSpan.FromMinutes(2));
 				UploadFile (FtpUrl, fileName, userName, password, UploadDirectory);

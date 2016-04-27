@@ -147,7 +147,7 @@ namespace DMS_3
 			base.OnStart();
 			serviceTimer = new System.Timers.Timer();
 			serviceTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnServiceTimerHandler);
-			serviceTimer.Interval = 30000;
+			serviceTimer.Interval = 300000;
 			serviceTimer.Enabled = true;
 			serviceTimer.Start ();
 		}
