@@ -37,6 +37,7 @@ namespace DMS_3.BDD
 				db.CreateTable<TableStatutPositions>();
 				db.CreateTable<TableMessages>();
 				db.CreateTable<TableNotifications>();
+				db.CreateTable<TableLog>();
 				Console.Out.WriteLine("\nTable User Crée");
 				string result = "Table crée !";
 				return result;
@@ -217,6 +218,25 @@ namespace DMS_3.BDD
 			}
 		}
 
+		public string InsertLog (String exeption, DateTime date, String description)
+		{
+			try
+			{
+				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal), "ormDMS.db3");
+				var db = new SQLiteConnection(dbPath);
+				TableLog item = new TableLog();
+				item.exeption = exeption;
+				item.date = date;
+				item.description = description;
+				db.Insert(item);
+				return "Insertion Log good";
+			}
+			catch (SQLiteException ex)
+			{
+				return "Erreur : " + ex.Message;
+			}
+		}
 		//USER CHECK LOGIN
 		public bool user_Check(string user_AndsoftUserTEXT,string user_PasswordTEXT)
 		{		

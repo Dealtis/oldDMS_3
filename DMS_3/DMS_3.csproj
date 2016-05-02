@@ -104,6 +104,7 @@
     <Compile Include="BDD\TableMessages.cs" />
     <Compile Include="MessageActivity.cs" />
     <Compile Include="ListeViewMessageAdapter.cs" />
+    <Compile Include="BDD\TableLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -154,6 +154,8 @@ namespace DMS_3
 
 		void OnServiceTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
 		{
+			DBRepository dbr = new DBRepository();
+			dbr.InsertLog("",DateTime.Now,"Check Service Start");
 			//verification de la date de la pre Service
 			//si la diff est > 10 min relancer le service
 			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
@@ -165,9 +167,12 @@ namespace DMS_3
 					//LANCEMENT DU SERVICE
 					if (Data.userAndsoft == null || Data.userAndsoft == "") {
 					} else {
-						StartService (new Intent (this, typeof(ProcessDMS)));
+						StartService (new Intent (this, typeof(ProcessDMS)));					
+						dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
 						File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
 					}
+				}else{
+					dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
 				}
 
 			} catch (Exception ex) {
