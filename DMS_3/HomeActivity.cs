@@ -8,7 +8,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Telephony;
 using Android.App;
 using Android.Content;
 using Android.Locations;
@@ -16,11 +15,14 @@ using Android.Net;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4;
+using Android.Telephony;
 using Android.Views;
 using Android.Widget;
 using AndroidHUD;
 using DMS_3.BDD;
 using Java.Text;
+using SocketIO;
+using SocketIO.Client;
 using SQLite;
 using Xamarin;
 using Environment = System.Environment;
@@ -43,6 +45,7 @@ namespace DMS_3
 		System.Timers.Timer serviceTimer;
 		public ProcessDMSBinder binder;
 		ProcessDMSConnection processDMSConnection;
+
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -86,7 +89,9 @@ namespace DMS_3
 			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
-			//HockeyApp
+			//Socket
+			//Data.socket.Emit("new message", "This is a message from Xamarin.Android...");
+
 
 		
 			if (processDMSConnection != null)

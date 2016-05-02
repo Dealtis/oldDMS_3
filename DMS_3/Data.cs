@@ -12,12 +12,16 @@ using Xamarin;
 using System.Json;
 using Android.Media;
 using Android.App;
+using SocketIO;
+using SocketIO.Client;
 
 namespace DMS_3
 {
 	class Data
 	{	
-		//LOPETTE POOL
+		public static Socket socket;
+
+
 		//Instance
 		private static Data instance;
 		//DATA User

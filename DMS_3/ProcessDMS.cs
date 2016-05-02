@@ -24,6 +24,8 @@ using Environment = System.Environment;
 using Xamarin;
 using Android.Media;
 using Android.Telephony;
+using SocketIO;
+using SocketIO.Client;
 
 
 namespace DMS_3
@@ -46,6 +48,8 @@ namespace DMS_3
 		string stringValues;
 		string stringNotif;
 		System.Threading.Timer _timer;
+		Socket socket;
+
 
 		//string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
@@ -58,26 +62,10 @@ namespace DMS_3
 			TelephonyManager tel = (TelephonyManager)this.GetSystemService(Context.TelephonyService);
 			var telId = tel.DeviceId;
 
-			//Si il n'y a pas de shared pref
-//			if (log == String.Empty){
-//				log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
-//				ISharedPreferencesEditor edit = pref.Edit();
-//				edit.PutString("Log",log_file);
-//				edit.Apply();
-//			}else{
-//				//il y a des shared pref
-//				log_file = pref.GetString("Log", String.Empty);
-//				if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
-//					File.Delete(log_file);
-//					log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
-//					ISharedPreferencesEditor edit = pref.Edit();
-//					edit.PutString("Log",log_file);
-//					edit.Apply();
-//					log_file = pref.GetString("Log", String.Empty);
-//				}
-//
-//			}
-//			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
+			socket = IO.Socket("http://51.254.101.196:8000/");
+			socket.Connect();
+			socket.Emit("return","Hello");
+
 
 
 			StartServiceInForeground ();
