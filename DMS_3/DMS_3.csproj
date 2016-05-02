@@ -72,9 +72,6 @@
     <Reference Include="FortySevenDeg.SwipeListView">
       <HintPath>..\Components\android-swipelistview-2.0.0\lib\android\FortySevenDeg.SwipeListView.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.Insights">
-      <HintPath>..\packages\Xamarin.Insights.1.11.4\lib\MonoAndroid10\Xamarin.Insights.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -82,6 +79,9 @@
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="Xamarin.Insights">
+      <HintPath>..\packages\Xamarin.Insights.1.12.3\lib\MonoAndroid10\Xamarin.Insights.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -179,7 +179,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\SQLitePCL.raw.0.8.6\build\MonoAndroid\SQLitePCL.raw.targets" Condition="Exists('..\packages\SQLitePCL.raw.0.8.6\build\MonoAndroid\SQLitePCL.raw.targets')" />
-  <Import Project="..\packages\Xamarin.Insights.1.11.4\build\MonoAndroid10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.4\build\MonoAndroid10\Xamarin.Insights.targets')" />
+  <Import Project="..\packages\Xamarin.Insights.1.12.3\build\MonoAndroid10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.12.3\build\MonoAndroid10\Xamarin.Insights.targets')" />
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">
       <Version>1.0.11</Version>
