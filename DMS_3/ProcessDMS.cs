@@ -39,6 +39,7 @@ namespace DMS_3
 		String userTransics;
 		String GPS;
 		String GPSTemp = string.Empty;
+		System.Timers.Timer timer;
 		Thread ThreadService;
 		Location previousLocation;
 		string _locationProvider;
@@ -98,7 +99,6 @@ namespace DMS_3
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
 			ThreadService.Abort ();
 			StopForeground (true);
 			StopSelf();
@@ -579,6 +579,7 @@ namespace DMS_3
 						}
 						break;
 					case "%%STOPSER":
+
 						StopForeground (true);
 						StopSelf();
 						break;
@@ -669,7 +670,7 @@ namespace DMS_3
 						break;
 					}
 				}
-				db.Close ();
+				
 			} catch (Exception ex) {
 				Console.WriteLine ("\n"+ex);
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR METHOD MESSAGE]"+ex+"\n");
