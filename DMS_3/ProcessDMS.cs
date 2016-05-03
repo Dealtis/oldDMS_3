@@ -61,17 +61,23 @@ namespace DMS_3
 			//GetTelId
 			TelephonyManager tel = (TelephonyManager)this.GetSystemService(Context.TelephonyService);
 			var telId = tel.DeviceId;
+			//provisoire
+			DBRepository dbr = new DBRepository ();
+			userAndsoft = dbr.getUserAndsoft ();
+			userTransics = dbr.getUserTransics ();
 
 			socket = IO.Socket("http://51.254.101.196:8000/");
 			socket.Connect();
-			socket.On("return", data => {		
-				// display the welcome message...
-				Console.WriteLine ("Hello le webservice");
+			socket.On("qui", data => {		
+				socket.Emit ("conn",userAndsoft);
+			});
+			socket.On("newEmit", data => {		
+				traitMessages("DSAVONNET",data[0].ToString(),"Romain",1);
 			});
 
 
 			StartServiceInForeground ();
-			Routine ();
+			//Routine ();
 			// initialize location manager
 			InitializeLocationManager ();
 
@@ -124,13 +130,6 @@ namespace DMS_3
 			StartForeground ((int)NotificationFlags.ForegroundService,ongoing);
 		}
 
-		public void DoStuff ()
-		{
-			ThreadService = new Thread(new ThreadStart(this.Routine));
-			ThreadService.Start();
-			Console.WriteLine ("\nThreadService Lancé, for the first time");
-			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
-		}
 
 		void Routine ()
 		{			
@@ -516,7 +515,8 @@ namespace DMS_3
 			try {
 				if (texteMessage.ToString().Length < 9) {
 					var resinteg = dbr.InsertDataMessage (codeChauffeur, utilisateurEmetteur, texteMessage,0,DateTime.Now,1,numMessage);
-					var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
+					//TODO
+					//var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
 					alertsms ();	
 				}else{
 					switch(texteMessage.ToString().Substring(0,9))
@@ -653,7 +653,8 @@ namespace DMS_3
 						break;
 					default:
 						var resinteg = dbr.InsertDataMessage (codeChauffeur, utilisateurEmetteur, texteMessage,0,DateTime.Now,1,numMessage);
-						dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
+						//TODO
+						//dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
 						alertsms ();
 						Console.WriteLine (numMessage.ToString());
 						Console.WriteLine (resinteg);

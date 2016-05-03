@@ -36,13 +36,6 @@ namespace DMS_3
 		{
 			base.OnResume ();
 			Task startupWork = new Task (() => {
-				// connect to a Socket.IO server
-//				Data.socket = IO.Socket("http://51.254.101.196:8000/");
-//				Data.socket.Connect();
-//				Data.socket.On("return", data => {
-//					Console.WriteLine ("Hello la Socket");
-//				});
-
 				//INSTANCE DBREPOSITORY
 				DBRepository dbr = new DBRepository ();
 				//CREATION DE LA BDD
