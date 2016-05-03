@@ -18,6 +18,8 @@ using DMS_3.BDD;
 using Android.Text.Format;
 using Xamarin;
 using Android.Telephony;
+using SocketIO;
+using SocketIO.Client;
 
 
 namespace DMS_3
@@ -26,6 +28,7 @@ namespace DMS_3
 	public class SplashActivity : AppCompatActivity
 	{
 		static readonly string TAG = "X:" + typeof(SplashActivity).Name;
+		Socket socket;
 
 		public override void OnCreate (Bundle savedInstanceState, PersistableBundle persistentState)
 		{
@@ -36,13 +39,6 @@ namespace DMS_3
 		{
 			base.OnResume ();
 			Task startupWork = new Task (() => {
-				// connect to a Socket.IO server
-//				Data.socket = IO.Socket("http://51.254.101.196:8000/");
-//				Data.socket.Connect();
-//				Data.socket.On("return", data => {
-//					Console.WriteLine ("Hello la Socket");
-//				});
-
 				//INSTANCE DBREPOSITORY
 				DBRepository dbr = new DBRepository ();
 				//CREATION DE LA BDD
@@ -126,6 +122,29 @@ namespace DMS_3
 					//Data.userAndsoft = user_Login;
 					dbr.setUserdata (user_Login);
 					File.AppendAllText (Data.log_file, "Connexion de " + Data.userAndsoft + " à " + DateTime.Now.ToString ("G") + "\n");
+
+					//Socket
+					socket = IO.Socket("http://51.254.101.196:8000/");
+					socket.Connect();
+
+					socket.On("OnConn", data => {
+						socket.Emit("OnConnResponse",Data.userAndsoft);
+					});
+
+					socket.On("askgps", data => {
+						socket.Emit("responsegps",Data.GPS);
+					});
+
+					socket.On("sendPos", data => {
+						Console.WriteLine ("Insertion d'une position");
+					});
+
+					socket.On("sendMsg", data => {
+						Console.WriteLine ("Insertion d'une message");
+					});
+
+
+
 					StartActivity (new Intent (Application.Context, typeof(HomeActivity)));
 				} else {
 					StartActivity (new Intent (Application.Context, typeof(MainActivity)));
