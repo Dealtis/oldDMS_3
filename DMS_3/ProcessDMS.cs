@@ -64,8 +64,10 @@ namespace DMS_3
 
 			socket = IO.Socket("http://51.254.101.196:8000/");
 			socket.Connect();
-			socket.Emit("return","Hello");
-
+			socket.On("return", data => {		
+				// display the welcome message...
+				Console.WriteLine ("Hello le webservice");
+			});
 
 
 			StartServiceInForeground ();
