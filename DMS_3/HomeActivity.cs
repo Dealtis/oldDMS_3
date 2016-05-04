@@ -24,6 +24,7 @@ using Java.Text;
 using SQLite;
 using Xamarin;
 using Environment = System.Environment;
+using Thread = Java.Lang.Thread;
 
 namespace DMS_3
 {
@@ -43,6 +44,8 @@ namespace DMS_3
 		System.Timers.Timer serviceTimer;
 		public ProcessDMSBinder binder;
 		ProcessDMSConnection processDMSConnection;
+
+
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -102,6 +105,7 @@ namespace DMS_3
 			} else {
 				if (!Data.Is_Service_Running) {
 					StartService (new Intent (this, typeof(ProcessDMS)));
+					//Data.CheckService = new Thread(OnServiceTimerHandler);
 				}
 			}
 		}
@@ -118,6 +122,7 @@ namespace DMS_3
 				}
 			});
 		}
+
 		void Btn_Config_LongClick (object sender, View.LongClickEventArgs e)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -145,42 +150,15 @@ namespace DMS_3
 		protected override void OnStart()
 		{
 			base.OnStart();
-			serviceTimer = new System.Timers.Timer();
-			serviceTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnServiceTimerHandler);
-			serviceTimer.Interval = 300000;
-			serviceTimer.Enabled = true;
-			serviceTimer.Start ();
 		}
 
-		void OnServiceTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
+		void OnServiceTimerHandler ()
 		{
-			DBRepository dbr = new DBRepository();
-			dbr.InsertLog("",DateTime.Now,"Check Service Start");
-			//verification de la date de la pre Service
-			//si la diff est > 10 min relancer le service
-			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
-			ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-			long servicedate = pref.GetLong("Service",0L);
-
-			try {				
-				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
-					//LANCEMENT DU SERVICE
-					if (Data.userAndsoft == null || Data.userAndsoft == "") {
-					} else {
-						StartService (new Intent (this, typeof(ProcessDMS)));					
-						dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
-						File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
-					}
-				}else{
-					dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
-				}
-
-			} catch (Exception ex) {
-				Console.Out.Write (ex);
+			while (true) {				
+				Thread.Sleep (120000);
 			}
-
+				
 		}
-
 		protected override void OnResume()
 		{
 			base.OnResume();
@@ -225,12 +203,15 @@ namespace DMS_3
 			var version = this.PackageManager.GetPackageInfo(this.PackageName, 0).VersionName;
 			lblTitle.Text = Data.userAndsoft + " " + version;
 			indicatorTimer = new System.Timers.Timer();
+
 			indicatorTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnIndicatorTimerHandler);
 			indicatorTimer.Interval = 1000;
 			indicatorTimer.Enabled = true;
 			indicatorTimer.Start();
 
-
+//			if (!Data.CheckService.IsAlive) {
+//				Data.CheckService.Start();
+//			}
 		}
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)

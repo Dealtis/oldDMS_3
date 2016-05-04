@@ -12,8 +12,7 @@ namespace DMS_3.BDD
 	{		
 			SQLiteConnection db = new SQLiteConnection (System.IO.Path.Combine(Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal),"ormDMS.db3"));
-		// CS comprennant toutes les requêtes BDD
-
+		
 		//CREATE BDD
 		public string CreateDB()
 		{
@@ -218,43 +217,61 @@ namespace DMS_3.BDD
 		}
 		//USER CHECK LOGIN
 		public bool user_Check(string user_AndsoftUserTEXT,string user_PasswordTEXT)
-		{		
-			bool output = false;
+		{
+			try {
+				bool output = false;
 
-			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUserTEXT)).Where (v => v.user_Password.Equals(user_PasswordTEXT));
+				var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUserTEXT)).Where (v => v.user_Password.Equals(user_PasswordTEXT));
 
-			foreach (var item in query) {
-				output = true;
-				var row = db.Get<TableUser> (item.Id);
-				row.user_IsLogin = true;
-				db.Update(row);
-				Console.WriteLine ("UPDATE GOOD" + row.user_IsLogin);
+				foreach (var item in query) {
+					output = true;
+					var row = db.Get<TableUser> (item.Id);
+					row.user_IsLogin = true;
+					db.Update(row);
+					Console.WriteLine ("UPDATE GOOD" + row.user_IsLogin);
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return false;
 			}
-			return output;
 		}
 
 		public string updatePosition (int idposition,string statut, string txtAnomalie, string txtRemarque, string codeAnomalie, string imgpath)
 		{
-			string output = "";
-			var row = db.Get<TablePositions>(idposition);
-			row.StatutLivraison = statut;
-			db.Update(row);
-			output = "UPDATE POSITIONS " + row.Id;
-			return output;
+			try {
+				string output = "";
+				var row = db.Get<TablePositions>(idposition);
+				row.StatutLivraison = statut;
+				db.Update(row);
+				output = "UPDATE POSITIONS " + row.Id;
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}
+
 		}
 
 		public string updatePositionSuppliv (string numCommande)
 		{
-			string output = "";
-			var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande));
-			foreach (var item in query) {
-				output = "YALO";
-				var row = db.Get<TablePositions> (item.Id);
-				row.imgpath = "SUPPLIV";
-				db.Update(row);
-				Console.WriteLine ("UPDATE SUPPLIV" + row.numCommande);
+			try {
+				string output = "";
+				var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande));
+				foreach (var item in query) {
+					output = "YALO";
+					var row = db.Get<TablePositions> (item.Id);
+					row.imgpath = "SUPPLIV";
+					db.Update(row);
+					Console.WriteLine ("UPDATE SUPPLIV" + row.numCommande);
+				}
+				return output;
+				
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
 			}
-			return output;
+
 		}
 		//USER CHECK LOGIN
 		public string is_user_Log_In()
@@ -271,91 +288,134 @@ namespace DMS_3.BDD
 		//setUserdata
 
 		public string setUserdata(string UserAndsoft)
-		{		
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(UserAndsoft));
-			foreach (var item in query) {
-				Data.userAndsoft = item.user_AndsoftUser;
-				Data.userTransics = item.user_TransicsUser;
-				output = "setUserdata good";
-				Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(UserAndsoft));
+				foreach (var item in query) {
+					Data.userAndsoft = item.user_AndsoftUser;
+					Data.userTransics = item.user_TransicsUser;
+					output = "setUserdata good";
+					Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
 			}
-			return output;
+
 		}
 
 		public string getUserAndsoft()
-		{		
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
-			foreach (var item in query) {				
-				output = item.user_AndsoftUser;
-			}
-			return output;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+				foreach (var item in query) {				
+					output = item.user_AndsoftUser;
+				}
+				return output;
+				
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}	
+
 
 		}
 
 		public string getUserTransics()
-		{		
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
-			foreach (var item in query) {				
-				output = item.user_TransicsUser;
-			}
-			return output;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+				foreach (var item in query) {				
+					output = item.user_TransicsUser;
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}	
+
 
 		}
 
 		public string getAnomalieImgPath(string numCommande)
-		{		
-			string output = string.Empty;
-			var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.StatutLivraison.Equals("2"));
-			foreach (var item in query) {			
-				output = item.imgpath;
-			}
-			return output;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.StatutLivraison.Equals("2"));
+				foreach (var item in query) {			
+					output = item.imgpath;
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}	
+
 
 		}
 
 		public string logout()
-		{		
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
-			foreach (var item in query) {
-				var row = db.Get<TableUser>(item.Id);
-				row.user_IsLogin = false;
-				db.Update(row);
-				output = "UPDATE USER LOGOUT " + row.user_AndsoftUser;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+				foreach (var item in query) {
+					var row = db.Get<TableUser>(item.Id);
+					row.user_IsLogin = false;
+					db.Update(row);
+					output = "UPDATE USER LOGOUT " + row.user_AndsoftUser;
+				}
+				return output;
+				
+			} catch (Exception ex) {
+				return "Erreur : " + ex.Message;
 			}
-			return output;
 		}
 
 	
 		//VERIF SI POS DEJA INTEGRER
 		public bool pos_AlreadyExist(string numCommande, string groupage, string typeMission, string typeSegment)
 		{
-			bool output = false;
-			var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage)).Where (v => v.typeMission.Equals(typeMission)).Where (v => v.typeSegment.Equals(typeSegment));
-			foreach (var item in table)
-			{
-				output = true;
-
+			try {
+				bool output = false;
+				var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage)).Where (v => v.typeMission.Equals(typeMission)).Where (v => v.typeSegment.Equals(typeSegment));
+				foreach (var item in table)
+				{
+					output = true;
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return false;
 			}
-			return output;
+
 		}
 
 		//suppresion d'un GRP
 		public string supp_grp(string numGroupage)
 		{
-			string output = "";
-
-			var query = db.Table<TablePositions>().Where (v => v.groupage.Equals(numGroupage));
-			foreach (var item in query) {
-				output = item.groupage;
-				var row = db.Get<TablePositions>(item.Id);
-				db.Delete(row);
-				Console.WriteLine ("\nDELETE GOOD" + numGroupage);
+			try {
+				return "Y";
+			} catch (Exception ex) {
+				return "N";
 			}
-			return output;
+
+		}
+
+		public string purgeLog(){			
+			//var query = db.Table<TableLog>().Where (v => v.date.CompareTo(DateTime.Now));
+			var query = db.Table<TableLog>();
+			foreach (var item in query) {
+				if ((item.date.CompareTo(DateTime.Now))>3) {
+					var row = db.Get<TableLog>(item.Id);
+					db.Delete(row);
+				}	
+			}
+			return "Log purgé";
 		}
 
 		//supp notification

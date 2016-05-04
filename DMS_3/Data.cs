@@ -17,7 +17,8 @@ namespace DMS_3
 {
 	class Data
 	{	
-		//LOPETTE POOL
+
+		public static Java.Lang.Thread CheckService;
 		//Instance
 		private static Data instance;
 		//DATA User

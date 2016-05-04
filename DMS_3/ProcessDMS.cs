@@ -135,13 +135,13 @@ namespace DMS_3
 			StartForeground ((int)NotificationFlags.ForegroundService,ongoing);
 		}
 
-		public void DoStuff ()
-		{
-			ThreadService = new Thread(new ThreadStart(this.Routine));
-			ThreadService.Start();
-			Console.WriteLine ("\nThreadService Lancé, for the first time");
-			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
-		}
+//		public void DoStuff ()
+//		{
+//			ThreadService = new Thread(new ThreadStart(this.Routine));
+//			ThreadService.Start();
+//			Console.WriteLine ("\nThreadService Lancé, for the first time");
+//			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
+//		}
 
 		void Routine ()
 		{			
@@ -176,7 +176,7 @@ namespace DMS_3
 				edit.Apply();
 				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
 
-			}, null, 0, 120000);
+			}, null, 0, 30000);
 		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)

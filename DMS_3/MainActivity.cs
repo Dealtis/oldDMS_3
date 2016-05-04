@@ -3,6 +3,7 @@ using System.Json;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel;
 using Android.App;
 using Android.Content;
 using Android.Net;
@@ -23,6 +24,7 @@ namespace DMS_3
 		EditText user;
 		EditText password;
 		TextView tableload;
+		BackgroundWorker bgService;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -82,6 +84,10 @@ namespace DMS_3
 					//UPDATE DE LA BDD AVEC CE USER
 					AndHUD.Shared.ShowSuccess(this, "Bienvenue", MaskType.Black, TimeSpan.FromSeconds(2));
 					dbr.setUserdata (user.Text.ToUpper ());
+					//lancement du BgWorker Service
+					bgService = new BackgroundWorker();
+					bgService.RunWorkerAsync();
+					bgService.DoWork += bgService_DoWork;
 					StartActivity(typeof(HomeActivity));
 				} else {
 					AndHUD.Shared.ShowError(this, "Mauvais mot de passe", MaskType.Black, TimeSpan.FromSeconds(2));
@@ -89,6 +95,40 @@ namespace DMS_3
 			} else {
 				AndHUD.Shared.ShowError(this, "Champ user obligatoire", MaskType.Black, TimeSpan.FromSeconds(2));
 			}
+		}
+
+		private void bgService_DoWork(object sender, DoWorkEventArgs e)
+		{			
+			try {
+				DBRepository dbr = new DBRepository();
+				dbr.InsertLog("",DateTime.Now,"Check Service Start");
+				Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
+				//verification de la date de la pre Service
+				//si la diff est > 10 min relancer le service
+				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+				long servicedate = pref.GetLong("Service",0L);
+
+				try {				
+					if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
+						//LANCEMENT DU SERVICE
+						if (Data.userAndsoft == null || Data.userAndsoft == "") {
+						} else {
+							StartService (new Intent (this, typeof(ProcessDMS)));					
+							dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
+						}
+					}else{
+						dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
+					}
+
+				} catch (Exception ex) {
+					Console.Out.Write (ex);
+				}
+			} catch (Exception ex) {
+
+			}
+			Thread.Sleep(120000);
+			bgService.DoWork += bgService_DoWork;
 		}
 
 		void btn_Login_LongClick ()
