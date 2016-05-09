@@ -104,7 +104,6 @@ namespace DMS_3
 				
 			} else {
 				if (!Data.Is_Service_Running) {
-					StartService (new Intent (this, typeof(ProcessDMS)));
 					//Data.CheckService = new Thread(OnServiceTimerHandler);
 				}
 			}

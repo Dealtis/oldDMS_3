@@ -3,7 +3,7 @@ using SQLite;
 
 namespace DMS_3
 {
-	public class TableLog
+	public class TableLogApp
 	{		
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
@@ -12,5 +12,4 @@ namespace DMS_3
 		public String description { get; set; }
 	}
 }
-
 

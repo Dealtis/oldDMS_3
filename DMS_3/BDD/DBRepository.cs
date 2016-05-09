@@ -5,37 +5,78 @@ using SQLite;
 using Android.Graphics;
 using Xamarin;
 using System.Threading.Tasks;
+using Mono.Data.Sqlite;
+
 namespace DMS_3.BDD
 {		
 	
 	public class DBRepository
 	{		
-			SQLiteConnection db = new SQLiteConnection (System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal),"ormDMS.db3"));
+		public static  SQLiteConnection db;
 		
+		public static SqliteConnection connection;
 		//CREATE BDD
 		public string CreateDB()
 		{
-			var output = "";
-			output += "Création de la BDD";
-//			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-//				(Environment.SpecialFolder.Personal),"ormDMS.db3");
-//			db = new SQLiteConnection (dbPath);		
-			output += "\nBDD crée...";
-			return output;
+			try {
+				var output = "";
+				output += "Création de la BDD";
+				db 	= new SQLiteConnection (System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal),"ormDMS.db3"));
+				output += "\nBDD crée...";
+
+//				//ADO
+//				string dbPath = System.IO.Path.Combine (
+//					Environment.GetFolderPath (Environment.SpecialFolder.Personal),"adoDMS2.db3");
+//
+//				bool exists = File.Exists (dbPath);
+//
+//				if (!exists) {
+//					Console.WriteLine("Creating database");
+//					// Need to create the database before seeding it with some data
+//					Mono.Data.Sqlite.SqliteConnection.CreateFile (dbPath);
+//					connection = new SqliteConnection ("Data Source=" + dbPath);
+//
+//					var commands = new[] {
+//						"CREATE TABLE [TableLogService] (_id INTEGER PRIMARY KEY AUTOINCREMENT, exeption ntext, datelog date, descrition ntext);"
+//					};
+//					// Open the database connection and create table with data
+//					connection.Open ();
+//					foreach (var command in commands) {
+//						using (var c = connection.CreateCommand ()) {
+//							c.CommandText = command;
+//							var rowcount = c.ExecuteNonQuery ();
+//							Console.WriteLine("\tExecuted " + command);
+//						}
+//					}
+//				} else {
+//					Console.WriteLine("Database already exists");
+//					// Open connection to existing database file
+//					connection = new SqliteConnection ("Data Source=" + dbPath);
+//				}
+
+//				connection.Close ();
+				return output;
+
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "error";
+			}
+
 		}
 
 		//CREATE TABLE
 		public string CreateTable()
 		{
 			try
-			{				
+			{	
 				db.CreateTable<TableUser>();
 				db.CreateTable<TablePositions>();
 				db.CreateTable<TableStatutPositions>();
 				db.CreateTable<TableMessages>();
 				db.CreateTable<TableNotifications>();
-				db.CreateTable<TableLog>();
+				db.CreateTable<TableLogService>();
+				db.CreateTable<TableLogApp>();
 				Console.Out.WriteLine("\nTable User Crée");
 				string result = "Table crée !";
 				return result;
@@ -199,11 +240,36 @@ namespace DMS_3.BDD
 			}
 		}
 
-		public string InsertLog (String exeption, DateTime date, String description)
+		public string InsertLogService (String exeption, DateTime date, String description)
 		{
 			try
 			{
-				TableLog item = new TableLog();
+				TableLogService item = new TableLogService();
+				item.exeption = exeption;
+				item.date = date;
+				item.description = description;
+				db.Insert(item);
+//				connection.Open();
+//				using (var c = connection.CreateCommand ()) {
+//					c.CommandText = "INSERT INTO [TableLogService] ([exeption],[datelog],[descrition]) VALUES ('"+exeption+"', '"+date+"','"+description+"')";// exeption ntext, datelog date, descrition ntext
+//					var rowcount = c.ExecuteNonQuery ();
+//					Console.WriteLine("\tExecuted " + c.CommandText);
+//				}
+//				connection.Close ();
+//
+				return "Insertion Log good";
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+			}
+		}
+
+		public string InsertLogApp (String exeption, DateTime date, String description)
+		{
+			try
+			{
+				TableLogApp item = new TableLogApp();
 				item.exeption = exeption;
 				item.date = date;
 				item.description = description;
@@ -215,6 +281,8 @@ namespace DMS_3.BDD
 				return "Erreur : " + ex.Message;
 			}
 		}
+
+
 		//USER CHECK LOGIN
 		public bool user_Check(string user_AndsoftUserTEXT,string user_PasswordTEXT)
 		{
@@ -408,10 +476,10 @@ namespace DMS_3.BDD
 
 		public string purgeLog(){			
 			//var query = db.Table<TableLog>().Where (v => v.date.CompareTo(DateTime.Now));
-			var query = db.Table<TableLog>();
+			var query = db.Table<TableLogService>();
 			foreach (var item in query) {
 				if ((item.date.CompareTo(DateTime.Now))>3) {
-					var row = db.Get<TableLog>(item.Id);
+					var row = db.Get<TableLogService>(item.Id);
 					db.Delete(row);
 				}	
 			}

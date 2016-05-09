@@ -82,6 +82,7 @@
     <Reference Include="Xamarin.Insights">
       <HintPath>..\packages\Xamarin.Insights.1.12.3\lib\MonoAndroid10\Xamarin.Insights.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -104,7 +105,8 @@
     <Compile Include="BDD\TableMessages.cs" />
     <Compile Include="MessageActivity.cs" />
     <Compile Include="ListeViewMessageAdapter.cs" />
-    <Compile Include="BDD\TableLog.cs" />
+    <Compile Include="BDD\TableLogService.cs" />
+    <Compile Include="BDD\TableLogApp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

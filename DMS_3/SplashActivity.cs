@@ -125,6 +125,7 @@ namespace DMS_3
 					dbr.setUserdata (user_Login);
 					File.AppendAllText (Data.log_file, "Connexion de " + Data.userAndsoft + " à " + DateTime.Now.ToString ("G") + "\n");
 					//lancement du BgWorker Service
+					StartService (new Intent (this, typeof(ProcessDMS)));
 					bgService = new BackgroundWorker();
 					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
 					bgService.RunWorkerAsync();
@@ -138,10 +139,10 @@ namespace DMS_3
 
 		private void bgService_DoWork(object sender, DoWorkEventArgs e)
 		{
-			while (true) {
+		while (true) {
 				try {
 					DBRepository dbr = new DBRepository();
-					dbr.InsertLog("",DateTime.Now,"Check Service Start");
+					dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
 					Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
 					//verification de la date de la pre Service
 					//si la diff est > 10 min relancer le service
@@ -150,16 +151,16 @@ namespace DMS_3
 					long servicedate = pref.GetLong("Service",0L);
 
 					try {				
-						if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
+						if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>10){
 							//LANCEMENT DU SERVICE
 							if (Data.userAndsoft == null || Data.userAndsoft == "") {
 							} else {
 								StartService (new Intent (this, typeof(ProcessDMS)));					
-								dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
+								dbr.InsertLogApp("",DateTime.Now,"Relance du service après 10 min d'inactivité");
 								File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
 							}
 						}else{
-							dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
+							dbr.InsertLogApp("",DateTime.Now,"Pas de Relance du service");
 						}
 
 					} catch (Exception ex) {

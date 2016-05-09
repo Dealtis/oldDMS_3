@@ -85,6 +85,7 @@ namespace DMS_3
 					AndHUD.Shared.ShowSuccess(this, "Bienvenue", MaskType.Black, TimeSpan.FromSeconds(2));
 					dbr.setUserdata (user.Text.ToUpper ());
 					//lancement du BgWorker Service
+					StartService (new Intent (this, typeof(ProcessDMS)));
 					bgService = new BackgroundWorker();
 					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
 					bgService.RunWorkerAsync();
@@ -102,7 +103,7 @@ namespace DMS_3
 			while (true) {
 				try {
 					DBRepository dbr = new DBRepository();
-					dbr.InsertLog("",DateTime.Now,"Check Service Start");
+					dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
 					Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
 					//verification de la date de la pre Service
 					//si la diff est > 10 min relancer le service
@@ -116,10 +117,10 @@ namespace DMS_3
 							if (Data.userAndsoft == null || Data.userAndsoft == "") {
 							} else {
 								StartService (new Intent (this, typeof(ProcessDMS)));					
-								dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
+								dbr.InsertLogApp("",DateTime.Now,"Relance du service après 10 min d'inactivité");
 							}
 						}else{
-							dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
+							dbr.InsertLogApp("",DateTime.Now,"Pas de Relance du service");
 						}
 
 					} catch (Exception ex) {
