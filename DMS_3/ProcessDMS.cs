@@ -65,9 +65,6 @@ namespace DMS_3
 			userAndsoft = dbr.getUserAndsoft ();
 			userTransics = dbr.getUserTransics ();
 
-
-
-
 			StartServiceInForeground ();
 			//Routine ();
 			// initialize location manager
