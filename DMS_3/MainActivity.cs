@@ -86,8 +86,8 @@ namespace DMS_3
 					dbr.setUserdata (user.Text.ToUpper ());
 					//lancement du BgWorker Service
 					bgService = new BackgroundWorker();
+					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
 					bgService.RunWorkerAsync();
-					bgService.DoWork += bgService_DoWork;
 					StartActivity(typeof(HomeActivity));
 				} else {
 					AndHUD.Shared.ShowError(this, "Mauvais mot de passe", MaskType.Black, TimeSpan.FromSeconds(2));
@@ -98,37 +98,38 @@ namespace DMS_3
 		}
 
 		private void bgService_DoWork(object sender, DoWorkEventArgs e)
-		{			
-			try {
-				DBRepository dbr = new DBRepository();
-				dbr.InsertLog("",DateTime.Now,"Check Service Start");
-				Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
-				//verification de la date de la pre Service
-				//si la diff est > 10 min relancer le service
-				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
-				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-				long servicedate = pref.GetLong("Service",0L);
+		{
+			while (true) {
+				try {
+					DBRepository dbr = new DBRepository();
+					dbr.InsertLog("",DateTime.Now,"Check Service Start");
+					Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
+					//verification de la date de la pre Service
+					//si la diff est > 10 min relancer le service
+					string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+					ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+					long servicedate = pref.GetLong("Service",0L);
 
-				try {				
-					if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
-						//LANCEMENT DU SERVICE
-						if (Data.userAndsoft == null || Data.userAndsoft == "") {
-						} else {
-							StartService (new Intent (this, typeof(ProcessDMS)));					
-							dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
+					try {				
+						if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
+							//LANCEMENT DU SERVICE
+							if (Data.userAndsoft == null || Data.userAndsoft == "") {
+							} else {
+								StartService (new Intent (this, typeof(ProcessDMS)));					
+								dbr.InsertLog("",DateTime.Now,"Relance du service après 5 min d'inactivité");
+							}
+						}else{
+							dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
 						}
-					}else{
-						dbr.InsertLog("",DateTime.Now,"Pas de Relance du service");
+
+					} catch (Exception ex) {
+						Console.Out.Write (ex);
 					}
-
 				} catch (Exception ex) {
-					Console.Out.Write (ex);
+					Console.Write(ex);
 				}
-			} catch (Exception ex) {
-
+				Thread.Sleep(600000);
 			}
-			Thread.Sleep(120000);
-			bgService.DoWork += bgService_DoWork;
 		}
 
 		void btn_Login_LongClick ()

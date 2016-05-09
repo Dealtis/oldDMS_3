@@ -176,7 +176,7 @@ namespace DMS_3
 				edit.Apply();
 				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
 
-			}, null, 0, 30000);
+			}, null, 0, 120000);
 		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
