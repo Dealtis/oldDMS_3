@@ -23,39 +23,7 @@ namespace DMS_3.BDD
 				output += "Création de la BDD";
 				db 	= new SQLiteConnection (System.IO.Path.Combine(Environment.GetFolderPath
 					(Environment.SpecialFolder.Personal),"ormDMS.db3"));
-				output += "\nBDD crée...";
-
-//				//ADO
-//				string dbPath = System.IO.Path.Combine (
-//					Environment.GetFolderPath (Environment.SpecialFolder.Personal),"adoDMS2.db3");
-//
-//				bool exists = File.Exists (dbPath);
-//
-//				if (!exists) {
-//					Console.WriteLine("Creating database");
-//					// Need to create the database before seeding it with some data
-//					Mono.Data.Sqlite.SqliteConnection.CreateFile (dbPath);
-//					connection = new SqliteConnection ("Data Source=" + dbPath);
-//
-//					var commands = new[] {
-//						"CREATE TABLE [TableLogService] (_id INTEGER PRIMARY KEY AUTOINCREMENT, exeption ntext, datelog date, descrition ntext);"
-//					};
-//					// Open the database connection and create table with data
-//					connection.Open ();
-//					foreach (var command in commands) {
-//						using (var c = connection.CreateCommand ()) {
-//							c.CommandText = command;
-//							var rowcount = c.ExecuteNonQuery ();
-//							Console.WriteLine("\tExecuted " + command);
-//						}
-//					}
-//				} else {
-//					Console.WriteLine("Database already exists");
-//					// Open connection to existing database file
-//					connection = new SqliteConnection ("Data Source=" + dbPath);
-//				}
-
-//				connection.Close ();
+					output += "\nBDD crée...";
 				return output;
 
 			} catch (Exception ex) {
@@ -478,7 +446,15 @@ namespace DMS_3.BDD
 			//var query = db.Table<TableLog>().Where (v => v.date.CompareTo(DateTime.Now));
 			var query = db.Table<TableLogService>();
 			foreach (var item in query) {
-				if ((item.date.CompareTo(DateTime.Now))>3) {
+				if ((item.date.Day.CompareTo(DateTime.Now.Day))>3) {
+					var row = db.Get<TableLogService>(item.Id);
+					db.Delete(row);
+				}	
+			}
+
+			var queryApp = db.Table<TableLogApp>();
+			foreach (var item in queryApp) {
+				if ((item.date.Day.CompareTo(DateTime.Now.Day))>3) {
 					var row = db.Get<TableLogService>(item.Id);
 					db.Delete(row);
 				}	

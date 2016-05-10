@@ -156,14 +156,16 @@ namespace DMS_3
 						Task.Factory.StartNew (
 							() => {
 								Console.WriteLine ("\nHello from ComPosNotifMsg.");
-								dbr.InsertLogService("",DateTime.Now,"ComPosNotifMsg Start");
+								//dbr.InsertLogService("",DateTime.Now,"ComPosNotifMsg Start");
 								ComPosNotifMsg ();
+								Thread.Sleep(500);
 							}					
 						).ContinueWith (
 							t => {
 								Console.WriteLine ("\nHello from ComWebService.");
-								dbr.InsertLogService("",DateTime.Now,"ComWebService Start");
+								//dbr.InsertLogService("",DateTime.Now,"ComWebService Start");
 								ComWebService ();
+								Thread.Sleep(500);
 							}						
 						);
 					}
@@ -199,7 +201,7 @@ namespace DMS_3
 				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 				webClient.Encoding = System.Text.Encoding.UTF8;
 				content_integdata = webClient.DownloadString (_url);
-				dbr.InsertLogService("",DateTime.Now,"webClient.DownloadString Done");
+				//dbr.InsertLogService("",DateTime.Now,"webClient.DownloadString Done");
 				//intégration des données dans la BDD
 				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
 				var jsonArr = jsonVal;
@@ -238,7 +240,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
-				dbr.InsertLogService(ex.ToString(),DateTime.Now,"Insert Data Error");
+				//dbr.InsertLogService(ex.ToString(),DateTime.Now,"Insert Data Error");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][ERROR] InserData : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				Insights.Report(ex);
 			}
@@ -364,16 +366,16 @@ namespace DMS_3
 			catch (Exception e)
 			{
 				Insights.Report (e,Xamarin.Insights.Severity.Error);
-					dbr.InsertLogService(e.ToString(),DateTime.Now,"ComPosNotifMsg UploadStringAsync Error");
+					//dbr.InsertLogService(e.ToString(),DateTime.Now,"ComPosNotifMsg UploadStringAsync Error");
 			}
 			} catch (Exception ex) {
 				Insights.Report (ex,Xamarin.Insights.Severity.Error);
 				Console.Out.Write(ex);
-				dbr.InsertLogService(ex.ToString(),DateTime.Now,"ComPosNotifMsg Error");
+				//dbr.InsertLogService(ex.ToString(),DateTime.Now,"ComPosNotifMsg Error");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		Console.WriteLine ("\nTask ComPosGps done");
-			dbr.InsertLogService("",DateTime.Now,"Task ComPosGps done");
+			//dbr.InsertLogService("",DateTime.Now,"Task ComPosGps done");
 		}
 		
 
@@ -401,16 +403,16 @@ namespace DMS_3
 				try {
 					webClient.UploadStringCompleted += WebClient_UploadStringCompleted;
 					webClient.UploadStringAsync (uri, datajsonArray);
-					dbr.InsertLogService("",DateTime.Now,"ComWebService UploadStringAsync Done");
+					//dbr.InsertLogService("",DateTime.Now,"ComWebService UploadStringAsync Done");
 				} catch (Exception e) {
 					Console.WriteLine (e);
 					Insights.Report(e);
-					dbr.InsertLogService(e.ToString(),DateTime.Now,"ComWebService Error");
+					//dbr.InsertLogService(e.ToString(),DateTime.Now,"ComWebService Error");
 					//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComWebService : "+e+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 			}
 			Console.WriteLine ("\nTask ComWebService done");
-			dbr.InsertLogService("",DateTime.Now,"Task ComWebService done");
+			//dbr.InsertLogService("",DateTime.Now,"Task ComWebService done");
 			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[TASK] ComWebService Done \n");
 		}
 
@@ -418,7 +420,7 @@ namespace DMS_3
 		{
 			try {
 				string resultjson = "[" + e.Result + "]";
-				dbr.InsertLogService(e.Result,DateTime.Now,"WebClient_UploadStringCompleted Response");
+				//dbr.InsertLogService(e.Result,DateTime.Now,"WebClient_UploadStringCompleted Response");
 				if (e.Result == "\"YOLO\"") {
 
 				} else {
@@ -431,7 +433,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				Insights.Report(ex);
-				dbr.InsertLogService(e.Result,DateTime.Now,"WebClient_UploadStringCompleted Response");
+				//dbr.InsertLogService(e.Result,DateTime.Now,"WebClient_UploadStringCompleted Response");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		}
@@ -456,11 +458,11 @@ namespace DMS_3
 				foreach (var item in tablemessage) {
 					var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
 				}
-				dbr.InsertLogService("",DateTime.Now,"WebClient_UploadStringStatutCompleted Done");
+				//dbr.InsertLogService("",DateTime.Now,"WebClient_UploadStringStatutCompleted Done");
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				Insights.Report(ex);
-				dbr.InsertLogService(ex.ToString(),DateTime.Now,"WebClient_UploadStringStatutCompleted Error");
+				//dbr.InsertLogService(ex.ToString(),DateTime.Now,"WebClient_UploadStringStatutCompleted Error");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringStatutCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 

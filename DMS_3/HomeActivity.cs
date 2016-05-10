@@ -15,7 +15,7 @@ using Android.Locations;
 using Android.Net;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.V4;
+using Android.Support.V7;
 using Android.Views;
 using Android.Widget;
 using AndroidHUD;
@@ -162,7 +162,6 @@ namespace DMS_3
 		{
 			base.OnResume();
 			DBRepository dbr = new DBRepository ();
-			dbr.SETBadges(Data.userAndsoft);
 			if (dbr.is_user_Log_In() == "false") {
 				Intent intent = new Intent (this, typeof(MainActivity));
 				this.StartActivity (intent);

@@ -142,7 +142,7 @@ namespace DMS_3
 		while (true) {
 				try {
 					DBRepository dbr = new DBRepository();
-					dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
+					//dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
 					Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
 					//verification de la date de la pre Service
 					//si la diff est > 10 min relancer le service
@@ -156,11 +156,11 @@ namespace DMS_3
 							if (Data.userAndsoft == null || Data.userAndsoft == "") {
 							} else {
 								StartService (new Intent (this, typeof(ProcessDMS)));					
-								dbr.InsertLogApp("",DateTime.Now,"Relance du service après 10 min d'inactivité");
+								//dbr.InsertLogApp("",DateTime.Now,"Relance du service après 10 min d'inactivité");
 								File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
 							}
 						}else{
-							dbr.InsertLogApp("",DateTime.Now,"Pas de Relance du service");
+							//dbr.InsertLogApp("",DateTime.Now,"Pas de Relance du service");
 						}
 
 					} catch (Exception ex) {
