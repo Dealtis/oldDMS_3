@@ -25,26 +25,25 @@ using Xamarin;
 using Android.Media;
 using Android.Telephony;
 
-
 namespace DMS_3
 {
 	[Service]
-	[IntentFilter(new String[]{"com.dealtis.dms_3.ProcessDMS"})]
+	[IntentFilter(new string[]{"com.dealtis.dms_3.ProcessDMS"})]
 	public class ProcessDMS : Service, ILocationListener
 	{
 		ProcessDMSBinder binder;
-		String datedujour;
+		string datedujour;
 		LocationManager locMgr;
-		String userAndsoft;
-		String userTransics;
-		String GPS;
-		String GPSTemp = string.Empty;
-		Thread ThreadService;
+		string userAndsoft;
+		string userTransics;
+		string GPS;
+		string GPSTemp = string.Empty;
 		Location previousLocation;
 		string _locationProvider;
 		string stringValues;
 		string stringNotif;
-		System.Threading.Timer _timer;
+
+		Task task;
 		DBRepository dbr = new DBRepository();
 
 		//string log_file;
@@ -82,6 +81,7 @@ namespace DMS_3
 
 			StartServiceInForeground ();
 			Routine ();
+
 			// initialize location manager
 			InitializeLocationManager ();
 
@@ -100,7 +100,6 @@ namespace DMS_3
 		{
 			base.OnDestroy ();
 			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
-			ThreadService.Abort ();
 			StopForeground (true);
 			StopSelf();
 		}
@@ -124,7 +123,6 @@ namespace DMS_3
 				_locationProvider = String.Empty;
 			}
 			Console.Out.Write("Using " + _locationProvider + ".");
-
 		}
 
 		void StartServiceInForeground ()
@@ -145,40 +143,49 @@ namespace DMS_3
 
 		void Routine ()
 		{			
-			_timer = new System.Threading.Timer ((o) => {
-				DBRepository dbr = new DBRepository ();
-				userAndsoft = dbr.getUserAndsoft ();
-				userTransics = dbr.getUserTransics ();
-				var connectivityManager = (ConnectivityManager)GetSystemService (ConnectivityService);
-				var activeConnection = connectivityManager.ActiveNetworkInfo;
-				if (userAndsoft != string.Empty) {
-					if ((activeConnection != null) && activeConnection.IsConnected) {			
-						Task.Factory.StartNew (
-							() => {
-								Console.WriteLine ("\nHello from ComPosNotifMsg.");
-								//dbr.InsertLogService("",DateTime.Now,"ComPosNotifMsg Start");
-								ComPosNotifMsg ();
-								Thread.Sleep(500);
-							}					
-						).ContinueWith (
-							t => {
-								Console.WriteLine ("\nHello from ComWebService.");
-								//dbr.InsertLogService("",DateTime.Now,"ComWebService Start");
-								ComWebService ();
-								Thread.Sleep(500);
-							}						
-						);
+//			_timer = new System.Threading.Timer ((o) => {
+//				
+//
+//			}, null, 0, 120000);
+
+			task = Task.Factory.StartNew(() =>
+				{
+					while (true)
+					{
+						DBRepository dbr = new DBRepository ();
+						userAndsoft = dbr.getUserAndsoft ();
+						userTransics = dbr.getUserTransics ();
+						var connectivityManager = (ConnectivityManager)GetSystemService (ConnectivityService);
+						var activeConnection = connectivityManager.ActiveNetworkInfo;
+						if (userAndsoft != string.Empty) {
+							if ((activeConnection != null) && activeConnection.IsConnected) {			
+								Task.Factory.StartNew (
+									() => {
+										Console.WriteLine ("\nHello from ComPosNotifMsg.");
+										//dbr.InsertLogService("",DateTime.Now,"ComPosNotifMsg Start");
+										ComPosNotifMsg ();
+										Thread.Sleep(500);
+									}					
+								).ContinueWith (
+									t => {
+										Console.WriteLine ("\nHello from ComWebService.");
+										//dbr.InsertLogService("",DateTime.Now,"ComWebService Start");
+										ComWebService ();
+										Thread.Sleep(500);
+									}						
+								);
+							}
+						}
+
+						string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+						ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+						ISharedPreferencesEditor edit = pref.Edit();
+						edit.PutLong("Service",DateTime.Now.Ticks);
+						edit.Apply();
+						Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
+						Thread.Sleep(120000);
 					}
-				}
-
-				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
-				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-				ISharedPreferencesEditor edit = pref.Edit();
-				edit.PutLong("Service",DateTime.Now.Ticks);
-				edit.Apply();
-				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
-
-			}, null, 0, 120000);
+				});
 		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)

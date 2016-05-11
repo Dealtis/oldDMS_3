@@ -86,7 +86,7 @@ namespace DMS_3
 			txtEnlevement.SetTypeface (Data.LatoBlack, Android.Graphics.TypefaceStyle.Normal);
 
 			//Xamarin Insight
-			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
+			Insights.Initialize("df79e746ac72427e41c82366b7af4ad6948d1d6d", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
 			//HockeyApp
@@ -197,6 +197,7 @@ namespace DMS_3
 
 			var user = dbr.getUserAndsoft ();
 			dbr.setUserdata (user);
+			dbr.SETBadges(Data.userAndsoft);
 
 			var version = this.PackageManager.GetPackageInfo(this.PackageName, 0).VersionName;
 			lblTitle.Text = Data.userAndsoft + " " + version;
@@ -255,6 +256,7 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE","LIV");
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
@@ -263,6 +265,7 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE","RAM");
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
@@ -270,6 +273,7 @@ namespace DMS_3
 		{
 			Intent intent = new Intent (this, typeof(MessageActivity));
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 

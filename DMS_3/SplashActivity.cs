@@ -22,7 +22,7 @@ using Android.Telephony;
 
 namespace DMS_3
 {
-	[Activity (Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation)]
+	[Activity (Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 	public class SplashActivity : AppCompatActivity
 	{
 		static readonly string TAG = "X:" + typeof(SplashActivity).Name;
@@ -140,6 +140,7 @@ namespace DMS_3
 		private void bgService_DoWork(object sender, DoWorkEventArgs e)
 		{
 		while (true) {
+				Thread.Sleep(600000);
 				try {
 					DBRepository dbr = new DBRepository();
 					//dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
@@ -169,7 +170,6 @@ namespace DMS_3
 				} catch (Exception ex) {
 					Console.Write(ex);
 				}
-				Thread.Sleep(600000);
 			}
 		}
 
