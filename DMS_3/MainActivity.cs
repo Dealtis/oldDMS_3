@@ -17,7 +17,7 @@ using Xamarin;
 
 namespace DMS_3
 {
-	[Activity (Label = "DMS_3", Icon = "@mipmap/icon",ConfigurationChanges=Android.Content.PM.ConfigChanges.Orientation, NoHistory = true)]
+	[Activity (Label = "DMS_3", Icon = "@mipmap/icon",ConfigurationChanges=Android.Content.PM.ConfigChanges.Orientation,ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, NoHistory = true)]
 	public class MainActivity : Activity
 	{
 		Button btn_Login;
@@ -101,6 +101,7 @@ namespace DMS_3
 		private void bgService_DoWork(object sender, DoWorkEventArgs e)
 		{
 			while (true) {
+				Thread.Sleep(600000);
 				try {
 					DBRepository dbr = new DBRepository();
 					//dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
@@ -112,7 +113,7 @@ namespace DMS_3
 					long servicedate = pref.GetLong("Service",0L);
 
 					try {				
-						if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
+						if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>10){
 							//LANCEMENT DU SERVICE
 							if (Data.userAndsoft == null || Data.userAndsoft == "") {
 							} else {
@@ -129,7 +130,6 @@ namespace DMS_3
 				} catch (Exception ex) {
 					Console.Write(ex);
 				}
-				Thread.Sleep(600000);
 			}
 		}
 

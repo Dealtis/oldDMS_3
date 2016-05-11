@@ -78,7 +78,7 @@ namespace DMS_3
 				var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 1 WHERE statutMessage = 0");
 				var resintegstatut = dbr.InsertDataStatutMessage (1,DateTime.Now,item.numMessage,"","");
 			}
-
+			dbr.SETBadges(Data.userAndsoft);
 		}
 
 		void  Btnsend_Click (object sender, EventArgs e){
@@ -116,12 +116,14 @@ namespace DMS_3
 			var del = dbr.DropTableMessage();
 
 			StartActivity(typeof(MessageActivity));
+
 		}
 
 		public override void OnBackPressed ()
 		{
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);
 		}   
 	}
