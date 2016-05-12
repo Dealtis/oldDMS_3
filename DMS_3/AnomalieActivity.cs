@@ -210,6 +210,8 @@ namespace DMS_3
 									//ftp://77.158.93.75 ftp://10.1.2.75
 								statutuploadfile = Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
 								uploadone= true;
+								bmp.Recycle();
+								rbmp.Recycle();
 							} catch (Exception ex) {
 								Console.WriteLine ("\n" + ex);
 								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + ex + DateTime.Now.ToString ("G") + "\n");
@@ -222,7 +224,9 @@ namespace DMS_3
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra ("TYPE", type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
+				Finish ();
+				_imageView.Dispose ();
+				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
 			}
 		}
 
@@ -275,6 +279,7 @@ namespace DMS_3
 				dbr.updateposimgpath (i,Data._file.Path);
 				Data.bitmap = null;
 			}
+			GC.Collect();
 		}
 		private Bitmap DecodeSmallFile(String filename, int width, int height)
 		{
@@ -311,12 +316,16 @@ namespace DMS_3
 					Intent intent = new Intent (this, typeof(ListeTraitee));
 					intent.PutExtra("TYPE",type);
 					this.StartActivity (intent);
-					this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+					Finish ();
+					_imageView.Dispose ();
+					//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 				} else {
 					Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 					intent.PutExtra("TYPE",type);
 					this.StartActivity (intent);
-					this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+					Finish ();
+					_imageView.Dispose ();
+					//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 				}
 			});
 			builder.SetNegativeButton("Non", delegate {  });

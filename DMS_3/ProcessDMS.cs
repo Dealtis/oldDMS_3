@@ -27,27 +27,27 @@ using Android.Telephony;
 using SocketIO;
 using SocketIO.Client;
 
-
 namespace DMS_3
 {
 	[Service]
-	[IntentFilter(new String[]{"com.dealtis.dms_3.ProcessDMS"})]
+	[IntentFilter(new string[]{"com.dealtis.dms_3.ProcessDMS"})]
 	public class ProcessDMS : Service, ILocationListener
 	{
 		ProcessDMSBinder binder;
-		String datedujour;
+		string datedujour;
 		LocationManager locMgr;
-		String userAndsoft;
-		String userTransics;
-		String GPS;
-		String GPSTemp = string.Empty;
-		System.Timers.Timer timer;
-		Thread ThreadService;
+
+		string userAndsoft;
+		string userTransics;
+		string GPS;
+		string GPSTemp = string.Empty;
 		Location previousLocation;
 		string _locationProvider;
 		string stringValues;
 		string stringNotif;
-		System.Threading.Timer _timer;
+
+		Task task;
+		DBRepository dbr = new DBRepository();
 
 
 		//string log_file;
@@ -67,6 +67,7 @@ namespace DMS_3
 
 			StartServiceInForeground ();
 			//Routine ();
+
 			// initialize location manager
 			InitializeLocationManager ();
 
@@ -84,7 +85,6 @@ namespace DMS_3
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-			ThreadService.Abort ();
 			StopForeground (true);
 			StopSelf();
 		}
@@ -108,7 +108,6 @@ namespace DMS_3
 				_locationProvider = String.Empty;
 			}
 			Console.Out.Write("Using " + _locationProvider + ".");
-
 		}
 
 		void StartServiceInForeground ()
@@ -122,36 +121,49 @@ namespace DMS_3
 
 		void Routine ()
 		{			
-			_timer = new System.Threading.Timer ((o) => {
-				DBRepository dbr = new DBRepository ();
-				userAndsoft = dbr.getUserAndsoft ();
-				userTransics = dbr.getUserTransics ();
-				var connectivityManager = (ConnectivityManager)GetSystemService (ConnectivityService);
-				var activeConnection = connectivityManager.ActiveNetworkInfo;
-				if (userAndsoft != string.Empty) {
-					if ((activeConnection != null) && activeConnection.IsConnected) {			
-						Task.Factory.StartNew (
-							() => {
-								Console.WriteLine ("\nHello from ComPosNotifMsg.");
-								ComPosNotifMsg ();
-							}					
-						).ContinueWith (
-							t => {
-								Console.WriteLine ("\nHello from ComWebService.");
-								ComWebService ();
-							}						
-						);
+//			_timer = new System.Threading.Timer ((o) => {
+//				
+//
+//			}, null, 0, 120000);
+
+			task = Task.Factory.StartNew(() =>
+				{
+					while (true)
+					{
+						DBRepository dbr = new DBRepository ();
+						userAndsoft = dbr.getUserAndsoft ();
+						userTransics = dbr.getUserTransics ();
+						var connectivityManager = (ConnectivityManager)GetSystemService (ConnectivityService);
+						var activeConnection = connectivityManager.ActiveNetworkInfo;
+						if (userAndsoft != string.Empty) {
+							if ((activeConnection != null) && activeConnection.IsConnected) {			
+								Task.Factory.StartNew (
+									() => {
+										Console.WriteLine ("\nHello from ComPosNotifMsg.");
+										//dbr.InsertLogService("",DateTime.Now,"ComPosNotifMsg Start");
+										ComPosNotifMsg ();
+										Thread.Sleep(500);
+									}					
+								).ContinueWith (
+									t => {
+										Console.WriteLine ("\nHello from ComWebService.");
+										//dbr.InsertLogService("",DateTime.Now,"ComWebService Start");
+										ComWebService ();
+										Thread.Sleep(500);
+									}						
+								);
+							}
+						}
+
+						string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+						ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+						ISharedPreferencesEditor edit = pref.Edit();
+						edit.PutLong("Service",DateTime.Now.Ticks);
+						edit.Apply();
+						Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
+						Thread.Sleep(120000);
 					}
-				}
-
-				string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
-				ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-				ISharedPreferencesEditor edit = pref.Edit();
-				edit.PutLong("Service",DateTime.Now.Ticks);
-				edit.Apply();
-				Console.Out.WriteLine ("Service timer :"+pref.GetLong("Service", 0));
-
-			}, null, 0, 120000);
+				});
 		}
 
 		public override Android.OS.IBinder OnBind (Android.Content.Intent intent)
@@ -164,7 +176,6 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection(dbPath);
-			DBRepository dbr = new DBRepository ();
 			datedujour = DateTime.Now.ToString("yyyyMMdd");
 
 			//récupération de donnée via le webservice
@@ -175,7 +186,7 @@ namespace DMS_3
 				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 				webClient.Encoding = System.Text.Encoding.UTF8;
 				content_integdata = webClient.DownloadString (_url);
-				Console.Out.WriteLine ("\nWebclient integdata Terminé");
+				//dbr.InsertLogService("",DateTime.Now,"webClient.DownloadString Done");
 				//intégration des données dans la BDD
 				JsonArray jsonVal = JsonArray.Parse (content_integdata) as JsonArray;
 				var jsonArr = jsonVal;
@@ -214,6 +225,7 @@ namespace DMS_3
 			} catch (Exception ex) {
 				content_integdata = "[]";
 				Console.WriteLine ("\n"+ex);
+				//dbr.InsertLogService(ex.ToString(),DateTime.Now,"Insert Data Error");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][ERROR] InserData : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 				Insights.Report(ex);
 			}
@@ -262,8 +274,6 @@ namespace DMS_3
 			string dbPath = System.IO.Path.Combine (System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
-
-			DBRepository dbr = new DBRepository ();
 			var webClient = new WebClient ();
 
 			try {
@@ -326,11 +336,8 @@ namespace DMS_3
 			}else{
 				datamsg = datamsg.Remove(datamsg.Length - 1);
 			}
-//				if (GPSTemp==String.Empty) {
 			datajson = "{\"suivgps\":"+datagps+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
-//				}else{
-//					datajson = "{\"suivgps\":"+GPSTemp.Remove(GPSTemp.Length - 1)+",\"statutmessage\":["+datanotif+"],\"Message\":["+datamsg+"]}";
-//				}		
+
 
 			//API MSG/NOTIF/GPS
 			try{
@@ -344,15 +351,16 @@ namespace DMS_3
 			catch (Exception e)
 			{
 				Insights.Report (e,Xamarin.Insights.Severity.Error);
-				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] POSTMSG/NOTIF/GPS : "+e+" à "+DateTime.Now.ToString("t")+"\n");
-				//GPSTemp += datagps+"tps"+DateTime.Now.ToString("t")+"|";
+					//dbr.InsertLogService(e.ToString(),DateTime.Now,"ComPosNotifMsg UploadStringAsync Error");
 			}
 			} catch (Exception ex) {
 				Insights.Report (ex,Xamarin.Insights.Severity.Error);
 				Console.Out.Write(ex);
+				//dbr.InsertLogService(ex.ToString(),DateTime.Now,"ComPosNotifMsg Error");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComPosNotifMsg : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		Console.WriteLine ("\nTask ComPosGps done");
+			//dbr.InsertLogService("",DateTime.Now,"Task ComPosGps done");
 		}
 		
 
@@ -363,7 +371,6 @@ namespace DMS_3
 				(Environment.SpecialFolder.Personal), "ormDMS.db3");
 			var db = new SQLiteConnection (dbPath);
 			var table = db.Query<TableStatutPositions> ("Select * FROM TableStatutPositions");
-
 			string datajsonArray = string.Empty;
 			datajsonArray += "[";
 			foreach (var item in table) {
@@ -378,28 +385,27 @@ namespace DMS_3
 				webClient.Headers [HttpRequestHeader.ContentType] = "application/json";
 				webClient.Encoding = System.Text.Encoding.UTF8;
 				System.Uri uri = new System.Uri("http://dmsv3.jeantettransport.com/api/livraisongroupagev3");
-
 				try {
 					webClient.UploadStringCompleted += WebClient_UploadStringCompleted;
 					webClient.UploadStringAsync (uri, datajsonArray);
+					//dbr.InsertLogService("",DateTime.Now,"ComWebService UploadStringAsync Done");
 				} catch (Exception e) {
 					Console.WriteLine (e);
 					Insights.Report(e);
+					//dbr.InsertLogService(e.ToString(),DateTime.Now,"ComWebService Error");
 					//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] ComWebService : "+e+" à "+DateTime.Now.ToString("t")+"\n");
 				}
 			}
 			Console.WriteLine ("\nTask ComWebService done");
+			//dbr.InsertLogService("",DateTime.Now,"Task ComWebService done");
 			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[TASK] ComWebService Done \n");
 		}
 
 		void WebClient_UploadStringCompleted (object sender, UploadStringCompletedEventArgs e)
 		{
 			try {
-
-				string dbPath = System.IO.Path.Combine (Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection (dbPath);
 				string resultjson = "[" + e.Result + "]";
+				//dbr.InsertLogService(e.Result,DateTime.Now,"WebClient_UploadStringCompleted Response");
 				if (e.Result == "\"YOLO\"") {
 
 				} else {
@@ -409,10 +415,10 @@ namespace DMS_3
 						traitMessages (item ["codeChauffeur"], item ["texteMessage"], item ["utilisateurEmetteur"], item ["numMessage"]);
 					}
 				}
-				db.Close ();
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				Insights.Report(ex);
+				//dbr.InsertLogService(e.Result,DateTime.Now,"WebClient_UploadStringCompleted Response");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 		}
@@ -437,10 +443,11 @@ namespace DMS_3
 				foreach (var item in tablemessage) {
 					var updatestatutmessage = db.Query<TableMessages> ("UPDATE TableMessages SET statutMessage = 3 WHERE _Id = ?",item.Id);
 				}
-				db.Close ();
+				//dbr.InsertLogService("",DateTime.Now,"WebClient_UploadStringStatutCompleted Done");
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				Insights.Report(ex);
+				//dbr.InsertLogService(ex.ToString(),DateTime.Now,"WebClient_UploadStringStatutCompleted Error");
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR] WebClient_UploadStringStatutCompleted : "+ex+" à "+DateTime.Now.ToString("t")+"\n");
 			}
 
@@ -628,7 +635,28 @@ namespace DMS_3
 							rowUser.Remove(rowUser.Length -1);
 							rowUser += "]";
 							var rMUSER = dbr.InsertDataMessage (Data.userAndsoft, "", rowUser, 5, DateTime.Now, 5, 0);
-							//File.AppendAllText (log_file, "[" + DateTime.Now.ToString ("G") + "]" + "[SYSTEM]REQUETE Execute " + rowUser + "\n");
+							break;
+						case"TableLogService":
+							var selLog = db.Query<TableLogService> (texteMessageInputSplit [3]);
+							string rowLog = "";
+							rowLog += "[";
+							foreach (var item in selLog) {
+								rowLog += "{"+item.exeption+","+item.date.ToString("g")+","+item.description+"},";
+							}
+							rowLog.Remove(rowLog.Length -1);
+							rowLog += "]";
+							dbr.InsertDataMessage (Data.userAndsoft, "", rowLog, 5, DateTime.Now, 5, 0);
+							break;
+						case"TableLogApp":
+							var appLog = db.Query<TableLogApp> (texteMessageInputSplit [3]);
+							string rowapLog = "";
+							rowapLog += "[";
+							foreach (var item in appLog) {
+								rowapLog += "{"+item.exeption+","+item.date.ToString("g")+","+item.description+"},";
+							}
+							rowapLog.Remove(rowapLog.Length -1);
+							rowapLog += "]";
+							dbr.InsertDataMessage (Data.userAndsoft, "", rowapLog, 5, DateTime.Now, 5, 0);
 							break;
 						case"NOTHING":
 							break;

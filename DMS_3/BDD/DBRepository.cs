@@ -5,38 +5,46 @@ using SQLite;
 using Android.Graphics;
 using Xamarin;
 using System.Threading.Tasks;
+using Mono.Data.Sqlite;
+
 namespace DMS_3.BDD
 {		
+	
 	public class DBRepository
-	{
+	{		
+		public static  SQLiteConnection db;
 		
-		// CS comprennant toutes les requêtes BDD
-
+		public static SqliteConnection connection;
 		//CREATE BDD
 		public string CreateDB()
 		{
-			var output = "";
-			output += "Création de la BDD";
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal),"ormDMS.db3");
-			var db = new SQLiteConnection (dbPath);		
-			output += "\nBDD crée...";
-			return output;
+			try {
+				var output = "";
+				output += "Création de la BDD";
+				db 	= new SQLiteConnection (System.IO.Path.Combine(Environment.GetFolderPath
+					(Environment.SpecialFolder.Personal),"ormDMS.db3"));
+					output += "\nBDD crée...";
+				return output;
+
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "error";
+			}
+
 		}
 
 		//CREATE TABLE
 		public string CreateTable()
 		{
 			try
-			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal),"ormDMS.db3");
-				var db = new SQLiteConnection (dbPath);
+			{	
 				db.CreateTable<TableUser>();
 				db.CreateTable<TablePositions>();
 				db.CreateTable<TableStatutPositions>();
 				db.CreateTable<TableMessages>();
 				db.CreateTable<TableNotifications>();
+				db.CreateTable<TableLogService>();
+				db.CreateTable<TableLogApp>();
 				Console.Out.WriteLine("\nTable User Crée");
 				string result = "Table crée !";
 				return result;
@@ -52,9 +60,6 @@ namespace DMS_3.BDD
 		//VERIF SI USER DEJA INTEGRER
 		public bool user_AlreadyExist(string user_AndsoftUser, string user_TransicsUser, string user_Password, string user_UsePartic)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
 			bool output = false;
 			var table = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUser)).Where (v => v.user_TransicsUser.Equals(user_TransicsUser)).Where (v => v.user_Password.Equals(user_Password)).Where (v => v.user_UsePartic.Equals(user_UsePartic));
 			foreach (var item in table)
@@ -69,9 +74,6 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
 				TableUser item = new TableUser();
 
 				item.user_AndsoftUser =  user_AndsoftUser;
@@ -94,9 +96,7 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
+
 				TablePositions item = new TablePositions();
 
 				item.codeLivraison =  codeLivraison;
@@ -148,9 +148,6 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
 				TableMessages item = new TableMessages();
 				item.codeChauffeur = codeChauffeur;
 				item.utilisateurEmetteur =  utilisateurEmetteur;				
@@ -174,9 +171,6 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
 				TableNotifications item = new TableNotifications();
 				item.statutNotificationMessage = statutNotificationMessage;
 				item.dateNotificationMessage =  dateNotificationMessage;				
@@ -197,9 +191,6 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal), "ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
 				TableStatutPositions item = new TableStatutPositions();
 				item.commandesuiviliv = commandesuiviliv;
 				item.codesuiviliv = codesuiviliv;
@@ -217,61 +208,110 @@ namespace DMS_3.BDD
 			}
 		}
 
+		public string InsertLogService (String exeption, DateTime date, String description)
+		{
+			try
+			{
+				TableLogService item = new TableLogService();
+				item.exeption = exeption;
+				item.date = date;
+				item.description = description;
+				db.Insert(item);
+//				connection.Open();
+//				using (var c = connection.CreateCommand ()) {
+//					c.CommandText = "INSERT INTO [TableLogService] ([exeption],[datelog],[descrition]) VALUES ('"+exeption+"', '"+date+"','"+description+"')";// exeption ntext, datelog date, descrition ntext
+//					var rowcount = c.ExecuteNonQuery ();
+//					Console.WriteLine("\tExecuted " + c.CommandText);
+//				}
+//				connection.Close ();
+//
+				return "Insertion Log good";
+			}
+			catch (Exception ex)
+			{
+				return "Erreur : " + ex.Message;
+			}
+		}
+
+		public string InsertLogApp (String exeption, DateTime date, String description)
+		{
+			try
+			{
+				TableLogApp item = new TableLogApp();
+				item.exeption = exeption;
+				item.date = date;
+				item.description = description;
+				db.Insert(item);
+				return "Insertion Log good";
+			}
+			catch (SQLiteException ex)
+			{
+				return "Erreur : " + ex.Message;
+			}
+		}
+
+
 		//USER CHECK LOGIN
 		public bool user_Check(string user_AndsoftUserTEXT,string user_PasswordTEXT)
-		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			bool output = false;
+		{
+			try {
+				bool output = false;
 
-			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUserTEXT)).Where (v => v.user_Password.Equals(user_PasswordTEXT));
+				var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(user_AndsoftUserTEXT)).Where (v => v.user_Password.Equals(user_PasswordTEXT));
 
-			foreach (var item in query) {
-				output = true;
-				var row = db.Get<TableUser> (item.Id);
-				row.user_IsLogin = true;
-				db.Update(row);
-				Console.WriteLine ("UPDATE GOOD" + row.user_IsLogin);
+				foreach (var item in query) {
+					output = true;
+					var row = db.Get<TableUser> (item.Id);
+					row.user_IsLogin = true;
+					db.Update(row);
+					Console.WriteLine ("UPDATE GOOD" + row.user_IsLogin);
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return false;
 			}
-			return output;
 		}
 
 		public string updatePosition (int idposition,string statut, string txtAnomalie, string txtRemarque, string codeAnomalie, string imgpath)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = "";
-			var row = db.Get<TablePositions>(idposition);
-			row.StatutLivraison = statut;
-			db.Update(row);
-			output = "UPDATE POSITIONS " + row.Id;
-			return output;
+			try {
+				string output = "";
+				var row = db.Get<TablePositions>(idposition);
+				row.StatutLivraison = statut;
+				db.Update(row);
+				output = "UPDATE POSITIONS " + row.Id;
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}
+
 		}
 
 		public string updatePositionSuppliv (string numCommande)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = "";
-			var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande));
-			foreach (var item in query) {
-				output = "YALO";
-				var row = db.Get<TablePositions> (item.Id);
-				row.imgpath = "SUPPLIV";
-				db.Update(row);
-				Console.WriteLine ("UPDATE SUPPLIV" + row.numCommande);
+			try {
+				string output = "";
+				var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande));
+				foreach (var item in query) {
+					output = "YALO";
+					var row = db.Get<TablePositions> (item.Id);
+					row.imgpath = "SUPPLIV";
+					db.Update(row);
+					Console.WriteLine ("UPDATE SUPPLIV" + row.numCommande);
+				}
+				return output;
+				
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
 			}
-			return output;
+
 		}
 		//USER CHECK LOGIN
 		public string is_user_Log_In()
 		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
 			string output = "false";
 			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
 			foreach (var item in query) {
@@ -284,112 +324,142 @@ namespace DMS_3.BDD
 		//setUserdata
 
 		public string setUserdata(string UserAndsoft)
-		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(UserAndsoft));
-			foreach (var item in query) {
-				Data.userAndsoft = item.user_AndsoftUser;
-				Data.userTransics = item.user_TransicsUser;
-				output = "setUserdata good";
-				Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_AndsoftUser.Equals(UserAndsoft));
+				foreach (var item in query) {
+					Data.userAndsoft = item.user_AndsoftUser;
+					Data.userTransics = item.user_TransicsUser;
+					output = "setUserdata good";
+					Console.WriteLine ("\nUSER CONNECTE" + item.user_AndsoftUser);
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
 			}
-			return output;
+
 		}
 
 		public string getUserAndsoft()
-		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
-			foreach (var item in query) {				
-				output = item.user_AndsoftUser;
-			}
-			return output;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+				foreach (var item in query) {				
+					output = item.user_AndsoftUser;
+				}
+				return output;
+				
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}	
+
 
 		}
 
 		public string getUserTransics()
-		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
-			foreach (var item in query) {				
-				output = item.user_TransicsUser;
-			}
-			return output;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+				foreach (var item in query) {				
+					output = item.user_TransicsUser;
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}	
+
 
 		}
 
 		public string getAnomalieImgPath(string numCommande)
-		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = string.Empty;
-			var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.StatutLivraison.Equals("2"));
-			foreach (var item in query) {			
-				output = item.imgpath;
-			}
-			return output;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.StatutLivraison.Equals("2"));
+				foreach (var item in query) {			
+					output = item.imgpath;
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return "Erreur : " + ex.Message;
+			}	
+
 
 		}
 
 		public string logout()
-		{		
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = string.Empty;
-			var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
-			foreach (var item in query) {
-				var row = db.Get<TableUser>(item.Id);
-				row.user_IsLogin = false;
-				db.Update(row);
-				output = "UPDATE USER LOGOUT " + row.user_AndsoftUser;
+		{
+			try {
+				string output = string.Empty;
+				var query = db.Table<TableUser>().Where (v => v.user_IsLogin.Equals(true));
+				foreach (var item in query) {
+					var row = db.Get<TableUser>(item.Id);
+					row.user_IsLogin = false;
+					db.Update(row);
+					output = "UPDATE USER LOGOUT " + row.user_AndsoftUser;
+				}
+				return output;
+				
+			} catch (Exception ex) {
+				return "Erreur : " + ex.Message;
 			}
-			return output;
 		}
 
 	
 		//VERIF SI POS DEJA INTEGRER
 		public bool pos_AlreadyExist(string numCommande, string groupage, string typeMission, string typeSegment)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			bool output = false;
-			var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage)).Where (v => v.typeMission.Equals(typeMission)).Where (v => v.typeSegment.Equals(typeSegment));
-			foreach (var item in table)
-			{
-				output = true;
-
+			try {
+				bool output = false;
+				var table = db.Table<TablePositions>().Where (v => v.numCommande.Equals(numCommande)).Where (v => v.groupage.Equals(groupage)).Where (v => v.typeMission.Equals(typeMission)).Where (v => v.typeSegment.Equals(typeSegment));
+				foreach (var item in table)
+				{
+					output = true;
+				}
+				return output;
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+				return false;
 			}
-			return output;
+
 		}
 
 		//suppresion d'un GRP
 		public string supp_grp(string numGroupage)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-			string output = "";
-
-			var query = db.Table<TablePositions>().Where (v => v.groupage.Equals(numGroupage));
-			foreach (var item in query) {
-				output = item.groupage;
-				var row = db.Get<TablePositions>(item.Id);
-				db.Delete(row);
-				Console.WriteLine ("\nDELETE GOOD" + numGroupage);
+			try {
+				return "Y";
+			} catch (Exception ex) {
+				return "N";
 			}
-			return output;
+
+		}
+
+		public string purgeLog(){			
+			//var query = db.Table<TableLog>().Where (v => v.date.CompareTo(DateTime.Now));
+			var query = db.Table<TableLogService>();
+			foreach (var item in query) {
+				if ((item.date.Day.CompareTo(DateTime.Now.Day))>3) {
+					var row = db.Get<TableLogService>(item.Id);
+					db.Delete(row);
+				}	
+			}
+
+			var queryApp = db.Table<TableLogApp>();
+			foreach (var item in queryApp) {
+				if ((item.date.Day.CompareTo(DateTime.Now.Day))>3) {
+					var row = db.Get<TableLogService>(item.Id);
+					db.Delete(row);
+				}	
+			}
+			return "Log purgé";
 		}
 
 		//supp notification
@@ -397,9 +467,6 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal),"ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
 				db.Delete<TableNotifications>(id);
 				string result = "delete";
 				return result;
@@ -414,45 +481,41 @@ namespace DMS_3.BDD
 		//SELECT PAR ID
 		public TablePositions GetPositionsData(int id)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-
 			TablePositions data = new TablePositions ();
 			var item = db.Get<TablePositions>(id);
 			data.codeLivraison = item.codeLivraison;
-			data. numCommande = item.numCommande;
-			data. nomClient = item.nomClient;
-			data. refClient = item.refClient;
-			data. nomPayeur = item.nomPayeur;
-			data. adresseLivraison = item.adresseLivraison;
-			data. CpLivraison = item.CpLivraison;
-			data. villeLivraison = item.villeLivraison;
-			data. dateHeure = item.dateHeure;
-			data. dateExpe = item.dateExpe;
-			data. nbrColis = item.nbrColis;
-			data. nbrPallette = item.nbrPallette;
-			data. adresseExpediteur = item.adresseExpediteur;
-			data. CpExpediteur = item.CpExpediteur;
-			data. villeExpediteur = item.villeExpediteur;
-			data. nomExpediteur = item.nomExpediteur;
-			data. StatutLivraison = item.StatutLivraison;
-			data .instrucLivraison = item.instrucLivraison;
-			data. groupage = item.groupage;
-			data. ADRLiv = item.ADRLiv;
-			data .ADRGrp = item.ADRGrp;
-			data .planDeTransport = item.planDeTransport;
-			data. typeMission = item.typeMission;
+			data.numCommande = item.numCommande;
+			data.nomClient = item.nomClient;
+			data.refClient = item.refClient;
+			data.nomPayeur = item.nomPayeur;
+			data.adresseLivraison = item.adresseLivraison;
+			data.CpLivraison = item.CpLivraison;
+			data.villeLivraison = item.villeLivraison;
+			data.dateHeure = item.dateHeure;
+			data.dateExpe = item.dateExpe;
+			data.nbrColis = item.nbrColis;
+			data.nbrPallette = item.nbrPallette;
+			data.adresseExpediteur = item.adresseExpediteur;
+			data.CpExpediteur = item.CpExpediteur;
+			data.villeExpediteur = item.villeExpediteur;
+			data.nomExpediteur = item.nomExpediteur;
+			data.StatutLivraison = item.StatutLivraison;
+			data.instrucLivraison = item.instrucLivraison;
+			data.groupage = item.groupage;
+			data.ADRLiv = item.ADRLiv;
+			data.ADRGrp = item.ADRGrp;
+			data.planDeTransport = item.planDeTransport;
+			data.typeMission = item.typeMission;
 			data.typeSegment = item.typeSegment;
 			data.CR = item.CR;
-			data .nomClientLivraison = item.nomClientLivraison;
-			data .villeClientLivraison = item.villeClientLivraison;
-			data .Datemission = item.Datemission;
-			data. Ordremission = item.Ordremission;
-			data .Userandsoft = item.Userandsoft;
-			data .remarque = item.remarque;
-			data .codeAnomalie = item.codeAnomalie;
-			data .libeAnomalie = item.libeAnomalie;
+			data.nomClientLivraison = item.nomClientLivraison;
+			data.villeClientLivraison = item.villeClientLivraison;
+			data.Datemission = item.Datemission;
+			data.Ordremission = item.Ordremission;
+			data.Userandsoft = item.Userandsoft;
+			data.remarque = item.remarque;
+			data.codeAnomalie = item.codeAnomalie;
+			data.libeAnomalie = item.libeAnomalie;
 			data.imgpath = item.imgpath;
 
 			if (Convert.ToDouble((item.poids).Replace ('.', ',')) < 1) {
@@ -465,9 +528,6 @@ namespace DMS_3.BDD
 
 		public int GetidPrev (int id)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
 			int idprev;
 			//get int ordremission
 			var item = db.Get<TablePositions>(id);
@@ -486,9 +546,6 @@ namespace DMS_3.BDD
 
 		public int GetidNext (int id)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
 			int idnext;
 			//get int ordremission
 			var item = db.Get<TablePositions>(id);
@@ -508,9 +565,6 @@ namespace DMS_3.BDD
 
 		public string updateposimgpath (int i, string path)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
 			string output = "";
 			var row = db.Get<TablePositions>(i);
 			row.imgpath = path;
@@ -523,9 +577,6 @@ namespace DMS_3.BDD
 		{
 			try
 			{
-				string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-					(Environment.SpecialFolder.Personal),"ormDMS.db3");
-				var db = new SQLiteConnection(dbPath);
 				db.DeleteAll<TableMessages>();
 				string result = "delete";
 				return result;
@@ -541,10 +592,6 @@ namespace DMS_3.BDD
 
 		public int SETBadges (string userandsoft)
 		{
-			string dbPath = System.IO.Path.Combine(Environment.GetFolderPath
-				(Environment.SpecialFolder.Personal), "ormDMS.db3");
-			var db = new SQLiteConnection(dbPath);
-
 			var cLIV = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("L")).Where (v => v.typeSegment.Equals("LIV")).Where (v => v.StatutLivraison.Equals("0")).Count();
 			var cRam = db.Table<TablePositions>().Where (v => v.Userandsoft.Equals(userandsoft)).Where (v => v.typeMission.Equals("C")).Where (v => v.typeSegment.Equals("RAM")).Where (v => v.StatutLivraison.Equals("0")).Count();
 			var cMsg = db.Table<TableMessages>().Where (v => v.statutMessage.Equals(0)).Count();

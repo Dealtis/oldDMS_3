@@ -31,6 +31,8 @@ namespace DMS_3
 		Button btngrp2;
 		Button btngrp3;
 		Button btngrp4;
+		LinearLayout btnsearch;
+		Button btntrait;
 		string type;
 		string tyS;
 		string tyM;
@@ -57,8 +59,14 @@ namespace DMS_3
 			btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
 			btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
 			btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
-			LinearLayout btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
-			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
+			btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
+			btntrait = FindViewById<Button> (Resource.Id.btn_traite);	
+
+		}
+
+		protected override void OnResume()
+		{
+			base.OnResume();
 
 			btngrpAll.Click += delegate {
 				btngrpAll_Click();
@@ -79,14 +87,6 @@ namespace DMS_3
 				btntrait_Click();
 			};
 
-
-
-
-		}
-
-		protected override void OnResume()
-		{
-			base.OnResume();
 			//Mise dans un Array des Groupage
 			string dbPath = System.IO.Path.Combine(System.Environment.GetFolderPath
 				(System.Environment.SpecialFolder.Personal), "ormDMS.db3");
@@ -174,6 +174,7 @@ namespace DMS_3
 				intent.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
+				Finish ();
 			}
 		}
 
@@ -231,6 +232,36 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeTraitee));
 			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
+//			btngrpAll.Dispose();
+//			btngrp1.Dispose();
+//			btngrp2.Dispose();
+//			btngrp3.Dispose();
+//			btngrp4.Dispose();
+//			btnsearch.Dispose();
+//			btntrait.Dispose();
+//
+//			bodyListView.Dispose();
+//
+//			btngrpAll.Click -= delegate {
+//				btngrpAll_Click();
+//			};
+//			btngrp1.Click -= delegate {
+//				btngrp1_Click();
+//			};
+//			btngrp2.Click -= delegate {
+//				btngrp2_Click();
+//			};
+//			btngrp3.Click -= delegate {
+//				btngrp3_Click();
+//			};
+//			btnsearch.Click -= delegate {
+//				btnsearch_Click();
+//			};
+//			btntrait.Click -= delegate {
+//				btntrait_Click();
+//			};
+
+			Finish ();
 		}
 
 		public void initListView (string requete)
@@ -277,6 +308,7 @@ namespace DMS_3
 		{		
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
+			Finish ();
 		}
 	}
 }
