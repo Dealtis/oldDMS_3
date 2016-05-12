@@ -85,11 +85,11 @@ namespace DMS_3
 					AndHUD.Shared.ShowSuccess(this, "Bienvenue", MaskType.Black, TimeSpan.FromSeconds(2));
 					dbr.setUserdata (user.Text.ToUpper ());
 					//lancement du BgWorker Service
-					StartService (new Intent (this, typeof(ProcessDMS)));
-					bgService = new BackgroundWorker();
-					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
-					bgService.RunWorkerAsync();
-					StartActivity(typeof(HomeActivity));
+//					StartService (new Intent (this, typeof(ProcessDMS)));
+//					bgService = new BackgroundWorker();
+//					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
+//					bgService.RunWorkerAsync();
+//					StartActivity(typeof(HomeActivity));
 				} else {
 					AndHUD.Shared.ShowError(this, "Mauvais mot de passe", MaskType.Black, TimeSpan.FromSeconds(2));
 				}

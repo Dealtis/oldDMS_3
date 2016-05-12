@@ -10,14 +10,17 @@
         <section class="container">
             <div class="sendMsg" ng-controller="msgController">
                 <h2>Send Msg</h2>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Message" ng-model="msgInput">
+                <div class="input-group my-group">
+                    <input type="text" class="form-control" name="snpid" placeholder="Test" style="width: 80%">
+                    <select class="selectpicker form-control" data-live-search="true" title="Chauffeur" style="width: 20%">
+                        <option ng-repeat="user in users track by $index">{{user}}</option>
+                    </select>
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" ng-click="sendMsg(msgInput)">Send</button>
+                        <button class="btn btn-default" type="submit">SEND</button>
                     </span>
                 </div>
                 <ul class="list">
-
+                    <li ng-repeat="user in users track by $index">{{user}}</li>
                 </ul>
             </div>
         </section>
@@ -33,19 +36,23 @@
                 mySocket = socketFactory({ioSocket: myIoSocket});
                 return mySocket;
             }).controller('AppCtrl', function($scope, WebSocket) {
-                WebSocket.on('OnConn',function () {
-                  WebSocket.emit('OnConnResponse',"Browser")
-                  console.log("OnConn");
+                WebSocket.on('OnConn', function() {
+                    //WebSocket.emit('OnConnResponse', "Browser")
+                    console.log("OnConn");
                 })
             }).controller('msgController', function($scope, WebSocket) {
+                $scope.users = [];
                 $scope.sendMsg = function(msg) {
                     console.log(msg);
                     WebSocket.emit("OnConnResponse", msg);
                 }
-                WebSocket.on("userList", function (users) {
-                  _.forEach(user, function functionName(value,key) {
-                    $(".list").append("<li>"+value.username+"</li>");
-                  })
+                WebSocket.on("userList", function(users) {
+                    console.log(users);
+                    $scope.users = [];
+                    _.forEach(users, function functionName(user, key) {
+                        $scope.users.push(user);
+                        console.log(users);
+                    })
                 });
             });
             //socket.emmit("newPos", position); socket.emmit("clotGrp", clotgrp);

@@ -131,7 +131,7 @@ namespace DMS_3
 					File.AppendAllText (Data.log_file, "Connexion de " + Data.userAndsoft + " à " + DateTime.Now.ToString ("G") + "\n");
 
 					//Socket
-					socket = IO.Socket("http://51.254.101.196:8000/");
+					socket = IO.Socket("http://51.254.101.196:3300/");
 					socket.Connect();
 
 					socket.On("OnConn", data => {
