@@ -13,6 +13,10 @@ using Android.Widget;
 using AndroidHUD;
 using DMS_3.BDD;
 using Xamarin;
+using SocketIO;
+using SocketIO.Client;
+using Newtonsoft.Json;
+using Org.Json;
 
 
 namespace DMS_3
@@ -25,6 +29,8 @@ namespace DMS_3
 		EditText password;
 		TextView tableload;
 		BackgroundWorker bgService;
+
+		Socket socket;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -85,11 +91,37 @@ namespace DMS_3
 					AndHUD.Shared.ShowSuccess(this, "Bienvenue", MaskType.Black, TimeSpan.FromSeconds(2));
 					dbr.setUserdata (user.Text.ToUpper ());
 					//lancement du BgWorker Service
-//					StartService (new Intent (this, typeof(ProcessDMS)));
-//					bgService = new BackgroundWorker();
-//					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
-//					bgService.RunWorkerAsync();
-//					StartActivity(typeof(HomeActivity));
+					StartService (new Intent (this, typeof(ProcessDMS)));
+					bgService = new BackgroundWorker();
+					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
+					bgService.RunWorkerAsync();
+					//Socket
+					socket = IO.Socket("http://51.254.101.196:3300/");
+					socket.Connect();
+
+					socket.On("OnConn", data => {
+						socket.Emit("OnConnResponse",Data.userAndsoft);
+					});
+
+					socket.On("askgps", data => {
+						socket.Emit("responsegps",Data.GPS);
+					});
+
+					socket.On("sendPos", data => {
+						Console.WriteLine ("Insertion d'une position");
+					});
+
+					socket.On("sendMsg", data => {
+						Console.WriteLine ("Réception d'un message");
+					
+						var d = JSONData.FromData(data);
+
+						// get the number of users
+						var resinteg = dbr.InsertDataMessage (d.Destinataire,"NodeJS",d.Message,0,DateTime.Now,'1','0');
+
+					});
+
+					StartActivity(typeof(HomeActivity));
 				} else {
 					AndHUD.Shared.ShowError(this, "Mauvais mot de passe", MaskType.Black, TimeSpan.FromSeconds(2));
 				}
@@ -163,6 +195,23 @@ namespace DMS_3
 				Insights.Report (ex);
 				AndHUD.Shared.ShowError (this, "Une erreur c'est produite lors du lancement, réessaie dans 5 secondes", MaskType.Black, TimeSpan.FromSeconds (5));
 			}
+		}
+	}
+
+	public class JSONData
+	{
+		public string Destinataire;
+		public string Message;
+		public int numUsers;
+
+		public static JSONData FromData(Java.Lang.Object[] data)
+		{
+			if (data != null && data.Length == 1)
+			{
+				var json = data[0] as JSONObject;
+				return JsonConvert.DeserializeObject<JSONData>(json.ToString());
+			}
+			return null;
 		}
 	}
 }

@@ -21,6 +21,8 @@ using Xamarin;
 using Android.Telephony;
 using SocketIO;
 using SocketIO.Client;
+using Newtonsoft.Json;
+using Org.Json;
 
 
 namespace DMS_3
@@ -147,7 +149,12 @@ namespace DMS_3
 					});
 
 					socket.On("sendMsg", data => {
-						Console.WriteLine ("Insertion d'une message");
+						Console.WriteLine ("Réception d'un message");
+
+						var d = JSONData.FromData(data);
+
+						// get the number of users
+						var resinteg = dbr.InsertDataMessage (d.Destinataire,"NodeJS",d.Message,0,DateTime.Now,'1','0');
 					});
 
 					//lancement du BgWorker Service

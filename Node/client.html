@@ -11,12 +11,12 @@
             <div class="sendMsg" ng-controller="msgController">
                 <h2>Send Msg</h2>
                 <div class="input-group my-group">
-                    <input type="text" class="form-control" name="snpid" placeholder="Test" style="width: 80%">
-                    <select class="selectpicker form-control" data-live-search="true" title="Chauffeur" style="width: 20%">
+                    <input type="text" class="form-control" name="snpid" placeholder="Votre message" style="width: 80%" ng-model="Message">
+                    <select class="selectpicker form-control" data-live-search="true" title="Chauffeur" style="width: 20%" ng-model="Destinataire">
                         <option ng-repeat="user in users track by $index">{{user}}</option>
                     </select>
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">SEND</button>
+                        <button class="btn btn-default" type="submit" ng-click="sendMsg(Message,Destinataire)">SEND</button>
                     </span>
                 </div>
                 <ul class="list">
@@ -42,9 +42,12 @@
                 })
             }).controller('msgController', function($scope, WebSocket) {
                 $scope.users = [];
-                $scope.sendMsg = function(msg) {
-                    console.log(msg);
-                    WebSocket.emit("OnConnResponse", msg);
+                $scope.sendMsg = function(Message, Destinataire) {
+                    console.log(Message + " / " + Destinataire);
+                    WebSocket.emit("newMsg", {
+                        Message: Message,
+                        Destinataire: Destinataire
+                    });
                 }
                 WebSocket.on("userList", function(users) {
                     console.log(users);

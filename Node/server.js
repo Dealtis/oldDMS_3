@@ -55,7 +55,9 @@ io.on('connection', function(socket) {
 
     //InsertMsg
     socket.on('newMsg', function(msg) {
-        console.log(msg);
+        console.log(msg.Destinataire +">"+msg.Message);
+        var Usersocket = _.find(users, { 'username': msg.Destinataire});
+        Usersocket.emit("sendMsg",msg);
         //socket.emit('sendMsg');
     });
 
