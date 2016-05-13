@@ -24,8 +24,6 @@ using Environment = System.Environment;
 using Xamarin;
 using Android.Media;
 using Android.Telephony;
-using SocketIO;
-using SocketIO.Client;
 
 namespace DMS_3
 {
@@ -66,7 +64,7 @@ namespace DMS_3
 			userTransics = dbr.getUserTransics ();
 
 			StartServiceInForeground ();
-			//Routine ();
+			Routine ();
 
 			// initialize location manager
 			InitializeLocationManager ();

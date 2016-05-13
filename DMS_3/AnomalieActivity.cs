@@ -196,15 +196,16 @@ namespace DMS_3
 				uploadone = false;
 
 				if (imgpath.imgpath != "null") {					
-					threadUpload = new Thread (() => {
-						try {
-							Android.Graphics.Bitmap bmp = DecodeSmallFile (imgpath.imgpath,1000,1000);
-							Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 2, bmp.Height / 2, true);
-							compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
-							File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress start" + DateTime.Now.ToString ("G") + "\n");
-							using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
-								rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
-							}
+
+						threadUpload = new Thread (() => {
+							try {
+								Android.Graphics.Bitmap bmp = DecodeSmallFile (imgpath.imgpath,1000,1000);
+								Bitmap rbmp = Bitmap.CreateScaledBitmap (bmp, bmp.Width / 2, bmp.Height / 2, true);
+								compImg = imgpath.imgpath.Replace (".jpg", "-1_1.jpg");
+								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress start" + DateTime.Now.ToString ("G") + "\n");
+								using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
+									rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+								}								
 							File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress done" + DateTime.Now.ToString ("G") + "\n");
 							bool statutuploadfile = false;
 								//ftp://77.158.93.75 ftp://10.1.2.75
