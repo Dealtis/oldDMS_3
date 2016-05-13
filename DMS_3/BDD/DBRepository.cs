@@ -75,7 +75,6 @@ namespace DMS_3.BDD
 			try
 			{
 				TableUser item = new TableUser();
-
 				item.user_AndsoftUser =  user_AndsoftUser;
 				item.user_TransicsUser = user_TransicsUser;
 				item.user_Password = user_Password;
@@ -217,14 +216,6 @@ namespace DMS_3.BDD
 				item.date = date;
 				item.description = description;
 				db.Insert(item);
-//				connection.Open();
-//				using (var c = connection.CreateCommand ()) {
-//					c.CommandText = "INSERT INTO [TableLogService] ([exeption],[datelog],[descrition]) VALUES ('"+exeption+"', '"+date+"','"+description+"')";// exeption ntext, datelog date, descrition ntext
-//					var rowcount = c.ExecuteNonQuery ();
-//					Console.WriteLine("\tExecuted " + c.CommandText);
-//				}
-//				connection.Close ();
-//
 				return "Insertion Log good";
 			}
 			catch (Exception ex)
@@ -279,6 +270,9 @@ namespace DMS_3.BDD
 				string output = "";
 				var row = db.Get<TablePositions>(idposition);
 				row.StatutLivraison = statut;
+				row.remarque = txtAnomalie;
+				row.codeAnomalie = codeAnomalie;
+				row.libeAnomalie = txtAnomalie;
 				db.Update(row);
 				output = "UPDATE POSITIONS " + row.Id;
 				return output;
