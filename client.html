@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="DMSApp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <title>Client DMS</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+    </head>
+    <body>
+        <section class="container">
+            <div class="sendMsg" ng-controller="msgController">
+                <h2>Send Msg</h2>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Message" ng-model="msgInput">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="sendMsg(msgInput)">Send</button>
+                    </span>
+                </div>
+            </div>
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js" charset="utf-8"></script>
+        <script src="bower_components/angular-socket-io/socket.min.js" charset="utf-8"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" charset="utf-8"></script>
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script type="text/javascript">
+            angular.module('DMSApp', ['btford.socket-io']).factory('WebSocket', function(socketFactory) {
+                var myIoSocket = io.connect('http://51.254.101.196:3300/');
+                mySocket = socketFactory({ioSocket: myIoSocket});
+                return mySocket;
+            }).controller('msgController', function($scope, WebSocket) {
+                $scope.sendMsg = function(msg) {
+                    console.log(msg);
+                    WebSocket.emit("newMsg", msg);
+                }
+            });
+            //socket.emmit("newPos", position); socket.emmit("clotGrp", clotgrp);
+        </script>
+    </body>
+</html>
