@@ -24,6 +24,14 @@ using Environment = System.Environment;
 using Xamarin;
 using Android.Media;
 using Android.Telephony;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+using SocketIO;
+using SocketIO.Client;
+=======
+>>>>>>> 0242a8f616d7306a1302e5f26f8da7c1de8f0a9e
+>>>>>>> debug_S18
 
 namespace DMS_3
 {
@@ -34,7 +42,14 @@ namespace DMS_3
 		ProcessDMSBinder binder;
 		string datedujour;
 		LocationManager locMgr;
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 0242a8f616d7306a1302e5f26f8da7c1de8f0a9e
+>>>>>>> debug_S18
 		string userAndsoft;
 		string userTransics;
 		string GPS;
