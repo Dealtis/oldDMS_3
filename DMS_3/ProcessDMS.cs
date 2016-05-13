@@ -24,8 +24,11 @@ using Environment = System.Environment;
 using Xamarin;
 using Android.Media;
 using Android.Telephony;
+<<<<<<< HEAD
 using SocketIO;
 using SocketIO.Client;
+=======
+>>>>>>> 0242a8f616d7306a1302e5f26f8da7c1de8f0a9e
 
 namespace DMS_3
 {
@@ -36,7 +39,10 @@ namespace DMS_3
 		ProcessDMSBinder binder;
 		string datedujour;
 		LocationManager locMgr;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0242a8f616d7306a1302e5f26f8da7c1de8f0a9e
 		string userAndsoft;
 		string userTransics;
 		string GPS;
@@ -66,7 +72,7 @@ namespace DMS_3
 			userTransics = dbr.getUserTransics ();
 
 			StartServiceInForeground ();
-			//Routine ();
+			Routine ();
 
 			// initialize location manager
 			InitializeLocationManager ();
