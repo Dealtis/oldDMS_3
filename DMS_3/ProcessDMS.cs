@@ -24,6 +24,8 @@ using Environment = System.Environment;
 using Xamarin;
 using Android.Media;
 using Android.Telephony;
+using SocketIO;
+using SocketIO.Client;
 
 namespace DMS_3
 {
@@ -34,6 +36,7 @@ namespace DMS_3
 		ProcessDMSBinder binder;
 		string datedujour;
 		LocationManager locMgr;
+
 		string userAndsoft;
 		string userTransics;
 		string GPS;
@@ -46,6 +49,7 @@ namespace DMS_3
 		Task task;
 		DBRepository dbr = new DBRepository();
 
+
 		//string log_file;
 		public override StartCommandResult OnStartCommand (Android.Content.Intent intent, StartCommandFlags flags, int startId)
 		{			
@@ -56,31 +60,13 @@ namespace DMS_3
 			//GetTelId
 			TelephonyManager tel = (TelephonyManager)this.GetSystemService(Context.TelephonyService);
 			var telId = tel.DeviceId;
-
-			//Si il n'y a pas de shared pref
-//			if (log == String.Empty){
-//				log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
-//				ISharedPreferencesEditor edit = pref.Edit();
-//				edit.PutString("Log",log_file);
-//				edit.Apply();
-//			}else{
-//				//il y a des shared pref
-//				log_file = pref.GetString("Log", String.Empty);
-//				if (!(Data.log_file.Substring(26,Math.Min(Data.log_file.Length,2)).Equals(DateTime.Now.Day.ToString("00")))) {
-//					File.Delete(log_file);
-//					log_file = Path.Combine (dir_log, t+"_"+telId+"_log.txt");
-//					ISharedPreferencesEditor edit = pref.Edit();
-//					edit.PutString("Log",log_file);
-//					edit.Apply();
-//					log_file = pref.GetString("Log", String.Empty);
-//				}
-//
-//			}
-//			File.AppendAllText(log_file,"[SERVICE] Service Onstart call "+DateTime.Now.ToString("t")+"\n");
-
+			//provisoire
+			DBRepository dbr = new DBRepository ();
+			userAndsoft = dbr.getUserAndsoft ();
+			userTransics = dbr.getUserTransics ();
 
 			StartServiceInForeground ();
-			Routine ();
+			//Routine ();
 
 			// initialize location manager
 			InitializeLocationManager ();
@@ -99,7 +85,6 @@ namespace DMS_3
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"][SERVICE] Service Ondestroy call");
 			StopForeground (true);
 			StopSelf();
 		}
@@ -133,13 +118,6 @@ namespace DMS_3
 			StartForeground ((int)NotificationFlags.ForegroundService,ongoing);
 		}
 
-//		public void DoStuff ()
-//		{
-//			ThreadService = new Thread(new ThreadStart(this.Routine));
-//			ThreadService.Start();
-//			Console.WriteLine ("\nThreadService Lancé, for the first time");
-//			//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]ThreadService Lancé, for the first time\n");
-//		}
 
 		void Routine ()
 		{			
@@ -533,7 +511,8 @@ namespace DMS_3
 			try {
 				if (texteMessage.ToString().Length < 9) {
 					var resinteg = dbr.InsertDataMessage (codeChauffeur, utilisateurEmetteur, texteMessage,0,DateTime.Now,1,numMessage);
-					var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
+					//TODO
+					//var resintegstatut = dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
 					alertsms ();	
 				}else{
 					switch(texteMessage.ToString().Substring(0,9))
@@ -586,6 +565,7 @@ namespace DMS_3
 						}
 						break;
 					case "%%STOPSER":
+
 						StopForeground (true);
 						StopSelf();
 						break;
@@ -690,14 +670,15 @@ namespace DMS_3
 						break;
 					default:
 						var resinteg = dbr.InsertDataMessage (codeChauffeur, utilisateurEmetteur, texteMessage,0,DateTime.Now,1,numMessage);
-						dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
+						//TODO
+						//dbr.InsertDataStatutMessage(0,DateTime.Now,numMessage,"","");
 						alertsms ();
 						Console.WriteLine (numMessage.ToString());
 						Console.WriteLine (resinteg);
 						break;
 					}
 				}
-				db.Close ();
+				
 			} catch (Exception ex) {
 				Console.WriteLine ("\n"+ex);
 				//File.AppendAllText(log_file,"["+DateTime.Now.ToString("t")+"]"+"[ERROR METHOD MESSAGE]"+ex+"\n");
