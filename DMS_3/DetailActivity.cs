@@ -128,7 +128,6 @@ namespace DMS_3
 			infolivraison.Text =  data.nomPayeur+"\n"+data.adresseLivraison+"\n"+data.CpLivraison+" "+data.villeLivraison+"\n"+data.nbrColis+" COLIS   "+data.nbrPallette+" PALETTE\n"+data.poids+"\n"+data.dateHeure+"\n"+data.CR;;		
 			infoclient.Text = "\n"+data.nomClient + "\nRef: "+data.refClient+"\nTournee : "+data.planDeTransport;
 			client.Text = "Client";
-			anomalie.Text = "\n"+data.libeAnomalie+"\n"+data.remarque;
 
 
 
@@ -160,7 +159,7 @@ namespace DMS_3
 
 				anomalie.Visibility = ViewStates.Visible;
 				anomaliet.Visibility = ViewStates.Visible;
-				anomalie.Text = data.codeAnomalie + data.libeAnomalie + "\n" + data.remarque;					
+				anomalie.Text = data.codeAnomalie +"\n"+ data.libeAnomalie + "\n" + data.remarque;					
 				//set IMG
 				_imageView.Visibility = ViewStates.Visible;
 				imgbitmap = data.imgpath.LoadAndResizeBitmap (500, 500);
@@ -192,7 +191,7 @@ namespace DMS_3
 			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
 			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
-			if (data.CR == "" || data.CR == "0") {
+			if (data.CR == "" || data.CR == "0" || type=="RAM") {
 				check1.Visibility = ViewStates.Gone;
 				check2.Visibility = ViewStates.Gone;
 				txtCR.Visibility = ViewStates.Gone;

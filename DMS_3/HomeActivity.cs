@@ -22,8 +22,6 @@ using Android.Widget;
 using AndroidHUD;
 using DMS_3.BDD;
 using Java.Text;
-using SocketIO;
-using SocketIO.Client;
 using SQLite;
 using Xamarin;
 using Environment = System.Environment;
@@ -89,10 +87,6 @@ namespace DMS_3
 			//Xamarin Insight
 			Insights.Initialize("df79e746ac72427e41c82366b7af4ad6948d1d6d", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
-
-			//Socket
-			//Data.socket.Emit("new message", "This is a message from Xamarin.Android...");
-
 
 		
 			if (processDMSConnection != null)

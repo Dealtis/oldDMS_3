@@ -12,14 +12,11 @@ using Xamarin;
 using System.Json;
 using Android.Media;
 using Android.App;
-using SocketIO;
-using SocketIO.Client;
 
 namespace DMS_3
 {
 	class Data
 	{
-		public static Socket socket;
 		public static Java.Lang.Thread CheckService;
 
 		//Instance

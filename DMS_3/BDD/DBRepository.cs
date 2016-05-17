@@ -270,7 +270,7 @@ namespace DMS_3.BDD
 				string output = "";
 				var row = db.Get<TablePositions>(idposition);
 				row.StatutLivraison = statut;
-				row.remarque = txtAnomalie;
+				row.remarque = txtRemarque;
 				row.codeAnomalie = codeAnomalie;
 				row.libeAnomalie = txtAnomalie;
 				db.Update(row);
