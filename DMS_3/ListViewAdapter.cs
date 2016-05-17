@@ -18,12 +18,6 @@ namespace DMS_3
 		private List<TablePositions> mItems;
 		private Context mContext;
 		string txtspinner;
-		string codeanomalie;
-		EditText EdittxtRem;
-		string txtRem;
-		ImageView _imageView;
-		private AlertDialog.Builder dialog;
-
 		public ListViewAdapterMenu(Context context,List<TablePositions> items) : base() {
 			mItems = items;
 			mContext = context;
@@ -59,7 +53,7 @@ namespace DMS_3
 				xml_type = Resource.Layout.ListeViewRowValide;
 				break;
 			case "2":
-				if (mItems[position].imgpath == "null") {
+				if (mItems[position].imgpath == "null" || mItems[position].imgpath == "") {
 					xml_type = Resource.Layout.ListeViewRowAnomalie;
 				} else {
 					xml_type = Resource.Layout.ListeViewRowAnomaliePJ;
@@ -92,18 +86,5 @@ namespace DMS_3
 
 			return row;
 		}
-		private void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)
-		{
-			Spinner spinner = (Spinner)sender;
-			txtspinner = string.Format ("{0}", spinner.GetItemAtPosition (e.Position));
-
-			if (txtspinner == "Restaure en non traite" || txtspinner == "Choisir une anomalie" ) {
-				EdittxtRem.Visibility = Android.Views.ViewStates.Gone;
-			} else {
-				EdittxtRem.Visibility = Android.Views.ViewStates.Visible;
-			}
-		}
-
-
 	}
 }

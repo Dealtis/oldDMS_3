@@ -192,7 +192,7 @@ namespace DMS_3
 			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
 			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
-			if (data.CR == "" || data.CR == "0") {
+			if (data.CR == "" || data.CR == "0" || type=="RAM") {
 				check1.Visibility = ViewStates.Gone;
 				check2.Visibility = ViewStates.Gone;
 				txtCR.Visibility = ViewStates.Gone;
