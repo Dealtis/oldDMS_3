@@ -27,6 +27,13 @@ namespace DMS_3
 		public ListView bodyListView;
 		public bool insertdone;
 		public ListViewAdapterMenu adapter;
+		Button btngrpAll;
+		Button btngrp1;
+		Button btngrp2;
+		Button btngrp3;
+		Button btngrp4;
+		LinearLayout btnsearch;
+		Button btntrait;
 
 		string type;
 		string tyS;
@@ -46,13 +53,13 @@ namespace DMS_3
 			}
 
 			//declaration des clicks btns
-			Button btngrpAll = FindViewById<Button> (Resource.Id.btn_all);
-			Button btngrp1 = FindViewById<Button> (Resource.Id.btn_1);
-			Button btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
-			Button btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
-			Button btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
-			LinearLayout btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
-			Button btntrait = FindViewById<Button> (Resource.Id.btn_traite);
+			btngrpAll = FindViewById<Button> (Resource.Id.btn_all);
+			btngrp1 = FindViewById<Button> (Resource.Id.btn_1);
+			btngrp2 = FindViewById<Button> (Resource.Id.btn_2);
+			btngrp3 = FindViewById<Button> (Resource.Id.btn_3);
+			btngrp4 = FindViewById<Button> (Resource.Id.btn_4);
+			btnsearch = FindViewById<LinearLayout> (Resource.Id.btn_search);
+			btntrait = FindViewById<Button> (Resource.Id.btn_traite);
 
 			//FONTS
 			btngrpAll.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
@@ -62,12 +69,11 @@ namespace DMS_3
 			btngrp4.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 			btntrait.SetTypeface (Data.LatoRegular, Android.Graphics.TypefaceStyle.Normal);
 
-			if (type == "RAM") {
-				btntrait.Text = "Ramasses";
-			} else {
-				btntrait.Text = "Livraisons";
-			}
+		}
 
+		protected override void OnResume()
+		{
+			base.OnResume ();
 			btngrpAll.Click += delegate {
 				btngrpAll_Click();
 			};
@@ -87,6 +93,11 @@ namespace DMS_3
 				btntrait_Click();
 			};
 
+			if (type == "RAM") {
+				btntrait.Text = "Ramasses";
+			} else {
+				btntrait.Text = "Livraisons";
+			}
 
 			//Mise dans un Array des Groupage
 			string dbPath = System.IO.Path.Combine(System.Environment.GetFolderPath
@@ -167,6 +178,8 @@ namespace DMS_3
 			//bodyListView.ItemClick += MListView_ItemClick;
 			initListView ("SELECT * FROM TablePositions WHERE StatutLivraison = '1' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"' OR StatutLivraison = '2' AND typeMission='"+tyM+"' AND typeSegment='"+tyS+"' AND Userandsoft='"+Data.userAndsoft+"'  ORDER BY Ordremission DESC");
 
+
+
 		}
 		void MListView_ItemClick (object sender, AdapterView.ItemClickEventArgs e)
 		{
@@ -177,6 +190,7 @@ namespace DMS_3
 				intent.PutExtra("ID",Convert.ToString(bodyItems[e.Position].Id));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
+				Finish ();
 				//this.OverridePendingTransition (Resource.Animation.slideIn_right,Resource.Animation.abc_fade_out);
 			}
 		}
@@ -233,10 +247,41 @@ namespace DMS_3
 
 		void btntrait_Click ()
 		{			
-				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
-				intent.PutExtra("TYPE",type);
-				this.StartActivity (intent);
-				//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);		
+			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
+			intent.PutExtra("TYPE",type);
+			this.StartActivity (intent);
+//			btngrpAll.Dispose();
+//			btngrp1.Dispose();
+//			btngrp2.Dispose();
+//			btngrp3.Dispose();
+//			btngrp4.Dispose();
+//			btnsearch.Dispose();
+//			btntrait.Dispose();
+//
+//			bodyListView.Dispose ();
+//
+//			btngrpAll.Click -= delegate {
+//				btngrpAll_Click();
+//			};
+//			btngrp1.Click -= delegate {
+//				btngrp1_Click();
+//			};
+//			btngrp2.Click -= delegate {
+//				btngrp2_Click();
+//			};
+//			btngrp3.Click -= delegate {
+//				btngrp3_Click();
+//			};
+//			btnsearch.Click -= delegate {
+//				btnsearch_Click();
+//			};
+//			btntrait.Click -= delegate {
+//				btntrait_Click();
+//			};
+
+			Finish ();
+
+			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_bottom,Resource.Animation.abc_slide_out_top);		
 		}
 
 		public void initListView (string requete)
@@ -269,7 +314,8 @@ namespace DMS_3
 					CpExpediteur = item.CpExpediteur,
 					villeExpediteur = item.villeLivraison,
 					nomClientLivraison = item.nomClientLivraison,
-					villeClientLivraison = item.villeClientLivraison
+					villeClientLivraison = item.villeClientLivraison,
+					imgpath = item.imgpath
 
 				});
 
@@ -282,6 +328,7 @@ namespace DMS_3
 		{		
 			Intent intent = new Intent (this, typeof(HomeActivity));
 			this.StartActivity (intent);
+			Finish ();
 			//this.OverridePendingTransition (Resource.Animation.abc_fade_in,Resource.Animation.abc_fade_out);
 		}
 	}

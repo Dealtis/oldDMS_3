@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel;
 using Android.App;
 using Android.Content;
 using Android.Net;
@@ -21,10 +22,12 @@ using Android.Telephony;
 
 namespace DMS_3
 {
-	[Activity (Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation)]
+	[Activity (Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 	public class SplashActivity : AppCompatActivity
 	{
 		static readonly string TAG = "X:" + typeof(SplashActivity).Name;
+		BackgroundWorker bgService;
+
 
 		public override void OnCreate (Bundle savedInstanceState, PersistableBundle persistentState)
 		{
@@ -41,6 +44,10 @@ namespace DMS_3
 				dbr.CreateDB ();
 				//CREATION DES TABLES
 				dbr.CreateTable ();
+
+				//suppression des logs trop anciens 3 jours
+				//dbr.purgeLog();
+
 				//TEST DE CONNEXION
 				var connectivityManager = (ConnectivityManager)GetSystemService (ConnectivityService);
 				var t = DateTime.Now.ToString ("dd_MM_yy");
@@ -118,12 +125,59 @@ namespace DMS_3
 					//Data.userAndsoft = user_Login;
 					dbr.setUserdata (user_Login);
 					File.AppendAllText (Data.log_file, "Connexion de " + Data.userAndsoft + " à " + DateTime.Now.ToString ("G") + "\n");
+
+					//lancement du BgWorker Service
+					StartService (new Intent (this, typeof(ProcessDMS)));
+					bgService = new BackgroundWorker();
+					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
+					bgService.RunWorkerAsync();
 					StartActivity (new Intent (Application.Context, typeof(HomeActivity)));
 				} else {
 					StartActivity (new Intent (Application.Context, typeof(MainActivity)));
 				}
 			}, TaskScheduler.FromCurrentSynchronizationContext ());
 			startupWork.Start ();
+		}
+
+		private void bgService_DoWork(object sender, DoWorkEventArgs e)
+		{
+		while (true) {
+				Thread.Sleep(600000);
+				try {
+					DBRepository dbr = new DBRepository();
+					//dbr.InsertLogApp("",DateTime.Now,"Check Service Start");
+					Console.WriteLine ("Check Service Start"+DateTime.Now.ToString("T"));
+					//verification de la date de la pre Service
+					//si la diff est > 10 min relancer le service
+					string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
+					ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
+					long servicedate = pref.GetLong("Service",0L);
+
+					try {				
+						if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>10){
+							//LANCEMENT DU SERVICE
+							if (Data.userAndsoft == null || Data.userAndsoft == "") {
+							} else {
+								StartService (new Intent (this, typeof(ProcessDMS)));					
+								//dbr.InsertLogApp("",DateTime.Now,"Relance du service après 10 min d'inactivité");
+								File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
+							}
+						}else{
+							//dbr.InsertLogApp("",DateTime.Now,"Pas de Relance du service");
+						}
+
+					} catch (Exception ex) {
+						Console.Out.Write (ex);
+					}
+				} catch (Exception ex) {
+					Console.Write(ex);
+				}
+			}
+		}
+
+		void bgService_DoWork_Completed (object sender, RunWorkerCompletedEventArgs e)
+		{
+			bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
 		}
 	}
 }

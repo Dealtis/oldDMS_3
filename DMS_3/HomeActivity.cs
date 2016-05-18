@@ -8,7 +8,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Telephony;
 using Android.App;
 using Android.Content;
 using Android.Locations;
@@ -16,6 +15,8 @@ using Android.Net;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4;
+using Android.Telephony;
+using Android.Support.V7;
 using Android.Views;
 using Android.Widget;
 using AndroidHUD;
@@ -24,6 +25,7 @@ using Java.Text;
 using SQLite;
 using Xamarin;
 using Environment = System.Environment;
+using Thread = Java.Lang.Thread;
 
 namespace DMS_3
 {
@@ -83,10 +85,8 @@ namespace DMS_3
 			txtEnlevement.SetTypeface (Data.LatoBlack, Android.Graphics.TypefaceStyle.Normal);
 
 			//Xamarin Insight
-			Insights.Initialize("430f9493dc9ca0fcda9bd07a79c8345943885367", this);
+			Insights.Initialize("982a3c876c6a53932848ed500da432bb3dada603", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
-
-			//HockeyApp
 
 		
 			if (processDMSConnection != null)
@@ -101,7 +101,7 @@ namespace DMS_3
 				
 			} else {
 				if (!Data.Is_Service_Running) {
-					StartService (new Intent (this, typeof(ProcessDMS)));
+					//Data.CheckService = new Thread(OnServiceTimerHandler);
 				}
 			}
 		}
@@ -118,6 +118,7 @@ namespace DMS_3
 				}
 			});
 		}
+
 		void Btn_Config_LongClick (object sender, View.LongClickEventArgs e)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -145,42 +146,19 @@ namespace DMS_3
 		protected override void OnStart()
 		{
 			base.OnStart();
-			serviceTimer = new System.Timers.Timer();
-			serviceTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnServiceTimerHandler);
-			serviceTimer.Interval = 300000;
-			serviceTimer.Enabled = true;
-			serviceTimer.Start ();
 		}
 
-		void OnServiceTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
+		void OnServiceTimerHandler ()
 		{
-			//verification de la date de la pre Service
-			//si la diff est > 10 min relancer le service
-			string dir_log = (Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)).ToString();
-			ISharedPreferences pref = Application.Context.GetSharedPreferences("AppInfo", FileCreationMode.Private);
-			long servicedate = pref.GetLong("Service",0L);
-
-			try {				
-				if ((TimeSpan.FromTicks(DateTime.Now.Ticks-servicedate).TotalMinutes)>5){
-					//LANCEMENT DU SERVICE
-					if (Data.userAndsoft == null || Data.userAndsoft == "") {
-					} else {
-						StartService (new Intent (this, typeof(ProcessDMS)));
-						File.AppendAllText(Data.log_file, "["+DateTime.Now.ToString("t")+"]"+"[SERVICE] Relance du service après 10 min d'inactivité"+DateTime.Now.ToString("G")+"\n");
-					}
-				}
-
-			} catch (Exception ex) {
-				Console.Out.Write (ex);
+			while (true) {				
+				Thread.Sleep (120000);
 			}
-
+				
 		}
-
 		protected override void OnResume()
 		{
 			base.OnResume();
 			DBRepository dbr = new DBRepository ();
-			dbr.SETBadges(Data.userAndsoft);
 			if (dbr.is_user_Log_In() == "false") {
 				Intent intent = new Intent (this, typeof(MainActivity));
 				this.StartActivity (intent);
@@ -216,16 +194,20 @@ namespace DMS_3
 
 			var user = dbr.getUserAndsoft ();
 			dbr.setUserdata (user);
+			dbr.SETBadges(Data.userAndsoft);
 
 			var version = this.PackageManager.GetPackageInfo(this.PackageName, 0).VersionName;
 			lblTitle.Text = Data.userAndsoft + " " + version;
 			indicatorTimer = new System.Timers.Timer();
+
 			indicatorTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnIndicatorTimerHandler);
 			indicatorTimer.Interval = 1000;
 			indicatorTimer.Enabled = true;
 			indicatorTimer.Start();
 
-
+//			if (!Data.CheckService.IsAlive) {
+//				Data.CheckService.Start();
+//			}
 		}
 
 		void OnIndicatorTimerHandler (object sender, System.Timers.ElapsedEventArgs e)
@@ -271,6 +253,7 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE","LIV");
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
@@ -279,6 +262,7 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE","RAM");
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 
@@ -286,6 +270,7 @@ namespace DMS_3
 		{
 			Intent intent = new Intent (this, typeof(MessageActivity));
 			this.StartActivity (intent);
+			Finish();
 			//this.OverridePendingTransition (Resource.Animation.abc_slide_in_top,Resource.Animation.abc_slide_out_bottom);
 		}
 

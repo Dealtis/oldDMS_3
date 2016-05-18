@@ -49,6 +49,8 @@ namespace DMS_3
 		string type;
 		string tyValide;
 
+		Bitmap imgbitmap;
+
 
 		private AlertDialog.Builder dialog;
 
@@ -126,7 +128,6 @@ namespace DMS_3
 			infolivraison.Text =  data.nomPayeur+"\n"+data.adresseLivraison+"\n"+data.CpLivraison+" "+data.villeLivraison+"\n"+data.nbrColis+" COLIS   "+data.nbrPallette+" PALETTE\n"+data.poids+"\n"+data.dateHeure+"\n"+data.CR;;		
 			infoclient.Text = "\n"+data.nomClient + "\nRef: "+data.refClient+"\nTournee : "+data.planDeTransport;
 			client.Text = "Client";
-			anomalie.Text = "\n"+data.libeAnomalie+"\n"+data.remarque;
 
 
 
@@ -158,10 +159,10 @@ namespace DMS_3
 
 				anomalie.Visibility = ViewStates.Visible;
 				anomaliet.Visibility = ViewStates.Visible;
-				anomalie.Text = data.codeAnomalie + data.libeAnomalie + "\n" + data.remarque;					
+				anomalie.Text = data.codeAnomalie +"\n"+ data.libeAnomalie + "\n" + data.remarque;					
 				//set IMG
 				_imageView.Visibility = ViewStates.Visible;
-				Bitmap imgbitmap = data.imgpath.LoadAndResizeBitmap (500, 500);
+				imgbitmap = data.imgpath.LoadAndResizeBitmap (500, 500);
 				_imageView.SetImageBitmap (imgbitmap);
 				break;
 			default:
@@ -190,7 +191,7 @@ namespace DMS_3
 			var txtCR = viewAD.FindViewById<TextView> (Resource.Id.textcr);
 			EditText mémo = viewAD.FindViewById<EditText>(Resource.Id.edittext);
 
-			if (data.CR == "" || data.CR == "0") {
+			if (data.CR == "" || data.CR == "0" || type=="RAM") {
 				check1.Visibility = ViewStates.Gone;
 				check2.Visibility = ViewStates.Gone;
 				txtCR.Visibility = ViewStates.Gone;
@@ -240,6 +241,10 @@ namespace DMS_3
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
+				Finish();
+				if (imgbitmap != null) {
+					imgbitmap.Recycle ();
+				}
 
 			});
 			dialog.SetNegativeButton("Non", delegate {
@@ -255,6 +260,10 @@ namespace DMS_3
 			intent.PutExtra("ID",Convert.ToString(i));
 			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
+			Finish();
+			if (imgbitmap != null) {
+				imgbitmap.Recycle ();
+			}
 			//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 		}
 		public override bool OnTouchEvent(MotionEvent e)
@@ -319,11 +328,50 @@ namespace DMS_3
 				Intent intent = new Intent (this, typeof(ListeTraitee));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
+				if (imgbitmap != null) {
+					imgbitmap.Recycle ();
+				}
+				_imageView.Dispose();
+				GC.Collect ();
+				_imageView.Dispose();
+				codelivraison.Dispose();
+				commande.Dispose(); 
+				infolivraison.Dispose();
+				title.Dispose(); 
+				infosupp.Dispose(); 
+				infoclient.Dispose(); 
+				client.Dispose(); 
+				anomaliet.Dispose(); 
+				anomalie.Dispose(); 
+				destfinal.Dispose(); 
+				_imageView.Dispose(); 
+				btnvalide.Dispose();
+
+				Finish();
 				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 			} else {
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra("TYPE",type);
 				this.StartActivity (intent);
+
+				if (imgbitmap != null) {
+					imgbitmap.Recycle ();
+				}
+				_imageView.Dispose();
+				codelivraison.Dispose();
+				commande.Dispose(); 
+				infolivraison.Dispose();
+				title.Dispose(); 
+				infosupp.Dispose(); 
+				infoclient.Dispose(); 
+				client.Dispose(); 
+				anomaliet.Dispose(); 
+				anomalie.Dispose(); 
+				destfinal.Dispose(); 
+				_imageView.Dispose(); 
+				btnvalide.Dispose();
+				GC.Collect ();
+				Finish();
 				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 			}
 		}

@@ -196,6 +196,7 @@ namespace DMS_3
 				uploadone = false;
 
 				if (imgpath.imgpath != "null") {					
+
 						threadUpload = new Thread (() => {
 							try {
 								Android.Graphics.Bitmap bmp = DecodeSmallFile (imgpath.imgpath,1000,1000);
@@ -204,25 +205,29 @@ namespace DMS_3
 								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress start" + DateTime.Now.ToString ("G") + "\n");
 								using (var fs = new FileStream (compImg, FileMode.OpenOrCreate)) {
 									rbmp.Compress (Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
-								}
-								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress done" + DateTime.Now.ToString ("G") + "\n");
-								bool statutuploadfile = false;
-									//ftp://77.158.93.75 ftp://10.1.2.75
-								statutuploadfile = Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
-								uploadone= true;
-							} catch (Exception ex) {
-								Console.WriteLine ("\n" + ex);
-								File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + ex + DateTime.Now.ToString ("G") + "\n");
-								dbr.InsertDataStatutMessage(11,DateTime.Now,1,imgpath.numCommande,"");
-							}
-						});
-						threadUpload.Start ();
+								}								
+							File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + "Compress done" + DateTime.Now.ToString ("G") + "\n");
+							bool statutuploadfile = false;
+								//ftp://77.158.93.75 ftp://10.1.2.75
+							statutuploadfile = Data.Instance.UploadFile ("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
+							uploadone= true;
+							bmp.Recycle();
+							rbmp.Recycle();
+						} catch (Exception ex) {
+							Console.WriteLine ("\n" + ex);
+							File.AppendAllText (Data.log_file, "[" + DateTime.Now.ToString ("t") + "]" + ex + DateTime.Now.ToString ("G") + "\n");
+							dbr.InsertDataStatutMessage(11,DateTime.Now,1,imgpath.numCommande,"");
+						}
+					});
+					threadUpload.Start ();
 				};
 
 				Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 				intent.PutExtra ("TYPE", type);
 				this.StartActivity (intent);
-				this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
+				Finish ();
+				_imageView.Dispose ();
+				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
 			}
 		}
 
@@ -275,6 +280,7 @@ namespace DMS_3
 				dbr.updateposimgpath (i,Data._file.Path);
 				Data.bitmap = null;
 			}
+			GC.Collect();
 		}
 		private Bitmap DecodeSmallFile(String filename, int width, int height)
 		{
@@ -311,12 +317,16 @@ namespace DMS_3
 					Intent intent = new Intent (this, typeof(ListeTraitee));
 					intent.PutExtra("TYPE",type);
 					this.StartActivity (intent);
-					this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+					Finish ();
+					_imageView.Dispose ();
+					//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 				} else {
 					Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 					intent.PutExtra("TYPE",type);
 					this.StartActivity (intent);
-					this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
+					Finish ();
+					_imageView.Dispose ();
+					//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft,Android.Resource.Animation.SlideOutRight);
 				}
 			});
 			builder.SetNegativeButton("Non", delegate {  });
