@@ -85,7 +85,7 @@ namespace DMS_3
 			txtEnlevement.SetTypeface (Data.LatoBlack, Android.Graphics.TypefaceStyle.Normal);
 
 			//Xamarin Insight
-			Insights.Initialize("df79e746ac72427e41c82366b7af4ad6948d1d6d", this);
+			Insights.Initialize("982a3c876c6a53932848ed500da432bb3dada603", this);
 			Insights.Identify(Data.userAndsoft,"Name",Data.userAndsoft);
 
 		

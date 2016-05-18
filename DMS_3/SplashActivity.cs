@@ -131,7 +131,6 @@ namespace DMS_3
 					bgService = new BackgroundWorker();
 					bgService.DoWork += new DoWorkEventHandler(bgService_DoWork);
 					bgService.RunWorkerAsync();
-
 					StartActivity (new Intent (Application.Context, typeof(HomeActivity)));
 				} else {
 					StartActivity (new Intent (Application.Context, typeof(MainActivity)));

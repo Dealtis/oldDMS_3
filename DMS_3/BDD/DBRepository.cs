@@ -440,7 +440,7 @@ namespace DMS_3.BDD
 			//var query = db.Table<TableLog>().Where (v => v.date.CompareTo(DateTime.Now));
 			var query = db.Table<TableLogService>();
 			foreach (var item in query) {
-				if ((item.date.Day.CompareTo(DateTime.Now.Day))>3) {
+				if ((item.date.Day.CompareTo(DateTime.Now.Day))>1) {
 					var row = db.Get<TableLogService>(item.Id);
 					db.Delete(row);
 				}	
@@ -448,7 +448,7 @@ namespace DMS_3.BDD
 
 			var queryApp = db.Table<TableLogApp>();
 			foreach (var item in queryApp) {
-				if ((item.date.Day.CompareTo(DateTime.Now.Day))>3) {
+				if ((item.date.Day.CompareTo(DateTime.Now.Day))>1) {
 					var row = db.Get<TableLogService>(item.Id);
 					db.Delete(row);
 				}	
