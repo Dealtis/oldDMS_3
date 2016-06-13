@@ -114,53 +114,53 @@ namespace DMS_3
 			}
 
 			switch (countGrp) {
-			case 0:
-				//btn all big size
-				btngrpAll.SetWidth (5000);
-				//afficher pas de tournée au milieu et sur le btnall
-				btngrpAll.Text = "Aucune position";
-				break;
-			case 1:
-				//btn all avec le num de grp
-				btngrpAll.SetWidth (5000);
-				btngrpAll.Text = Arraygrp[1];
-				break;
-			case 2:
-				//afficher le btn 1 et 2
-				btngrp1.Visibility = ViewStates.Visible;
-				btngrp1.Text = Arraygrp[1];
-				btngrp2.Visibility = ViewStates.Visible;
-				btngrp2.Text = Arraygrp[2];
-				break;
-			case 3:
-				//afficher le btn 1,2 et 3
-				btngrp1.Visibility = ViewStates.Visible;
-				btngrp1.Text = Arraygrp[1];
-				btngrp2.Visibility = ViewStates.Visible;
-				btngrp2.Text = Arraygrp[2];
-				btngrp3.Visibility = ViewStates.Visible;
-				btngrp3.Text = Arraygrp[3];
-				break;
-			case 4:
-				//afficher le btn 1,2,3 et 4
-				btngrp1.Visibility = ViewStates.Visible;
-				btngrp1.Text = Arraygrp[1];
+				case 0:
+					//btn all big size
+					btngrpAll.SetWidth (5000);
+					//afficher pas de tournée au milieu et sur le btnall
+					btngrpAll.Text = "Aucune position";
+					break;
+				case 1:
+					//btn all avec le num de grp
+					btngrpAll.SetWidth (5000);
+					btngrpAll.Text = Arraygrp[1];
+					break;
+				case 2:
+					//afficher le btn 1 et 2
+					btngrp1.Visibility = ViewStates.Visible;
+					btngrp1.Text = Arraygrp[1];
+					btngrp2.Visibility = ViewStates.Visible;
+					btngrp2.Text = Arraygrp[2];
+					break;
+				case 3:
+					//afficher le btn 1,2 et 3
+					btngrp1.Visibility = ViewStates.Visible;
+					btngrp1.Text = Arraygrp[1];
+					btngrp2.Visibility = ViewStates.Visible;
+					btngrp2.Text = Arraygrp[2];
+					btngrp3.Visibility = ViewStates.Visible;
+					btngrp3.Text = Arraygrp[3];
+					break;
+				case 4:
+					//afficher le btn 1,2,3 et 4
+					btngrp1.Visibility = ViewStates.Visible;
+					btngrp1.Text = Arraygrp[1];
 
-				btngrp2.Visibility = ViewStates.Visible;
-				btngrp2.Text = Arraygrp[2];
+					btngrp2.Visibility = ViewStates.Visible;
+					btngrp2.Text = Arraygrp[2];
 
-				btngrp3.Visibility = ViewStates.Visible;
-				btngrp3.Text = Arraygrp[3];
+					btngrp3.Visibility = ViewStates.Visible;
+					btngrp3.Text = Arraygrp[3];
 
-				btngrp4.Visibility = ViewStates.Visible;
-				btngrp4.Text = Arraygrp[4];
-				break;
-			default:
-				//btn all big size
-				btngrpAll.SetWidth (5000);
-				//afficher pas de tournée au milieu et sur le btnall
-				btngrpAll.Text = "Aucune position";
-				break;
+					btngrp4.Visibility = ViewStates.Visible;
+					btngrp4.Text = Arraygrp[4];
+					break;
+				default:
+					//btn all big size
+					btngrpAll.SetWidth (5000);
+					//afficher pas de tournée au milieu et sur le btnall
+					btngrpAll.Text = "Aucune position";
+					break;
 			}
 
 			//LISTVIEW
@@ -250,34 +250,6 @@ namespace DMS_3
 			Intent intent = new Intent (this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE",type);
 			this.StartActivity (intent);
-//			btngrpAll.Dispose();
-//			btngrp1.Dispose();
-//			btngrp2.Dispose();
-//			btngrp3.Dispose();
-//			btngrp4.Dispose();
-//			btnsearch.Dispose();
-//			btntrait.Dispose();
-//
-//			bodyListView.Dispose ();
-//
-//			btngrpAll.Click -= delegate {
-//				btngrpAll_Click();
-//			};
-//			btngrp1.Click -= delegate {
-//				btngrp1_Click();
-//			};
-//			btngrp2.Click -= delegate {
-//				btngrp2_Click();
-//			};
-//			btngrp3.Click -= delegate {
-//				btngrp3_Click();
-//			};
-//			btnsearch.Click -= delegate {
-//				btnsearch_Click();
-//			};
-//			btntrait.Click -= delegate {
-//				btntrait_Click();
-//			};
 
 			Finish ();
 
