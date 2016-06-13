@@ -227,7 +227,7 @@ namespace DMS_3
 				}
 				if (checkP.Checked) {
 					typecr="PARTIC";
-					string JSONPARTIC ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"espece\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
+					string JSONPARTIC ="{\"codesuiviliv\":\""+typecr+"\",\"memosuiviliv\":\"particulier\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\""+data.numCommande+"\",\"groupagesuiviliv\":\""+data.groupage+"\",\"datesuiviliv\":\""+DateTime.Now.ToString("dd/MM/yyyy HH:mm")+"\",\"posgps\":\""+Data.GPS+"\"}";
 					dbr.insertDataStatutpositions(typecr,"1",typecr,data.numCommande,formatmémo,DateTime.Now.ToString("dd/MM/yyyy HH:mm"),JSONPARTIC);
 				}
 

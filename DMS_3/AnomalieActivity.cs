@@ -31,6 +31,7 @@ namespace DMS_3
 		ImageView _imageView;
 		TablePositions data;
 		Thread threadUpload;
+		var checkP;
 		string type;
 
 		bool uploadone;
@@ -51,6 +52,7 @@ namespace DMS_3
 			Spinner spinner = FindViewById<Spinner> (Resource.Id.spinnerAnomalie);
 			EdittxtRem = FindViewById<EditText>(Resource.Id.edittext);
 			_imageView = FindViewById<ImageView>(Resource.Id.imageView1);
+			checkP = FindViewById<CheckBox>(Resource.Id.checkBoxPartic);
 
 			Button buttonvalider = FindViewById<Button>(Resource.Id.valider);
 
@@ -189,6 +191,12 @@ namespace DMS_3
 				//création de la notification webservice // statut de position
 				dbr.insertDataStatutpositions (codeanomalie, "2", txtspinner, data.numCommande, formatrem, DateTime.Now.ToString ("dd/MM/yyyy HH:mm"), JSON);
 
+				if (checkP.Checked)
+				{
+					var typecr = "PARTIC";
+					string JSONPARTIC = "{\"codesuiviliv\":\"" + typecr + "\",\"memosuiviliv\":\"particulier\",\"libellesuiviliv\":\"\",\"commandesuiviliv\":\"" + data.numCommande + "\",\"groupagesuiviliv\":\"" + data.groupage + "\",\"datesuiviliv\":\"" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\",\"posgps\":\"" + Data.GPS + "\"}";
+					dbr.insertDataStatutpositions(typecr, "2", typecr, data.numCommande, formatrem, DateTime.Now.ToString("dd/MM/yyyy HH:mm"), JSONPARTIC);
+				}
 
 				var imgpath = dbr.GetPositionsData (i);
 
