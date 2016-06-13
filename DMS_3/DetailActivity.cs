@@ -63,7 +63,7 @@ namespace DMS_3
 
 			type = Intent.GetStringExtra ("TYPE");
 			if (type == "RAM") {
-				tyValide = "RAMCFM";
+				tyValide = "ECHCFM";
 			} else {				
 				tyValide = "LIVCFM";
 			}

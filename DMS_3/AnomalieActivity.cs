@@ -154,16 +154,16 @@ namespace DMS_3
 					codeanomalie = "RENFCO";
 					break;
 				case "Ramasse pas faite":
-					codeanomalie = "RAMPFT";
+					codeanomalie = "ENEDIV";
 					break;
 				case "Positions non chargees":
 					codeanomalie = "RENNCG";
 					break;
 				case "Avis de passage":
-					codeanomalie = "RENAVI";
+					codeanomalie = "ENEAVI";
 					break;
 				case "Ramasse diverse":
-					codeanomalie = "RAMDIV";
+					codeanomalie = "ENENJU";
 					break;
 				case "Restaure en non traite":
 					codeanomalie = "RESTNT";
