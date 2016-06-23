@@ -1,24 +1,19 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Json;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.ComponentModel;
 using Android.App;
 using Android.Content;
 using Android.Net;
 using Android.OS;
 using Android.Support.V7.App;
-using Android.Util;
-using Android.Widget;
-using System.Globalization;
-using AndroidHUD;
-using DMS_3.BDD;
-using Android.Text.Format;
-using Xamarin;
 using Android.Telephony;
+using Android.Widget;
+using DMS_3.BDD;
+using Xamarin;
 
 namespace DMS_3
 {

@@ -189,6 +189,21 @@
                     d1p1:paddingBottom="5dp" />
             </RelativeLayout>
         </LinearLayout>
+        <LinearLayout
+            d1p1:id="@+id/columnlayout2_2"
+            d1p1:orientation="vertical"
+            d1p1:clickable="true"
+            d1p1:background="@drawable/bleu_button"
+            d1p1:layout_width="match_parent"
+            d1p1:layout_height="match_parent"
+            d1p1:layout_weight="1">
+            <ImageView
+                d1p1:layout_width="64dp"
+                d1p1:layout_height="match_parent"
+                d1p1:src="@drawable/LivAdr"
+                d1p1:layout_gravity="center_horizontal"
+                d1p1:id="@+id/imageView3" />
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         d1p1:orientation="horizontal"

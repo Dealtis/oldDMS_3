@@ -77,7 +77,6 @@ namespace DMS_3
 			adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
 			spinner.Adapter = adapter;
 
-			//REMISE  à null de la valeur photo
 		}
 
 		void spinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
@@ -218,12 +217,10 @@ namespace DMS_3
 							Android.Graphics.Bitmap bmp = DecodeSmallFile(imgpath.imgpath, 1000, 1000);
 							Bitmap rbmp = Bitmap.CreateScaledBitmap(bmp, bmp.Width / 2, bmp.Height / 2, true);
 							compImg = imgpath.imgpath.Replace(".jpg", "-1_1.jpg");
-							File.AppendAllText(Data.log_file, "[" + DateTime.Now.ToString("t") + "]" + "Compress start" + DateTime.Now.ToString("G") + "\n");
 							using (var fs = new FileStream(compImg, FileMode.OpenOrCreate))
 							{
 								rbmp.Compress(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
 							}
-							File.AppendAllText(Data.log_file, "[" + DateTime.Now.ToString("t") + "]" + "Compress done" + DateTime.Now.ToString("G") + "\n");
 							bool statutuploadfile = false;
 							//ftp://77.158.93.75 ftp://10.1.2.75
 							statutuploadfile = Data.Instance.UploadFile("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
@@ -234,7 +231,6 @@ namespace DMS_3
 						catch (Exception ex)
 						{
 							Console.WriteLine("\n" + ex);
-							File.AppendAllText(Data.log_file, "[" + DateTime.Now.ToString("t") + "]" + ex + DateTime.Now.ToString("G") + "\n");
 							dbr.InsertDataStatutMessage(11, DateTime.Now, 1, imgpath.numCommande, "");
 						}
 					});
@@ -246,6 +242,10 @@ namespace DMS_3
 				this.StartActivity(intent);
 				Finish();
 				_imageView.Dispose();
+				if (Data.bitmap != null)
+				{
+					Data.bitmap.Recycle();
+				}
 				//this.OverridePendingTransition (Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
 			}
 		}
@@ -353,7 +353,6 @@ namespace DMS_3
 				}
 			});
 			builder.SetNegativeButton("Non", delegate { });
-
 			builder.Show();
 
 		}

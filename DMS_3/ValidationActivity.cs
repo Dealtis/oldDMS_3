@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -25,7 +27,6 @@ namespace DMS_3
 		string tyValide;
 
 		TablePositions data;
-
 		RadioButton check1;
 		RadioButton check2;
 		CheckBox checkP;
@@ -33,7 +34,8 @@ namespace DMS_3
 		EditText mémo;
 		ImageView _imageView;
 
-		Bitmap imgbitmap;
+		Thread threadUpload;
+		bool uploadone;
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -133,13 +135,49 @@ namespace DMS_3
 			//création de la notification webservice // statut de position
 			dbr.insertDataStatutpositions(tyValide, "1", "Validée", data.numCommande, formatmémo, DateTime.Now.ToString("dd/MM/yyyy HH:mm"), JSON);
 
+			var imgpath = dbr.GetPositionsData(i);
+
+			string compImg = String.Empty;
+			uploadone = false;
+
+			if (imgpath.imgpath != "null")
+			{
+
+				threadUpload = new Thread(() =>
+				{
+					try
+					{
+						Android.Graphics.Bitmap bmp = DecodeSmallFile(imgpath.imgpath, 1000, 1000);
+						Bitmap rbmp = Bitmap.CreateScaledBitmap(bmp, bmp.Width / 2, bmp.Height / 2, true);
+						compImg = imgpath.imgpath.Replace(".jpg", "-1_1.jpg");
+						using (var fs = new FileStream(compImg, FileMode.OpenOrCreate))
+						{
+							rbmp.Compress(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+						}
+						bool statutuploadfile = false;
+							//ftp://77.158.93.75 ftp://10.1.2.75
+							statutuploadfile = Data.Instance.UploadFile("ftp://77.158.93.75", compImg, "DMS", "Linuxr00tn", "");
+						uploadone = true;
+						bmp.Recycle();
+						rbmp.Recycle();
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("\n" + ex);
+						dbr.InsertDataStatutMessage(11, DateTime.Now, 1, imgpath.numCommande, "");
+					}
+				});
+				threadUpload.Start();
+			};
+
 			Intent intent = new Intent(this, typeof(ListeLivraisonsActivity));
 			intent.PutExtra("TYPE", type);
 			this.StartActivity(intent);
 			Finish();
-			if (imgbitmap != null)
+			_imageView.Dispose();
+			if (Data.bitmap != null)
 			{
-				imgbitmap.Recycle();
+				Data.bitmap.Recycle();
 			}
 		}
 		private void CreateDirectoryForPictures()

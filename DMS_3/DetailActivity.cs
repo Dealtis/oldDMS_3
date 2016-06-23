@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -151,6 +150,11 @@ namespace DMS_3
 					commande.SetBackgroundColor(Color.LightGreen);
 					client.SetBackgroundColor(Color.LightGreen);
 					_imageView.Visibility = ViewStates.Gone;
+
+					//set IMG
+					_imageView.Visibility = ViewStates.Visible;
+					imgbitmap = data.imgpath.LoadAndResizeBitmap(500, 500);
+					_imageView.SetImageBitmap(imgbitmap);
 					break;
 				case "2":
 					title.SetBackgroundColor(Color.IndianRed);
@@ -161,6 +165,7 @@ namespace DMS_3
 					anomalie.Visibility = ViewStates.Visible;
 					anomaliet.Visibility = ViewStates.Visible;
 					anomalie.Text = data.codeAnomalie + "\n" + data.libeAnomalie + "\n" + data.remarque;
+
 					//set IMG
 					_imageView.Visibility = ViewStates.Visible;
 					imgbitmap = data.imgpath.LoadAndResizeBitmap(500, 500);
